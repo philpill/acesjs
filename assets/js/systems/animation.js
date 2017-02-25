@@ -72,6 +72,8 @@ export default class AnimationSystem {
 
                 this.timer = dt;
             }
+
+            return node;
         });
     }
 }

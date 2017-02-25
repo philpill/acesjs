@@ -46,7 +46,7 @@
 
 	'use strict';
 	
-	var _game = __webpack_require__(6);
+	var _game = __webpack_require__(1);
 	
 	var _game2 = _interopRequireDefault(_game);
 	
@@ -56,12 +56,7 @@
 	game.init();
 
 /***/ },
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -72,69 +67,69 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _engine = __webpack_require__(7);
+	var _engine = __webpack_require__(2);
 	
 	var _engine2 = _interopRequireDefault(_engine);
 	
-	var _entity = __webpack_require__(12);
+	var _entity = __webpack_require__(8);
 	
 	var _entity2 = _interopRequireDefault(_entity);
 	
-	var _display = __webpack_require__(13);
+	var _display = __webpack_require__(9);
 	
 	var _display2 = _interopRequireDefault(_display);
 	
-	var _position = __webpack_require__(14);
+	var _position = __webpack_require__(10);
 	
 	var _position2 = _interopRequireDefault(_position);
 	
-	var _velocity = __webpack_require__(15);
+	var _velocity = __webpack_require__(11);
 	
 	var _velocity2 = _interopRequireDefault(_velocity);
 	
-	var _input = __webpack_require__(16);
+	var _input = __webpack_require__(12);
 	
 	var _input2 = _interopRequireDefault(_input);
 	
-	var _collision = __webpack_require__(17);
+	var _collision = __webpack_require__(13);
 	
 	var _collision2 = _interopRequireDefault(_collision);
 	
-	var _animation = __webpack_require__(25);
+	var _animation = __webpack_require__(14);
 	
 	var _animation2 = _interopRequireDefault(_animation);
 	
-	var _move = __webpack_require__(18);
+	var _move = __webpack_require__(15);
 	
 	var _move2 = _interopRequireDefault(_move);
 	
-	var _render = __webpack_require__(19);
+	var _render = __webpack_require__(16);
 	
 	var _render2 = _interopRequireDefault(_render);
 	
-	var _control = __webpack_require__(20);
+	var _control = __webpack_require__(17);
 	
 	var _control2 = _interopRequireDefault(_control);
 	
-	var _collision3 = __webpack_require__(21);
+	var _collision3 = __webpack_require__(18);
 	
 	var _collision4 = _interopRequireDefault(_collision3);
 	
-	var _animation3 = __webpack_require__(26);
+	var _animation3 = __webpack_require__(19);
 	
 	var _animation4 = _interopRequireDefault(_animation3);
 	
-	var _player = __webpack_require__(22);
-	
-	var _player2 = _interopRequireDefault(_player);
-	
-	var _settings = __webpack_require__(23);
+	var _settings = __webpack_require__(21);
 	
 	var _settings2 = _interopRequireDefault(_settings);
 	
-	var _map = __webpack_require__(24);
+	var _map = __webpack_require__(22);
 	
 	var _map2 = _interopRequireDefault(_map);
+	
+	var _player = __webpack_require__(24);
+	
+	var _player2 = _interopRequireDefault(_player);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -145,8 +140,6 @@
 	        _classCallCheck(this, Game);
 	
 	        this.engine = {};
-	
-	        this.renderer = {};
 	    }
 	
 	    _createClass(Game, [{
@@ -284,50 +277,7 @@
 	        key: 'createPlayer',
 	        value: function createPlayer(settings, start) {
 	
-	            var data = new _player2.default();
-	
-	            var player = new _entity2.default();
-	
-	            var animation = new _animation2.default();
-	
-	            animation.walkRight = [1, 2];
-	
-	            animation.walkLeft = [2, 1];
-	
-	            animation.jump = [3];
-	
-	            animation.default = [0];
-	
-	            player.addComponent(animation);
-	
-	            var collision = new _collision2.default();
-	
-	            collision.type = 'primary';
-	
-	            player.addComponent(collision);
-	
-	            var display = new _display2.default(data);
-	
-	            display.isFocus = true;
-	
-	            player.addComponent(display);
-	
-	            var positionComponent = new _position2.default();
-	
-	            positionComponent.x = start[0] * settings.TILE;
-	            positionComponent.y = start[1] * settings.TILE;
-	
-	            player.addComponent(positionComponent);
-	
-	            var velocityComponent = new _velocity2.default();
-	
-	            velocityComponent.accelerationY = settings.GRAVITY;
-	
-	            player.addComponent(velocityComponent);
-	
-	            var inputComponent = new _input2.default();
-	
-	            player.addComponent(inputComponent);
+	            var player = new _player2.default(settings, start);
 	
 	            this.engine.addEntity(player);
 	        }
@@ -339,7 +289,7 @@
 	exports.default = Game;
 
 /***/ },
-/* 7 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -350,23 +300,23 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _move = __webpack_require__(8);
+	var _move = __webpack_require__(3);
 	
 	var _move2 = _interopRequireDefault(_move);
 	
-	var _render = __webpack_require__(9);
+	var _render = __webpack_require__(4);
 	
 	var _render2 = _interopRequireDefault(_render);
 	
-	var _control = __webpack_require__(10);
+	var _control = __webpack_require__(5);
 	
 	var _control2 = _interopRequireDefault(_control);
 	
-	var _collision = __webpack_require__(11);
+	var _collision = __webpack_require__(6);
 	
 	var _collision2 = _interopRequireDefault(_collision);
 	
-	var _animation = __webpack_require__(27);
+	var _animation = __webpack_require__(7);
 	
 	var _animation2 = _interopRequireDefault(_animation);
 	
@@ -396,29 +346,29 @@
 	
 	            this.entities.push(entity);
 	
-	            if (entity.display && entity.position) {
+	            if (entity.components.display && entity.components.position) {
 	
-	                this.nodes.push({ entityId: entity.id, class: 'render', data: new _render2.default(entity.id, entity.display, entity.position) });
+	                this.nodes.push({ entityId: entity.id, class: 'render', data: new _render2.default(entity.id, entity.components.display, entity.components.position), isActive: true });
 	            }
 	
-	            if (entity.animation && entity.display && entity.velocity) {
+	            if (entity.components.animation && entity.components.display && entity.components.velocity) {
 	
-	                this.nodes.push({ entityId: entity.id, class: 'animation', data: new _animation2.default(entity.id, entity.animation, entity.display, entity.velocity) });
+	                this.nodes.push({ entityId: entity.id, class: 'animation', data: new _animation2.default(entity.id, entity.components.animation, entity.components.display, entity.components.velocity), isActive: true });
 	            }
 	
-	            if (entity.velocity && entity.position) {
+	            if (entity.components.velocity && entity.components.position) {
 	
-	                this.nodes.push({ entityId: entity.id, class: 'move', data: new _move2.default(entity.id, entity.position, entity.velocity) });
+	                this.nodes.push({ entityId: entity.id, class: 'move', data: new _move2.default(entity.id, entity.components.position, entity.components.velocity), isActive: true });
 	            }
 	
-	            if (entity.velocity && entity.input) {
+	            if (entity.components.velocity && entity.components.input) {
 	
-	                this.nodes.push({ entityId: entity.id, class: 'control', data: new _control2.default(entity.id, entity.control, entity.velocity) });
+	                this.nodes.push({ entityId: entity.id, class: 'control', data: new _control2.default(entity.id, entity.components.control, entity.components.velocity), isActive: true });
 	            }
 	
-	            if (entity.collision) {
+	            if (entity.components.collision) {
 	
-	                this.nodes.push({ entityId: entity.id, class: 'collision', data: new _collision2.default(entity.id, entity.collision, entity.display, entity.velocity) });
+	                this.nodes.push({ entityId: entity.id, class: 'collision', data: new _collision2.default(entity.id, entity.components.collision, entity.components.display, entity.components.velocity), isActive: true });
 	            }
 	        }
 	    }, {
@@ -427,20 +377,13 @@
 	
 	            var entityId = entity.id;
 	
-	            var index = this.entities.indexOf(entity);
-	            if (index > -1) {
-	                this.entities[index] = null;
-	                this.entities.splice(index, 1);
-	            }
+	            this.entities = this.entities.filter(function (entity) {
+	                return entity.id !== entityId;
+	            });
 	
-	            var i = this.nodes.length;
-	
-	            while (i--) {
-	                if (this.nodes[i].entityId === entityId) {
-	                    this.nodes[i] = null;
-	                    this.nodes.splice(i, 1);
-	                }
-	            }
+	            this.nodes = this.nodes.filter(function (node) {
+	                return node.entityId !== entityId;
+	            });
 	        }
 	    }, {
 	        key: 'addSystem',
@@ -454,37 +397,44 @@
 	        key: 'removeSystem',
 	        value: function removeSystem(system) {
 	
-	            var index = this.systems.indexOf(system);
+	            system.stop();
 	
-	            if (index > -1) {
-	                system.stop();
-	                this.systems.splice(index, 1);
-	            }
+	            system = null;
+	
+	            this.systems = this.systems.filter(function (system) {
+	                return !!system;
+	            });
 	        }
 	    }, {
-	        key: 'getNodes',
-	        value: function getNodes(nodeClass) {
-	
-	            var nodes = [];
-	
-	            for (var i = 0, j = this.nodes.length; i < j; i++) {
-	
-	                if (this.nodes[i].class === nodeClass) {
-	                    nodes.push(this.nodes[i]);
-	                }
-	            }
-	
-	            return nodes;
+	        key: 'getNodesByClass',
+	        value: function getNodesByClass(nodeClass) {
+	            return this.nodes.filter(function (node) {
+	                return node.class === nodeClass;
+	            });
+	        }
+	    }, {
+	        key: 'getNodesByEntityId',
+	        value: function getNodesByEntityId(entityId) {
+	            return this.nodes.filter(function (node) {
+	                return node.entityId === entityId;
+	            });
+	        }
+	    }, {
+	        key: 'getEntityById',
+	        value: function getEntityById(entityId) {
+	            return this.entities.filter(function (entity) {
+	                return entity.id === entityId;
+	            })[0];
 	        }
 	    }, {
 	        key: 'update',
 	        value: function update() {
+	            var _this = this;
+	
 	            var before = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 	
 	
 	            this.isPaused = false;
-	
-	            // console.log(document.visibilityState);
 	
 	            if (document.visibilityState !== 'visible') {
 	
@@ -493,22 +443,27 @@
 	
 	            var now = performance.now();
 	
-	            // console.log(now);
-	
-	            // console.log(before);
-	
 	            var dt = (now - before) / 1000;
 	
 	            dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
 	
-	            for (var i = 0, j = this.systems.length; i < j; i++) {
+	            if (!this.isPaused) {
 	
-	                // console.log(dt);
+	                this.nodes.filter(function (node) {
+	                    return !node.isActive;
+	                }).map(function (node) {
+	                    return node.entityId;
+	                }).filter(function (value, index, array) {
+	                    return array.indexOf(value) === index;
+	                }).map(function (id) {
+	                    var entity = _this.getEntityById(id);
+	                    console.log(entity);
+	                    entity.destroy();
+	                });
 	
-	                if (!this.isPaused) {
-	
-	                    this.systems[i].update(dt, this.getNodes(this.systems[i].class));
-	                }
+	                this.systems.map(function (system) {
+	                    system.update(dt, system.isGlobal ? _this.nodes : _this.getNodesByClass(system.class));
+	                });
 	            }
 	
 	            before = now;
@@ -523,7 +478,7 @@
 	exports.default = Engine;
 
 /***/ },
-/* 8 */
+/* 3 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -545,7 +500,7 @@
 	exports.default = MoveNode;
 
 /***/ },
-/* 9 */
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -567,7 +522,7 @@
 	exports.default = RenderNode;
 
 /***/ },
-/* 10 */
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -589,7 +544,7 @@
 	exports.default = ControlNode;
 
 /***/ },
-/* 11 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -612,7 +567,30 @@
 	exports.default = CollisionNode;
 
 /***/ },
-/* 12 */
+/* 7 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var AnimationNode = function AnimationNode(entityId, animationComponent, displayComponent, velocityComponent) {
+	    _classCallCheck(this, AnimationNode);
+	
+	    this.entityId = entityId;
+	    this.animation = animationComponent;
+	    this.display = displayComponent;
+	    this.velocity = velocityComponent;
+	};
+	
+	exports.default = AnimationNode;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -630,7 +608,8 @@
 	        _classCallCheck(this, Entity);
 	
 	        this.id = this.generateUUID();
-	        this.flag_kill = false;
+	        this.isActive = true;
+	        this.components = {};
 	    }
 	
 	    _createClass(Entity, [{
@@ -648,22 +627,33 @@
 	            return uuid;
 	        }
 	    }, {
-	        key: 'kill',
-	        value: function kill() {
-	            this.flag_kill = true;
-	        }
-	    }, {
 	        key: 'addComponent',
 	        value: function addComponent(component) {
 	
-	            this[component.class] = component;
+	            this.components[component.class] = component;
+	        }
+	    }, {
+	        key: 'addComponents',
+	        value: function addComponents() {
+	            var _this = this;
+	
+	            for (var _len = arguments.length, components = Array(_len), _key = 0; _key < _len; _key++) {
+	                components[_key] = arguments[_key];
+	            }
+	
+	            components.map(function (component) {
+	                _this.components[component.class] = component;
+	            });
 	        }
 	    }, {
 	        key: 'removeComponent',
 	        value: function removeComponent(componentClass) {
 	
-	            this[componentClass] = null;
+	            this.components[componentClass] = null;
 	        }
+	    }, {
+	        key: 'destroy',
+	        value: function destroy() {}
 	    }]);
 	
 	    return Entity;
@@ -672,7 +662,7 @@
 	exports.default = Entity;
 
 /***/ },
-/* 13 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -696,7 +686,7 @@
 	exports.default = DisplayComponent;
 
 /***/ },
-/* 14 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -719,7 +709,7 @@
 	exports.default = PositionComponent;
 
 /***/ },
-/* 15 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -748,7 +738,7 @@
 	exports.default = VelocityComponent;
 
 /***/ },
-/* 16 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -768,7 +758,7 @@
 	exports.default = InputComponent;
 
 /***/ },
-/* 17 */
+/* 13 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -795,7 +785,39 @@
 	exports.default = CollisionComponent;
 
 /***/ },
-/* 18 */
+/* 14 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var AnimationComponent = function AnimationComponent(data) {
+	    _classCallCheck(this, AnimationComponent);
+	
+	    this.class = 'animation';
+	
+	    this.default = [0];
+	
+	    this.walkRight = [1, 2];
+	
+	    this.walkLeft = [2, 1];
+	
+	    this.jump = [3];
+	
+	    this.currentAnimationProp = 'default';
+	
+	    this.currentFrame = 0;
+	};
+	
+	exports.default = AnimationComponent;
+
+/***/ },
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -860,6 +882,11 @@
 	                positionData.y += velocityY * _this.settings.TILE;
 	
 	                positionData.y = Math.max(0, positionData.y);
+	
+	                if (positionData.y > _this.settings.MAP[0] * _this.settings.TILE) {
+	                    console.log('OFF MAP');
+	                    node.isActive = false;
+	                }
 	            });
 	        }
 	    }]);
@@ -870,7 +897,7 @@
 	exports.default = MoveSystem;
 
 /***/ },
-/* 19 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1015,7 +1042,7 @@
 	exports.default = RenderSystem;
 
 /***/ },
-/* 20 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1110,7 +1137,7 @@
 	exports.default = ControlSystem;
 
 /***/ },
-/* 21 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1219,163 +1246,7 @@
 	exports.default = CollisionSystem;
 
 /***/ },
-/* 22 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var PlayerData = function PlayerData() {
-	    _classCallCheck(this, PlayerData);
-	
-	    var texture = PIXI.utils.TextureCache['/static/img/player.png'];
-	
-	    this.sprite = new PIXI.Sprite(texture);
-	
-	    this.sprite.data = {};
-	
-	    this.sprite.data.texture = [];
-	
-	    this.sprite.data.texture.push(new PIXI.Rectangle(0, 0, 16, 32));
-	    this.sprite.data.texture.push(new PIXI.Rectangle(16, 0, 16, 32));
-	    this.sprite.data.texture.push(new PIXI.Rectangle(32, 0, 16, 32));
-	    this.sprite.data.texture.push(new PIXI.Rectangle(48, 0, 16, 32));
-	
-	    texture.frame = this.sprite.data.texture[1];
-	
-	    this.sprite.data.animation = {
-	        walkLeft: [2, 1],
-	        walkRight: [1, 2],
-	        jump: [3],
-	        default: [0]
-	    };
-	};
-	
-	exports.default = PlayerData;
-
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var SettingsData = function SettingsData() {
-	    _classCallCheck(this, SettingsData);
-	
-	    this.GRAVITY = 1;
-	    this.FRICTION = 0.90;
-	    this.TILE = 16;
-	    this.MAP = [45, 30];
-	    this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 };
-	};
-	
-	exports.default = SettingsData;
-
-/***/ },
-/* 24 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var MapData = function () {
-	    function MapData() {
-	        _classCallCheck(this, MapData);
-	
-	        this.sprite = this.getSprite();
-	
-	        this.levels = [];
-	
-	        this.levels.push({
-	            url: '/assets/json/levelone.json',
-	            start: [3, 3]
-	        });
-	
-	        this.currentLevel = 1;
-	
-	        this.level = this.getData();
-	    }
-	
-	    _createClass(MapData, [{
-	        key: 'getSprite',
-	        value: function getSprite() {
-	
-	            var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(32, 0, 16, 16));
-	
-	            return new PIXI.Sprite(texture);
-	        }
-	    }, {
-	        key: 'getData',
-	        value: function getData() {
-	
-	            var levelData = this.levels[this.currentLevel - 1];
-	
-	            return fetch(levelData.url).then(function (response) {
-	                return response.json();
-	            }).then(function (data) {
-	                levelData.data = data;
-	                return levelData;
-	            });
-	        }
-	    }]);
-	
-	    return MapData;
-	}();
-	
-	exports.default = MapData;
-
-/***/ },
-/* 25 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var AnimationComponent = function AnimationComponent(data) {
-	    _classCallCheck(this, AnimationComponent);
-	
-	    this.class = 'animation';
-	
-	    this.default = [0];
-	
-	    this.walkRight = [1, 2];
-	
-	    this.walkLeft = [2, 1];
-	
-	    this.jump = [3];
-	
-	    this.currentAnimationProp = 'default';
-	
-	    this.currentFrame = 0;
-	};
-	
-	exports.default = AnimationComponent;
-
-/***/ },
-/* 26 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1462,6 +1333,8 @@
 	
 	                    _this.timer = dt;
 	                }
+	
+	                return node;
 	            });
 	        }
 	    }]);
@@ -1472,7 +1345,8 @@
 	exports.default = AnimationSystem;
 
 /***/ },
-/* 27 */
+/* 20 */,
+/* 21 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1483,16 +1357,183 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var AnimationNode = function AnimationNode(entityId, animationComponent, displayComponent, velocityComponent) {
-	    _classCallCheck(this, AnimationNode);
+	var SettingsData = function SettingsData() {
+	    _classCallCheck(this, SettingsData);
 	
-	    this.entityId = entityId;
-	    this.animation = animationComponent;
-	    this.display = displayComponent;
-	    this.velocity = velocityComponent;
+	    this.GRAVITY = 1;
+	    this.FRICTION = 0.90;
+	    this.TILE = 16;
+	    this.MAP = [45, 30];
+	    this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 };
 	};
 	
-	exports.default = AnimationNode;
+	exports.default = SettingsData;
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var MapData = function () {
+	    function MapData() {
+	        _classCallCheck(this, MapData);
+	
+	        this.sprite = this.getSprite();
+	
+	        this.levels = [];
+	
+	        this.levels.push({
+	            url: '/assets/json/levelone.json',
+	            start: [3, 3]
+	        });
+	
+	        this.currentLevel = 1;
+	
+	        this.level = this.getData();
+	    }
+	
+	    _createClass(MapData, [{
+	        key: 'getSprite',
+	        value: function getSprite() {
+	
+	            var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(32, 0, 16, 16));
+	
+	            return new PIXI.Sprite(texture);
+	        }
+	    }, {
+	        key: 'getData',
+	        value: function getData() {
+	
+	            var levelData = this.levels[this.currentLevel - 1];
+	
+	            return fetch(levelData.url).then(function (response) {
+	                return response.json();
+	            }).then(function (data) {
+	                levelData.data = data;
+	                return levelData;
+	            });
+	        }
+	    }]);
+	
+	    return MapData;
+	}();
+	
+	exports.default = MapData;
+
+/***/ },
+/* 23 */,
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _entity = __webpack_require__(8);
+	
+	var _entity2 = _interopRequireDefault(_entity);
+	
+	var _display = __webpack_require__(9);
+	
+	var _display2 = _interopRequireDefault(_display);
+	
+	var _position = __webpack_require__(10);
+	
+	var _position2 = _interopRequireDefault(_position);
+	
+	var _velocity = __webpack_require__(11);
+	
+	var _velocity2 = _interopRequireDefault(_velocity);
+	
+	var _input = __webpack_require__(12);
+	
+	var _input2 = _interopRequireDefault(_input);
+	
+	var _collision = __webpack_require__(13);
+	
+	var _collision2 = _interopRequireDefault(_collision);
+	
+	var _animation = __webpack_require__(14);
+	
+	var _animation2 = _interopRequireDefault(_animation);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var PlayerPrefab = function PlayerPrefab(settings, start) {
+	    _classCallCheck(this, PlayerPrefab);
+	
+	    var texture = PIXI.utils.TextureCache['/static/img/player.png'];
+	
+	    var sprite = new PIXI.Sprite(texture);
+	
+	    sprite.data = {};
+	
+	    sprite.data.texture = [];
+	
+	    sprite.data.texture.push(new PIXI.Rectangle(0, 0, 16, 32));
+	    sprite.data.texture.push(new PIXI.Rectangle(16, 0, 16, 32));
+	    sprite.data.texture.push(new PIXI.Rectangle(32, 0, 16, 32));
+	    sprite.data.texture.push(new PIXI.Rectangle(48, 0, 16, 32));
+	
+	    texture.frame = sprite.data.texture[1];
+	
+	    sprite.data.animation = {
+	        walkLeft: [2, 1],
+	        walkRight: [1, 2],
+	        jump: [3],
+	        default: [0]
+	    };
+	
+	    var player = new _entity2.default();
+	
+	    var animation = new _animation2.default();
+	
+	    animation.walkRight = sprite.data.animation.walkRight;
+	
+	    animation.walkLeft = sprite.data.animation.walkLeft;
+	
+	    animation.jump = sprite.data.animation.jump;
+	
+	    animation.default = sprite.data.animation.default;
+	
+	    var collision = new _collision2.default();
+	
+	    collision.type = 'primary';
+	
+	    var display = new _display2.default({ sprite: sprite });
+	
+	    display.isFocus = true;
+	
+	    var positionComponent = new _position2.default();
+	
+	    positionComponent.x = start[0] * settings.TILE;
+	    positionComponent.y = start[1] * settings.TILE;
+	
+	    var velocityComponent = new _velocity2.default();
+	
+	    velocityComponent.accelerationY = settings.GRAVITY;
+	
+	    var inputComponent = new _input2.default();
+	
+	    player.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation);
+	
+	    return player;
+	};
+	
+	exports.default = PlayerPrefab;
 
 /***/ }
 /******/ ]);

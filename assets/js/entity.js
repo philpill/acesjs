@@ -3,7 +3,8 @@ export default class Entity {
     constructor() {
 
         this.id = this.generateUUID();
-        this.flag_kill = false;
+        this.isActive = true;
+        this.components = {};
     }
 
     generateUUID() {
@@ -19,17 +20,23 @@ export default class Entity {
         return uuid;
     }
 
-    kill() {
-        this.flag_kill = true;
-    }
-
     addComponent(component) {
 
-        this[component.class] = component;
+        this.components[component.class] = component;
+    }
+
+    addComponents(...components) {
+        components.map((component) => {
+            this.components[component.class] = component;
+        });
     }
 
     removeComponent(componentClass) {
 
-        this[componentClass] = null;
+        this.components[componentClass] = null;
+    }
+
+    destroy() {
+
     }
 }

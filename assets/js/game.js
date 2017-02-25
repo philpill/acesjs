@@ -14,17 +14,16 @@ import ControlSystem from './systems/control';
 import CollisionSystem from './systems/collision';
 import AnimationSystem from './systems/animation';
 
-import PlayerData from './data/player';
 import SettingsData from './data/settings';
 import MapData from './data/map';
+
+import PlayerPrefab from './prefab/player';
 
 export default class Game {
 
     constructor() {
 
         this.engine = {};
-
-        this.renderer = {};
     }
 
     init() {
@@ -155,50 +154,7 @@ export default class Game {
 
     createPlayer(settings, start) {
 
-        let data = new PlayerData();
-
-        let player = new Entity();
-
-        let animation = new AnimationComponent();
-
-        animation.walkRight = [1, 2];
-
-        animation.walkLeft = [2, 1];
-
-        animation.jump = [3];
-
-        animation.default = [0];
-
-        player.addComponent(animation);
-
-        let collision = new CollisionComponent();
-
-        collision.type = 'primary';
-
-        player.addComponent(collision);
-
-        let display = new DisplayComponent(data);
-
-        display.isFocus = true;
-
-        player.addComponent(display);
-
-        let positionComponent = new PositionComponent();
-
-        positionComponent.x = start[0] * settings.TILE;
-        positionComponent.y = start[1] * settings.TILE;
-
-        player.addComponent(positionComponent);
-
-        let velocityComponent = new VelocityComponent();
-
-        velocityComponent.accelerationY = settings.GRAVITY;
-
-        player.addComponent(velocityComponent);
-
-        let inputComponent = new InputComponent();
-
-        player.addComponent(inputComponent);
+        let player = new PlayerPrefab(settings, start);
 
         this.engine.addEntity(player);
     }

@@ -23,29 +23,29 @@ export default class Engine {
 
         this.entities.push(entity);
 
-        if (entity.display && entity.position) {
+        if (entity.components.display && entity.components.position) {
 
-            this.nodes.push({ entityId: entity.id, class: 'render', data: new RenderNode(entity.id, entity.display, entity.position) });
+            this.nodes.push({ entityId: entity.id, class: 'render', data: new RenderNode(entity.id, entity.components.display, entity.components.position), isActive: true });
         }
 
-        if (entity.animation && entity.display && entity.velocity) {
+        if (entity.components.animation && entity.components.display && entity.components.velocity) {
 
-            this.nodes.push({ entityId: entity.id, class: 'animation', data: new AnimationNode(entity.id, entity.animation, entity.display, entity.velocity) });
+            this.nodes.push({ entityId: entity.id, class: 'animation', data: new AnimationNode(entity.id, entity.components.animation, entity.components.display, entity.components.velocity), isActive: true });
         }
 
-        if (entity.velocity && entity.position) {
+        if (entity.components.velocity && entity.components.position) {
 
-            this.nodes.push({ entityId: entity.id, class: 'move', data: new MoveNode(entity.id, entity.position, entity.velocity) });
+            this.nodes.push({ entityId: entity.id, class: 'move', data: new MoveNode(entity.id, entity.components.position, entity.components.velocity), isActive: true });
         }
 
-        if (entity.velocity && entity.input) {
+        if (entity.components.velocity && entity.components.input) {
 
-            this.nodes.push({ entityId: entity.id, class: 'control', data: new ControlNode(entity.id, entity.control, entity.velocity) });
+            this.nodes.push({ entityId: entity.id, class: 'control', data: new ControlNode(entity.id, entity.components.control, entity.components.velocity), isActive: true });
         }
 
-        if (entity.collision) {
+        if (entity.components.collision) {
 
-            this.nodes.push({ entityId: entity.id, class: 'collision', data: new CollisionNode(entity.id, entity.collision, entity.display, entity.velocity) });
+            this.nodes.push({ entityId: entity.id, class: 'collision', data: new CollisionNode(entity.id, entity.components.collision, entity.components.display, entity.components.velocity), isActive: true });
         }
     }
 
@@ -53,20 +53,13 @@ export default class Engine {
 
         let entityId = entity.id;
 
-        let index = this.entities.indexOf(entity);
-        if (index > -1) {
-            this.entities[index] = null;
-            this.entities.splice(index, 1);
-        }
+        this.entities = this.entities.filter((entity) => {
+            return entity.id !== entityId;
+        });
 
-        var i = this.nodes.length;
-
-        while (i--) {
-            if (this.nodes[i].entityId === entityId) {
-                this.nodes[i] = null;
-                this.nodes.splice(i, 1);
-            }
-        }
+        this.nodes = this.nodes.filter((node) => {
+            return node.entityId !== entityId;
+        });
     }
 
     addSystem(system) {
@@ -78,33 +71,36 @@ export default class Engine {
 
     removeSystem(system) {
 
-        let index = this.systems.indexOf(system);
+        system.stop();
 
-        if (index > -1) {
-            system.stop();
-            this.systems.splice(index, 1);
-        }
+        system = null;
+
+        this.systems = this.systems.filter((system) => {
+            return !!system;
+        });
     }
 
-    getNodes(nodeClass) {
+    getNodesByClass(nodeClass) {
+        return this.nodes.filter((node) => {
+            return node.class === nodeClass;
+        });
+    }
 
-        let nodes = [];
+    getNodesByEntityId(entityId) {
+        return this.nodes.filter((node) => {
+            return node.entityId === entityId;
+        });
+    }
 
-        for (var i = 0, j = this.nodes.length; i < j; i++) {
-
-            if (this.nodes[i].class === nodeClass) {
-                nodes.push(this.nodes[i]);
-            }
-        }
-
-        return nodes;
+    getEntityById(entityId) {
+        return this.entities.filter((entity) => {
+            return entity.id === entityId;
+        })[0];
     }
 
     update(before = 0) {
 
         this.isPaused = false;
-
-        // console.log(document.visibilityState);
 
         if (document.visibilityState !== 'visible') {
 
@@ -113,22 +109,27 @@ export default class Engine {
 
         let now = performance.now();
 
-            // console.log(now);
-
-            // console.log(before);
-
         let dt = (now - before)/1000;
 
         dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
 
-        for (var i = 0, j = this.systems.length; i < j; i++) {
+        if (!this.isPaused) {
 
-            // console.log(dt);
+            this.nodes.filter((node) => {
+                return !node.isActive;
+            }).map((node) => {
+                return node.entityId;
+            }).filter((value, index, array) => {
+                return array.indexOf(value) === index;
+            }).map((id) => {
+                let entity = this.getEntityById(id);
+                console.log(entity);
+                entity.destroy();
+            });
 
-            if (!this.isPaused) {
-
-                this.systems[i].update(dt, this.getNodes(this.systems[i].class));
-            }
+            this.systems.map((system) => {
+                system.update(dt, system.isGlobal ? this.nodes : this.getNodesByClass(system.class));
+            });
         }
 
         before = now;

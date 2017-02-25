@@ -50,6 +50,10 @@ export default class MoveSystem {
 
             positionData.y = Math.max(0, positionData.y);
 
+            if (positionData.y > this.settings.MAP[0]*this.settings.TILE) {
+                console.log('OFF MAP');
+                node.isActive = false;
+            }
         });
     }
 }
