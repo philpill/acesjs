@@ -99,21 +99,13 @@
 	
 	var _settings2 = _interopRequireDefault(_settings);
 	
-	var _map = __webpack_require__(15);
-	
-	var _map2 = _interopRequireDefault(_map);
-	
 	var _player = __webpack_require__(16);
 	
 	var _player2 = _interopRequireDefault(_player);
 	
-	var _sky = __webpack_require__(24);
+	var _level3 = __webpack_require__(27);
 	
-	var _sky2 = _interopRequireDefault(_sky);
-	
-	var _ground = __webpack_require__(25);
-	
-	var _ground2 = _interopRequireDefault(_ground);
+	var _level4 = _interopRequireDefault(_level3);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -159,48 +151,16 @@
 	
 	            this.engine.addSystem(new _level2.default(this.settings));
 	
-	            this.getLevelData().then(this.createLevel.bind(this)).then(function (level) {
-	                var player = new _player2.default(_this.settings, level.start);
-	                _this.engine.addEntity(player);
+	            var level = new _level4.default(this.settings, '/assets/json/levelone.json').then(function (level) {
+	
+	                console.log(level);
+	
+	                level.entities.map(function (entity) {
+	                    _this.engine.addEntity(entity);
+	                });
+	
 	                _this.engine.init();
 	            });
-	        }
-	    }, {
-	        key: 'getLevelData',
-	        value: function getLevelData() {
-	
-	            var map = new _map2.default();
-	
-	            return map.level;
-	        }
-	    }, {
-	        key: 'createLevel',
-	        value: function createLevel(level) {
-	
-	            var data = level.data;
-	
-	            var mapData = level.data.layers[0].data;
-	
-	            var sky = new _sky2.default(data.width, data.height, data.tileheight);
-	
-	            this.engine.addEntity(sky);
-	
-	            for (var i = 0, j = data.height; i < j; i++) {
-	
-	                for (var k = 0, l = data.width; k < l; k++) {
-	
-	                    var val = mapData[i * data.width + k];
-	
-	                    if (val === 1) {
-	
-	                        var ground = new _ground2.default(k * data.tilewidth, i * data.tilewidth, data.tileheight);
-	
-	                        this.engine.addEntity(ground);
-	                    }
-	                }
-	            }
-	
-	            return level;
 	        }
 	    }]);
 	
@@ -1088,85 +1048,16 @@
 	
 	        this.currentLevel = 1;
 	        this.levels = [];
-	
-	        this.levels.push({
-	            url: 'blank',
-	            start: [0, 0],
-	            finish: [0, 0]
-	        }, {
-	            url: '/assets/json/levelone.json',
-	            start: [3, 3],
-	            finish: [3, 4]
-	        });
 	    }
 	
 	    _createClass(LevelSystem, [{
 	        key: 'init',
-	        value: function init() {
-	
-	            this.getLevelData().then(this.createLevel).then(function (level) {
-	                console.log(level);
-	            });
-	        }
-	    }, {
-	        key: 'getLevelData',
-	        value: function getLevelData() {
-	
-	            var levelData = this.levels[this.currentLevel];
-	
-	            return fetch(levelData.url).then(function (response) {
-	                return response.json();
-	            }).then(function (data) {
-	                levelData.data = data;
-	                return levelData;
-	            });
-	        }
-	    }, {
-	        key: 'createLevel',
-	        value: function createLevel(level) {
-	
-	            var data = level.data;
-	
-	            var mapData = level.data.layers[0].data;
-	
-	            var sky = new _sky2.default(data.width, data.height, data.tileheight);
-	
-	            // this.engine.addEntity(sky);
-	
-	            for (var i = 0, j = data.height; i < j; i++) {
-	
-	                for (var k = 0, l = data.width; k < l; k++) {
-	
-	                    var val = mapData[i * data.width + k];
-	
-	                    if (val === 1) {
-	
-	                        var ground = new _ground2.default(k * data.tilewidth, i * data.tilewidth, data.tileheight);
-	
-	                        // this.engine.addEntity(ground);
-	                    }
-	                }
-	            }
-	
-	            return level;
-	        }
+	        value: function init() {}
 	    }, {
 	        key: 'update',
 	        value: function update(time, nodes) {
 	
-	            var finish = this.levels[this.currentLevel].finish;
-	
-	            nodes.map(function (node) {
-	
-	                var position = [node.data.position.x, node.data.position.y];
-	
-	                // spawn player at start
-	
-	                if (position === finish) {
-	
-	                    console.log('FINISH');
-	                }
-	            });
+	            nodes.map(function (node) {});
 	        }
 	    }]);
 	
@@ -1200,57 +1091,7 @@
 	exports.default = SettingsData;
 
 /***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var MapData = function () {
-	    function MapData() {
-	        _classCallCheck(this, MapData);
-	
-	        this.levels = [];
-	
-	        this.levels.push({
-	            url: '/assets/json/levelone.json',
-	            start: [3, 3],
-	            finish: [10, 5]
-	        });
-	
-	        this.currentLevel = 1;
-	
-	        this.level = this.getData();
-	    }
-	
-	    _createClass(MapData, [{
-	        key: 'getData',
-	        value: function getData() {
-	
-	            var levelData = this.levels[this.currentLevel - 1];
-	
-	            return fetch(levelData.url).then(function (response) {
-	                return response.json();
-	            }).then(function (data) {
-	                levelData.data = data;
-	                return levelData;
-	            });
-	        }
-	    }]);
-	
-	    return MapData;
-	}();
-	
-	exports.default = MapData;
-
-/***/ },
+/* 15 */,
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1727,6 +1568,128 @@
 	};
 	
 	exports.default = LevelNode;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _entity = __webpack_require__(17);
+	
+	var _entity2 = _interopRequireDefault(_entity);
+	
+	var _display = __webpack_require__(18);
+	
+	var _display2 = _interopRequireDefault(_display);
+	
+	var _position = __webpack_require__(19);
+	
+	var _position2 = _interopRequireDefault(_position);
+	
+	var _velocity = __webpack_require__(20);
+	
+	var _velocity2 = _interopRequireDefault(_velocity);
+	
+	var _input = __webpack_require__(21);
+	
+	var _input2 = _interopRequireDefault(_input);
+	
+	var _collision = __webpack_require__(22);
+	
+	var _collision2 = _interopRequireDefault(_collision);
+	
+	var _animation = __webpack_require__(23);
+	
+	var _animation2 = _interopRequireDefault(_animation);
+	
+	var _player = __webpack_require__(16);
+	
+	var _player2 = _interopRequireDefault(_player);
+	
+	var _sky = __webpack_require__(24);
+	
+	var _sky2 = _interopRequireDefault(_sky);
+	
+	var _ground = __webpack_require__(25);
+	
+	var _ground2 = _interopRequireDefault(_ground);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var LevelPrefab = function () {
+	    function LevelPrefab(settings, url) {
+	        _classCallCheck(this, LevelPrefab);
+	
+	        this.settings = settings;
+	
+	        var level = new _entity2.default();
+	
+	        return this.getLevelData(url).then(this.createLevel.bind(this)).then(function (level) {
+	            console.log(level);
+	
+	            return level;
+	            // return entities with level
+	        });
+	    }
+	
+	    _createClass(LevelPrefab, [{
+	        key: 'getLevelData',
+	        value: function getLevelData(url) {
+	
+	            return fetch(url).then(function (response) {
+	                return response.json();
+	            }).then(function (data) {
+	                return data;
+	            });
+	        }
+	    }, {
+	        key: 'createLevel',
+	        value: function createLevel(data) {
+	
+	            var mapData = data.layers[0].data;
+	
+	            data.entities = [];
+	
+	            var sky = new _sky2.default(data.width, data.height, data.tileheight);
+	
+	            data.entities.push(sky);
+	
+	            for (var i = 0, j = data.height; i < j; i++) {
+	
+	                for (var k = 0, l = data.width; k < l; k++) {
+	
+	                    var val = mapData[i * data.width + k];
+	
+	                    if (val === 1) {
+	
+	                        var ground = new _ground2.default(k * data.tilewidth, i * data.tilewidth, data.tileheight);
+	
+	                        data.entities.push(ground);
+	                    }
+	                }
+	            }
+	
+	            var player = new _player2.default(this.settings, [data.properties.startX, data.properties.startY]);
+	
+	            data.entities.push(player);
+	
+	            return data;
+	        }
+	    }]);
+	
+	    return LevelPrefab;
+	}();
+	
+	exports.default = LevelPrefab;
 
 /***/ }
 /******/ ]);

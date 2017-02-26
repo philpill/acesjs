@@ -13,6 +13,20 @@
         }],
  "nextobjectid":1,
  "orientation":"orthogonal",
+ "properties":
+    {
+     "finishX":3,
+     "finishY":25,
+     "startX":3,
+     "startY":3
+    },
+ "propertytypes":
+    {
+     "finishX":"int",
+     "finishY":"int",
+     "startX":"int",
+     "startY":"int"
+    },
  "renderorder":"right-down",
  "tileheight":16,
  "tilesets":[

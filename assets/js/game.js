@@ -8,11 +8,9 @@ import AnimationSystem from './systems/animation';
 import LevelSystem from './systems/level';
 
 import SettingsData from './data/settings';
-import MapData from './data/map';
 
 import PlayerPrefab from './prefab/player';
-import SkyPrefab from './prefab/sky';
-import GroundPrefab from './prefab/ground';
+import LevelPrefab from './prefab/level';
 
 export default class Game {
 
@@ -50,48 +48,18 @@ export default class Game {
 
         this.engine.addSystem(new LevelSystem(this.settings));
 
-        this.getLevelData()
-        .then(this.createLevel.bind(this))
+
+        let level = new LevelPrefab(this.settings, '/assets/json/levelone.json')
         .then((level) => {
-            let player = new PlayerPrefab(this.settings, level.start);
-            this.engine.addEntity(player);
+
+            console.log(level);
+
+            level.entities.map((entity) => {
+                this.engine.addEntity(entity);
+            });
+
             this.engine.init();
         });
-    }
-
-    getLevelData() {
-
-        let map = new MapData();
-
-        return map.level;
-    }
-
-    createLevel(level) {
-
-        let data = level.data;
-
-        let mapData = level.data.layers[0].data;
-
-        let sky = new SkyPrefab(data.width, data.height, data.tileheight);
-
-        this.engine.addEntity(sky);
-
-        for (var i = 0, j = data.height; i < j; i++) {
-
-            for (var k = 0, l = data.width; k < l; k++) {
-
-                let val = mapData[i * data.width + k];
-
-                if (val === 1) {
-
-                    let ground = new GroundPrefab(k * data.tilewidth, i * data.tilewidth, data.tileheight);
-
-                    this.engine.addEntity(ground);
-                }
-            }
-        }
-
-        return level;
     }
 }
 
