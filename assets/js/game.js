@@ -1,23 +1,18 @@
 import Engine from './engine';
-import Entity from './entity';
-
-import DisplayComponent from './components/display';
-import PositionComponent from './components/position';
-import VelocityComponent from './components/velocity';
-import InputComponent from './components/input';
-import CollisionComponent from './components/collision';
-import AnimationComponent from './components/animation';
 
 import MoveSystem from './systems/move';
 import RenderSystem from './systems/render';
 import ControlSystem from './systems/control';
 import CollisionSystem from './systems/collision';
 import AnimationSystem from './systems/animation';
+import LevelSystem from './systems/level';
 
 import SettingsData from './data/settings';
 import MapData from './data/map';
 
 import PlayerPrefab from './prefab/player';
+import SkyPrefab from './prefab/sky';
+import GroundPrefab from './prefab/ground';
 
 export default class Game {
 
@@ -53,10 +48,13 @@ export default class Game {
 
         this.engine.addSystem(new CollisionSystem(this.settings));
 
+        this.engine.addSystem(new LevelSystem(this.settings));
+
         this.getLevelData()
         .then(this.createLevel.bind(this))
         .then((level) => {
-            this.createPlayer(this.settings, level.start);
+            let player = new PlayerPrefab(this.settings, level.start);
+            this.engine.addEntity(player);
             this.engine.init();
         });
     }
@@ -74,7 +72,7 @@ export default class Game {
 
         let mapData = level.data.layers[0].data;
 
-        let sky = this.createSkyEntity(data.width, data.height, data.tileheight);
+        let sky = new SkyPrefab(data.width, data.height, data.tileheight);
 
         this.engine.addEntity(sky);
 
@@ -86,7 +84,7 @@ export default class Game {
 
                 if (val === 1) {
 
-                    let ground = this.createGroundEntity(k * data.tilewidth, i * data.tilewidth, data.tileheight);
+                    let ground = new GroundPrefab(k * data.tilewidth, i * data.tilewidth, data.tileheight);
 
                     this.engine.addEntity(ground);
                 }
@@ -94,69 +92,6 @@ export default class Game {
         }
 
         return level;
-    }
-
-    createSkyEntity(width, height, tile) {
-
-        let sky = new Entity();
-
-        let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(33, 0, 14, tile));
-
-        let thing = new PIXI.Sprite(texture);
-
-        thing.height = height * tile;
-        thing.width = width * tile;
-
-        let display = new DisplayComponent({ sprite: thing });
-
-        sky.addComponent(display);
-
-        let positionComponent = new PositionComponent();
-
-        positionComponent.x = 0;
-        positionComponent.y = 0;
-
-        sky.addComponent(positionComponent);
-
-        return sky;
-    }
-
-    createGroundEntity(x, y, tile) {
-
-        let ground = new Entity();
-
-        let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 14, tile));
-
-        let thing = new PIXI.Sprite(texture);
-
-        thing.height = tile;
-        thing.width = tile;
-
-        let display = new DisplayComponent({ sprite: thing });
-
-        ground.addComponent(display);
-
-        let positionComponent = new PositionComponent();
-
-        positionComponent.x = x;
-        positionComponent.y = y;
-
-        ground.addComponent(positionComponent);
-
-        let collision = new CollisionComponent();
-
-        collision.type = 'secondary';
-
-        ground.addComponent(collision);
-
-        return ground;
-    }
-
-    createPlayer(settings, start) {
-
-        let player = new PlayerPrefab(settings, start);
-
-        this.engine.addEntity(player);
     }
 }
 

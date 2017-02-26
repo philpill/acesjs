@@ -3,6 +3,7 @@ import RenderNode from './nodes/render';
 import ControlNode from './nodes/control';
 import CollisionNode from './nodes/collision';
 import AnimationNode from './nodes/animation';
+import LevelNode from './nodes/level';
 
 export default class Engine {
 
@@ -46,6 +47,11 @@ export default class Engine {
         if (entity.components.collision) {
 
             this.nodes.push({ entityId: entity.id, class: 'collision', data: new CollisionNode(entity.id, entity.components.collision, entity.components.display, entity.components.velocity), isActive: true });
+        }
+
+        if (entity.components.position) {
+
+            this.nodes.push({ entityId: entity.id, class: 'level', data: new LevelNode(entity.id, entity.components.position), isActive: true });
         }
     }
 
@@ -128,7 +134,7 @@ export default class Engine {
             });
 
             this.systems.map((system) => {
-                system.update(dt, system.isGlobal ? this.nodes : this.getNodesByClass(system.class));
+                system.update(dt, this.getNodesByClass(system.class));
             });
         }
 

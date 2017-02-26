@@ -37,6 +37,6 @@ export default class Entity {
     }
 
     destroy() {
-
+        console.log('destroy');
     }
 }

@@ -71,65 +71,49 @@
 	
 	var _engine2 = _interopRequireDefault(_engine);
 	
-	var _entity = __webpack_require__(8);
-	
-	var _entity2 = _interopRequireDefault(_entity);
-	
-	var _display = __webpack_require__(9);
-	
-	var _display2 = _interopRequireDefault(_display);
-	
-	var _position = __webpack_require__(10);
-	
-	var _position2 = _interopRequireDefault(_position);
-	
-	var _velocity = __webpack_require__(11);
-	
-	var _velocity2 = _interopRequireDefault(_velocity);
-	
-	var _input = __webpack_require__(12);
-	
-	var _input2 = _interopRequireDefault(_input);
-	
-	var _collision = __webpack_require__(13);
-	
-	var _collision2 = _interopRequireDefault(_collision);
-	
-	var _animation = __webpack_require__(14);
-	
-	var _animation2 = _interopRequireDefault(_animation);
-	
-	var _move = __webpack_require__(15);
+	var _move = __webpack_require__(8);
 	
 	var _move2 = _interopRequireDefault(_move);
 	
-	var _render = __webpack_require__(16);
+	var _render = __webpack_require__(9);
 	
 	var _render2 = _interopRequireDefault(_render);
 	
-	var _control = __webpack_require__(17);
+	var _control = __webpack_require__(10);
 	
 	var _control2 = _interopRequireDefault(_control);
 	
-	var _collision3 = __webpack_require__(18);
+	var _collision = __webpack_require__(11);
 	
-	var _collision4 = _interopRequireDefault(_collision3);
+	var _collision2 = _interopRequireDefault(_collision);
 	
-	var _animation3 = __webpack_require__(19);
+	var _animation = __webpack_require__(12);
 	
-	var _animation4 = _interopRequireDefault(_animation3);
+	var _animation2 = _interopRequireDefault(_animation);
 	
-	var _settings = __webpack_require__(21);
+	var _level = __webpack_require__(13);
+	
+	var _level2 = _interopRequireDefault(_level);
+	
+	var _settings = __webpack_require__(14);
 	
 	var _settings2 = _interopRequireDefault(_settings);
 	
-	var _map = __webpack_require__(22);
+	var _map = __webpack_require__(15);
 	
 	var _map2 = _interopRequireDefault(_map);
 	
-	var _player = __webpack_require__(24);
+	var _player = __webpack_require__(16);
 	
 	var _player2 = _interopRequireDefault(_player);
+	
+	var _sky = __webpack_require__(24);
+	
+	var _sky2 = _interopRequireDefault(_sky);
+	
+	var _ground = __webpack_require__(25);
+	
+	var _ground2 = _interopRequireDefault(_ground);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -163,7 +147,7 @@
 	
 	            this.engine = new _engine2.default();
 	
-	            this.engine.addSystem(new _animation4.default(this.settings));
+	            this.engine.addSystem(new _animation2.default(this.settings));
 	
 	            this.engine.addSystem(new _move2.default(this.settings));
 	
@@ -171,10 +155,13 @@
 	
 	            this.engine.addSystem(new _control2.default(this.settings));
 	
-	            this.engine.addSystem(new _collision4.default(this.settings));
+	            this.engine.addSystem(new _collision2.default(this.settings));
+	
+	            this.engine.addSystem(new _level2.default(this.settings));
 	
 	            this.getLevelData().then(this.createLevel.bind(this)).then(function (level) {
-	                _this.createPlayer(_this.settings, level.start);
+	                var player = new _player2.default(_this.settings, level.start);
+	                _this.engine.addEntity(player);
 	                _this.engine.init();
 	            });
 	        }
@@ -194,7 +181,7 @@
 	
 	            var mapData = level.data.layers[0].data;
 	
-	            var sky = this.createSkyEntity(data.width, data.height, data.tileheight);
+	            var sky = new _sky2.default(data.width, data.height, data.tileheight);
 	
 	            this.engine.addEntity(sky);
 	
@@ -206,7 +193,7 @@
 	
 	                    if (val === 1) {
 	
-	                        var ground = this.createGroundEntity(k * data.tilewidth, i * data.tilewidth, data.tileheight);
+	                        var ground = new _ground2.default(k * data.tilewidth, i * data.tilewidth, data.tileheight);
 	
 	                        this.engine.addEntity(ground);
 	                    }
@@ -214,72 +201,6 @@
 	            }
 	
 	            return level;
-	        }
-	    }, {
-	        key: 'createSkyEntity',
-	        value: function createSkyEntity(width, height, tile) {
-	
-	            var sky = new _entity2.default();
-	
-	            var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(33, 0, 14, tile));
-	
-	            var thing = new PIXI.Sprite(texture);
-	
-	            thing.height = height * tile;
-	            thing.width = width * tile;
-	
-	            var display = new _display2.default({ sprite: thing });
-	
-	            sky.addComponent(display);
-	
-	            var positionComponent = new _position2.default();
-	
-	            positionComponent.x = 0;
-	            positionComponent.y = 0;
-	
-	            sky.addComponent(positionComponent);
-	
-	            return sky;
-	        }
-	    }, {
-	        key: 'createGroundEntity',
-	        value: function createGroundEntity(x, y, tile) {
-	
-	            var ground = new _entity2.default();
-	
-	            var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 14, tile));
-	
-	            var thing = new PIXI.Sprite(texture);
-	
-	            thing.height = tile;
-	            thing.width = tile;
-	
-	            var display = new _display2.default({ sprite: thing });
-	
-	            ground.addComponent(display);
-	
-	            var positionComponent = new _position2.default();
-	
-	            positionComponent.x = x;
-	            positionComponent.y = y;
-	
-	            ground.addComponent(positionComponent);
-	
-	            var collision = new _collision2.default();
-	
-	            collision.type = 'secondary';
-	
-	            ground.addComponent(collision);
-	
-	            return ground;
-	        }
-	    }, {
-	        key: 'createPlayer',
-	        value: function createPlayer(settings, start) {
-	
-	            var player = new _player2.default(settings, start);
-	
-	            this.engine.addEntity(player);
 	        }
 	    }]);
 	
@@ -319,6 +240,10 @@
 	var _animation = __webpack_require__(7);
 	
 	var _animation2 = _interopRequireDefault(_animation);
+	
+	var _level = __webpack_require__(26);
+	
+	var _level2 = _interopRequireDefault(_level);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -369,6 +294,11 @@
 	            if (entity.components.collision) {
 	
 	                this.nodes.push({ entityId: entity.id, class: 'collision', data: new _collision2.default(entity.id, entity.components.collision, entity.components.display, entity.components.velocity), isActive: true });
+	            }
+	
+	            if (entity.components.position) {
+	
+	                this.nodes.push({ entityId: entity.id, class: 'level', data: new _level2.default(entity.id, entity.components.position), isActive: true });
 	            }
 	        }
 	    }, {
@@ -462,7 +392,7 @@
 	                });
 	
 	                this.systems.map(function (system) {
-	                    system.update(dt, system.isGlobal ? _this.nodes : _this.getNodesByClass(system.class));
+	                    system.update(dt, _this.getNodesByClass(system.class));
 	                });
 	            }
 	
@@ -603,233 +533,6 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Entity = function () {
-	    function Entity() {
-	        _classCallCheck(this, Entity);
-	
-	        this.id = this.generateUUID();
-	        this.isActive = true;
-	        this.components = {};
-	    }
-	
-	    _createClass(Entity, [{
-	        key: 'generateUUID',
-	        value: function generateUUID() {
-	            var d = new Date().getTime();
-	            if (window.performance && typeof window.performance.now === "function") {
-	                d += performance.now(); //use high-precision timer if available
-	            }
-	            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-	                var r = (d + Math.random() * 16) % 16 | 0;
-	                d = Math.floor(d / 16);
-	                return (c == 'x' ? r : r & 0x3 | 0x8).toString(16);
-	            });
-	            return uuid;
-	        }
-	    }, {
-	        key: 'addComponent',
-	        value: function addComponent(component) {
-	
-	            this.components[component.class] = component;
-	        }
-	    }, {
-	        key: 'addComponents',
-	        value: function addComponents() {
-	            var _this = this;
-	
-	            for (var _len = arguments.length, components = Array(_len), _key = 0; _key < _len; _key++) {
-	                components[_key] = arguments[_key];
-	            }
-	
-	            components.map(function (component) {
-	                _this.components[component.class] = component;
-	            });
-	        }
-	    }, {
-	        key: 'removeComponent',
-	        value: function removeComponent(componentClass) {
-	
-	            this.components[componentClass] = null;
-	        }
-	    }, {
-	        key: 'destroy',
-	        value: function destroy() {}
-	    }]);
-	
-	    return Entity;
-	}();
-	
-	exports.default = Entity;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var DisplayComponent = function DisplayComponent(data) {
-	    _classCallCheck(this, DisplayComponent);
-	
-	    this.class = 'display';
-	
-	    this.sprite = data.sprite;
-	
-	    this.isFocus = false;
-	};
-	
-	exports.default = DisplayComponent;
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var PositionComponent = function PositionComponent() {
-	    _classCallCheck(this, PositionComponent);
-	
-	    this.class = 'position';
-	
-	    this.x = 0;
-	    this.y = 0;
-	};
-	
-	exports.default = PositionComponent;
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var VelocityComponent = function VelocityComponent() {
-	    _classCallCheck(this, VelocityComponent);
-	
-	    this.class = 'velocity';
-	
-	    this.accelerationX = 0;
-	    this.accelerationY = 0;
-	
-	    this.maxAccelerationX = 3;
-	    this.maxAccelerationY = 4;
-	
-	    this.velocityX = 0;
-	    this.velocityY = 0;
-	};
-	
-	exports.default = VelocityComponent;
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var InputComponent = function InputComponent() {
-	    _classCallCheck(this, InputComponent);
-	
-	    this.class = 'input';
-	};
-	
-	exports.default = InputComponent;
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var CollisionComponent = function CollisionComponent() {
-	    _classCallCheck(this, CollisionComponent);
-	
-	    this.class = 'collision';
-	
-	    this.type = '';
-	
-	    this.collide = function () {
-	
-	        // console.log('COLLIDE');
-	    };
-	};
-	
-	exports.default = CollisionComponent;
-
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var AnimationComponent = function AnimationComponent(data) {
-	    _classCallCheck(this, AnimationComponent);
-	
-	    this.class = 'animation';
-	
-	    this.default = [0];
-	
-	    this.walkRight = [1, 2];
-	
-	    this.walkLeft = [2, 1];
-	
-	    this.jump = [3];
-	
-	    this.currentAnimationProp = 'default';
-	
-	    this.currentFrame = 0;
-	};
-	
-	exports.default = AnimationComponent;
-
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
 	var MoveSystem = function () {
 	    function MoveSystem(settings) {
 	        _classCallCheck(this, MoveSystem);
@@ -897,7 +600,7 @@
 	exports.default = MoveSystem;
 
 /***/ },
-/* 16 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1042,7 +745,7 @@
 	exports.default = RenderSystem;
 
 /***/ },
-/* 17 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1137,7 +840,7 @@
 	exports.default = ControlSystem;
 
 /***/ },
-/* 18 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1246,7 +949,7 @@
 	exports.default = CollisionSystem;
 
 /***/ },
-/* 19 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1345,8 +1048,135 @@
 	exports.default = AnimationSystem;
 
 /***/ },
-/* 20 */,
-/* 21 */
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _settings = __webpack_require__(14);
+	
+	var _settings2 = _interopRequireDefault(_settings);
+	
+	var _player = __webpack_require__(16);
+	
+	var _player2 = _interopRequireDefault(_player);
+	
+	var _sky = __webpack_require__(24);
+	
+	var _sky2 = _interopRequireDefault(_sky);
+	
+	var _ground = __webpack_require__(25);
+	
+	var _ground2 = _interopRequireDefault(_ground);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var LevelSystem = function () {
+	    function LevelSystem(settings) {
+	        _classCallCheck(this, LevelSystem);
+	
+	        this.class = 'level';
+	        this.settings = settings;
+	
+	        this.currentLevel = 1;
+	        this.levels = [];
+	
+	        this.levels.push({
+	            url: 'blank',
+	            start: [0, 0],
+	            finish: [0, 0]
+	        }, {
+	            url: '/assets/json/levelone.json',
+	            start: [3, 3],
+	            finish: [3, 4]
+	        });
+	    }
+	
+	    _createClass(LevelSystem, [{
+	        key: 'init',
+	        value: function init() {
+	
+	            this.getLevelData().then(this.createLevel).then(function (level) {
+	                console.log(level);
+	            });
+	        }
+	    }, {
+	        key: 'getLevelData',
+	        value: function getLevelData() {
+	
+	            var levelData = this.levels[this.currentLevel];
+	
+	            return fetch(levelData.url).then(function (response) {
+	                return response.json();
+	            }).then(function (data) {
+	                levelData.data = data;
+	                return levelData;
+	            });
+	        }
+	    }, {
+	        key: 'createLevel',
+	        value: function createLevel(level) {
+	
+	            var data = level.data;
+	
+	            var mapData = level.data.layers[0].data;
+	
+	            var sky = new _sky2.default(data.width, data.height, data.tileheight);
+	
+	            // this.engine.addEntity(sky);
+	
+	            for (var i = 0, j = data.height; i < j; i++) {
+	
+	                for (var k = 0, l = data.width; k < l; k++) {
+	
+	                    var val = mapData[i * data.width + k];
+	
+	                    if (val === 1) {
+	
+	                        var ground = new _ground2.default(k * data.tilewidth, i * data.tilewidth, data.tileheight);
+	
+	                        // this.engine.addEntity(ground);
+	                    }
+	                }
+	            }
+	
+	            return level;
+	        }
+	    }, {
+	        key: 'update',
+	        value: function update(time, nodes) {
+	
+	            var finish = this.levels[this.currentLevel].finish;
+	
+	            nodes.map(function (node) {
+	
+	                var position = [node.data.position.x, node.data.position.y];
+	
+	                // spawn player at start
+	
+	                if (position === finish) {
+	
+	                    console.log('FINISH');
+	                }
+	            });
+	        }
+	    }]);
+	
+	    return LevelSystem;
+	}();
+	
+	exports.default = LevelSystem;
+
+/***/ },
+/* 14 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1370,7 +1200,7 @@
 	exports.default = SettingsData;
 
 /***/ },
-/* 22 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1387,13 +1217,12 @@
 	    function MapData() {
 	        _classCallCheck(this, MapData);
 	
-	        this.sprite = this.getSprite();
-	
 	        this.levels = [];
 	
 	        this.levels.push({
 	            url: '/assets/json/levelone.json',
-	            start: [3, 3]
+	            start: [3, 3],
+	            finish: [10, 5]
 	        });
 	
 	        this.currentLevel = 1;
@@ -1402,14 +1231,6 @@
 	    }
 	
 	    _createClass(MapData, [{
-	        key: 'getSprite',
-	        value: function getSprite() {
-	
-	            var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(32, 0, 16, 16));
-	
-	            return new PIXI.Sprite(texture);
-	        }
-	    }, {
 	        key: 'getData',
 	        value: function getData() {
 	
@@ -1430,8 +1251,7 @@
 	exports.default = MapData;
 
 /***/ },
-/* 23 */,
-/* 24 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1440,31 +1260,31 @@
 	    value: true
 	});
 	
-	var _entity = __webpack_require__(8);
+	var _entity = __webpack_require__(17);
 	
 	var _entity2 = _interopRequireDefault(_entity);
 	
-	var _display = __webpack_require__(9);
+	var _display = __webpack_require__(18);
 	
 	var _display2 = _interopRequireDefault(_display);
 	
-	var _position = __webpack_require__(10);
+	var _position = __webpack_require__(19);
 	
 	var _position2 = _interopRequireDefault(_position);
 	
-	var _velocity = __webpack_require__(11);
+	var _velocity = __webpack_require__(20);
 	
 	var _velocity2 = _interopRequireDefault(_velocity);
 	
-	var _input = __webpack_require__(12);
+	var _input = __webpack_require__(21);
 	
 	var _input2 = _interopRequireDefault(_input);
 	
-	var _collision = __webpack_require__(13);
+	var _collision = __webpack_require__(22);
 	
 	var _collision2 = _interopRequireDefault(_collision);
 	
-	var _animation = __webpack_require__(14);
+	var _animation = __webpack_require__(23);
 	
 	var _animation2 = _interopRequireDefault(_animation);
 	
@@ -1490,24 +1310,17 @@
 	
 	    texture.frame = sprite.data.texture[1];
 	
-	    sprite.data.animation = {
-	        walkLeft: [2, 1],
-	        walkRight: [1, 2],
-	        jump: [3],
-	        default: [0]
-	    };
-	
 	    var player = new _entity2.default();
 	
 	    var animation = new _animation2.default();
 	
-	    animation.walkRight = sprite.data.animation.walkRight;
+	    animation.walkRight = [1, 2];
 	
-	    animation.walkLeft = sprite.data.animation.walkLeft;
+	    animation.walkLeft = [2, 1];
 	
-	    animation.jump = sprite.data.animation.jump;
+	    animation.jump = [3];
 	
-	    animation.default = sprite.data.animation.default;
+	    animation.default = [0];
 	
 	    var collision = new _collision2.default();
 	
@@ -1534,6 +1347,386 @@
 	};
 	
 	exports.default = PlayerPrefab;
+
+/***/ },
+/* 17 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Entity = function () {
+	    function Entity() {
+	        _classCallCheck(this, Entity);
+	
+	        this.id = this.generateUUID();
+	        this.isActive = true;
+	        this.components = {};
+	    }
+	
+	    _createClass(Entity, [{
+	        key: 'generateUUID',
+	        value: function generateUUID() {
+	            var d = new Date().getTime();
+	            if (window.performance && typeof window.performance.now === "function") {
+	                d += performance.now(); //use high-precision timer if available
+	            }
+	            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+	                var r = (d + Math.random() * 16) % 16 | 0;
+	                d = Math.floor(d / 16);
+	                return (c == 'x' ? r : r & 0x3 | 0x8).toString(16);
+	            });
+	            return uuid;
+	        }
+	    }, {
+	        key: 'addComponent',
+	        value: function addComponent(component) {
+	
+	            this.components[component.class] = component;
+	        }
+	    }, {
+	        key: 'addComponents',
+	        value: function addComponents() {
+	            var _this = this;
+	
+	            for (var _len = arguments.length, components = Array(_len), _key = 0; _key < _len; _key++) {
+	                components[_key] = arguments[_key];
+	            }
+	
+	            components.map(function (component) {
+	                _this.components[component.class] = component;
+	            });
+	        }
+	    }, {
+	        key: 'removeComponent',
+	        value: function removeComponent(componentClass) {
+	
+	            this.components[componentClass] = null;
+	        }
+	    }, {
+	        key: 'destroy',
+	        value: function destroy() {
+	            console.log('destroy');
+	        }
+	    }]);
+	
+	    return Entity;
+	}();
+	
+	exports.default = Entity;
+
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var DisplayComponent = function DisplayComponent(data) {
+	    _classCallCheck(this, DisplayComponent);
+	
+	    this.class = 'display';
+	
+	    this.sprite = data.sprite;
+	
+	    this.isFocus = false;
+	};
+	
+	exports.default = DisplayComponent;
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var PositionComponent = function PositionComponent() {
+	    _classCallCheck(this, PositionComponent);
+	
+	    this.class = 'position';
+	
+	    this.x = 0;
+	    this.y = 0;
+	};
+	
+	exports.default = PositionComponent;
+
+/***/ },
+/* 20 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var VelocityComponent = function VelocityComponent() {
+	    _classCallCheck(this, VelocityComponent);
+	
+	    this.class = 'velocity';
+	
+	    this.accelerationX = 0;
+	    this.accelerationY = 0;
+	
+	    this.maxAccelerationX = 3;
+	    this.maxAccelerationY = 4;
+	
+	    this.velocityX = 0;
+	    this.velocityY = 0;
+	};
+	
+	exports.default = VelocityComponent;
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var InputComponent = function InputComponent() {
+	    _classCallCheck(this, InputComponent);
+	
+	    this.class = 'input';
+	};
+	
+	exports.default = InputComponent;
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var CollisionComponent = function CollisionComponent() {
+	    _classCallCheck(this, CollisionComponent);
+	
+	    this.class = 'collision';
+	
+	    this.type = '';
+	
+	    this.collide = function () {
+	
+	        // console.log('COLLIDE');
+	    };
+	};
+	
+	exports.default = CollisionComponent;
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var AnimationComponent = function AnimationComponent(data) {
+	    _classCallCheck(this, AnimationComponent);
+	
+	    this.class = 'animation';
+	
+	    this.default = [0];
+	
+	    this.walkRight = [1, 2];
+	
+	    this.walkLeft = [2, 1];
+	
+	    this.jump = [3];
+	
+	    this.currentAnimationProp = 'default';
+	
+	    this.currentFrame = 0;
+	};
+	
+	exports.default = AnimationComponent;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _entity = __webpack_require__(17);
+	
+	var _entity2 = _interopRequireDefault(_entity);
+	
+	var _display = __webpack_require__(18);
+	
+	var _display2 = _interopRequireDefault(_display);
+	
+	var _position = __webpack_require__(19);
+	
+	var _position2 = _interopRequireDefault(_position);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var SkyPrefab = function SkyPrefab(width, height, tile) {
+	    _classCallCheck(this, SkyPrefab);
+	
+	    var sky = new _entity2.default();
+	
+	    var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(33, 0, 14, tile));
+	
+	    var sprite = new PIXI.Sprite(texture);
+	
+	    sprite.height = height * tile;
+	    sprite.width = width * tile;
+	
+	    var display = new _display2.default({ sprite: sprite });
+	
+	    sky.addComponent(display);
+	
+	    var position = new _position2.default();
+	
+	    position.x = 0;
+	    position.y = 0;
+	
+	    sky.addComponent(position);
+	
+	    return sky;
+	};
+	
+	exports.default = SkyPrefab;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _entity = __webpack_require__(17);
+	
+	var _entity2 = _interopRequireDefault(_entity);
+	
+	var _display = __webpack_require__(18);
+	
+	var _display2 = _interopRequireDefault(_display);
+	
+	var _position = __webpack_require__(19);
+	
+	var _position2 = _interopRequireDefault(_position);
+	
+	var _velocity = __webpack_require__(20);
+	
+	var _velocity2 = _interopRequireDefault(_velocity);
+	
+	var _input = __webpack_require__(21);
+	
+	var _input2 = _interopRequireDefault(_input);
+	
+	var _collision = __webpack_require__(22);
+	
+	var _collision2 = _interopRequireDefault(_collision);
+	
+	var _animation = __webpack_require__(23);
+	
+	var _animation2 = _interopRequireDefault(_animation);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var GroundPrefab = function GroundPrefab(x, y, tile) {
+	    _classCallCheck(this, GroundPrefab);
+	
+	    var ground = new _entity2.default();
+	
+	    var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 14, tile));
+	
+	    var thing = new PIXI.Sprite(texture);
+	
+	    thing.height = tile;
+	    thing.width = tile;
+	
+	    var display = new _display2.default({ sprite: thing });
+	
+	    ground.addComponent(display);
+	
+	    var positionComponent = new _position2.default();
+	
+	    positionComponent.x = x;
+	    positionComponent.y = y;
+	
+	    ground.addComponent(positionComponent);
+	
+	    var collision = new _collision2.default();
+	
+	    collision.type = 'secondary';
+	
+	    ground.addComponent(collision);
+	
+	    return ground;
+	};
+	
+	exports.default = GroundPrefab;
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var LevelNode = function LevelNode(entityId, positionComponent) {
+	    _classCallCheck(this, LevelNode);
+	
+	    this.entityId = entityId;
+	    this.position = positionComponent;
+	};
+	
+	exports.default = LevelNode;
 
 /***/ }
 /******/ ]);

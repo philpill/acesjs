@@ -28,24 +28,17 @@ export default class PlayerPrefab {
 
         texture.frame = sprite.data.texture[1];
 
-        sprite.data.animation = {
-            walkLeft : [2, 1],
-            walkRight: [1, 2],
-            jump: [3],
-            default: [0]
-        }
-
         let player = new Entity();
 
         let animation = new AnimationComponent();
 
-        animation.walkRight = sprite.data.animation.walkRight;
+        animation.walkRight = [1, 2];
 
-        animation.walkLeft = sprite.data.animation.walkLeft;
+        animation.walkLeft = [2, 1];
 
-        animation.jump = sprite.data.animation.jump;
+        animation.jump = [3];
 
-        animation.default = sprite.data.animation.default;
+        animation.default = [0];
 
         let collision = new CollisionComponent();
 
