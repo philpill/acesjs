@@ -26,8 +26,19 @@ export default class LevelSystem {
 
         let level =  new LevelPrefab(this.settings, levelData);
 
-        return { newEntities: level.entities };
+        return level.entities;
 
+    }
+
+    getAllEntityIds(nodes) {
+
+        let ids = nodes.map((nodes) => {
+            return nodes.entityId;
+        });
+
+        ids = Array.from(new Set(ids));
+
+        return ids;
     }
 
     update(time, nodes) {
@@ -35,9 +46,9 @@ export default class LevelSystem {
         let result = {};
 
         if (!this.currentLevel) {
-
+            result.deadEntities = this.getAllEntityIds(nodes);
             this.currentLevel = 1;
-            result = this.loadLevel(this.currentLevel - 1);
+            result.newEntities = this.loadLevel(this.currentLevel - 1);
         }
 
         return result;

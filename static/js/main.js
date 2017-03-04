@@ -1097,7 +1097,19 @@
 	
 	            var level = new _level2.default(this.settings, levelData);
 	
-	            return { newEntities: level.entities };
+	            return level.entities;
+	        }
+	    }, {
+	        key: 'getAllEntityIds',
+	        value: function getAllEntityIds(nodes) {
+	
+	            var ids = nodes.map(function (nodes) {
+	                return nodes.entityId;
+	            });
+	
+	            ids = Array.from(new Set(ids));
+	
+	            return ids;
 	        }
 	    }, {
 	        key: 'update',
@@ -1106,9 +1118,9 @@
 	            var result = {};
 	
 	            if (!this.currentLevel) {
-	
+	                result.deadEntities = this.getAllEntityIds(nodes);
 	                this.currentLevel = 1;
-	                result = this.loadLevel(this.currentLevel - 1);
+	                result.newEntities = this.loadLevel(this.currentLevel - 1);
 	            }
 	
 	            return result;
@@ -1629,6 +1641,10 @@
 	
 	var _ground2 = _interopRequireDefault(_ground);
 	
+	var _background = __webpack_require__(27);
+	
+	var _background2 = _interopRequireDefault(_background);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1643,16 +1659,10 @@
 	    }
 	
 	    _createClass(LevelPrefab, [{
-	        key: 'createLevel',
-	        value: function createLevel(data) {
+	        key: 'createLayer',
+	        value: function createLayer(data) {
 	
 	            var mapData = data.layers[0].data;
-	
-	            data.entities = [];
-	
-	            var sky = new _sky2.default(data.width, data.height, data.tileheight);
-	
-	            data.entities.push(sky);
 	
 	            for (var i = 0, j = data.height; i < j; i++) {
 	
@@ -1668,6 +1678,43 @@
 	                    }
 	                }
 	            }
+	        }
+	    }, {
+	        key: 'createBackgroundLayer',
+	        value: function createBackgroundLayer(data) {
+	
+	            var mapData = data.layers[1].data;
+	
+	            for (var i = 0, j = data.height; i < j; i++) {
+	
+	                for (var k = 0, l = data.width; k < l; k++) {
+	
+	                    var val = mapData[i * data.width + k];
+	
+	                    if (val === 4) {
+	
+	                        var bg = new _background2.default(4, k * data.tilewidth, i * data.tilewidth, data.tileheight);
+	
+	                        data.entities.push(bg);
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'createLevel',
+	        value: function createLevel(data) {
+	
+	            var mapData = data.layers[0].data;
+	
+	            data.entities = [];
+	
+	            var sky = new _sky2.default(data.width, data.height, data.tileheight);
+	
+	            data.entities.push(sky);
+	
+	            this.createLayer(data);
+	
+	            this.createBackgroundLayer(data);
 	
 	            var player = new _player2.default(this.settings, [data.properties.startX, data.properties.startY]);
 	
@@ -1681,6 +1728,64 @@
 	}();
 	
 	exports.default = LevelPrefab;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _entity = __webpack_require__(17);
+	
+	var _entity2 = _interopRequireDefault(_entity);
+	
+	var _display = __webpack_require__(18);
+	
+	var _display2 = _interopRequireDefault(_display);
+	
+	var _position = __webpack_require__(19);
+	
+	var _position2 = _interopRequireDefault(_position);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var GroundPrefab = function GroundPrefab(type, x, y, tile) {
+	    _classCallCheck(this, GroundPrefab);
+	
+	    var ground = new _entity2.default();
+	
+	    var texture = void 0;
+	
+	    if (type === 4) {
+	        texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(48, 0, 14, tile));
+	    }
+	
+	    var thing = new PIXI.Sprite(texture);
+	
+	    thing.height = tile;
+	    thing.width = tile;
+	
+	    var display = new _display2.default({ sprite: thing });
+	
+	    ground.addComponent(display);
+	
+	    var positionComponent = new _position2.default();
+	
+	    positionComponent.x = x;
+	    positionComponent.y = y;
+	
+	    ground.addComponent(positionComponent);
+	
+	    return ground;
+	};
+	
+	exports.default = GroundPrefab;
 
 /***/ }
 /******/ ]);
