@@ -1,8 +1,6 @@
 import SettingsData from '../data/settings';
 
-import PlayerPrefab from '../prefab/player';
-import SkyPrefab from '../prefab/sky';
-import GroundPrefab from '../prefab/ground';
+import LevelPrefab from '../prefab/level';
 
 export default class LevelSystem {
 
@@ -11,10 +9,10 @@ export default class LevelSystem {
         this.class = 'level';
         this.settings = settings;
 
-        this.currentLevel = 1;
-        this.levels = [];
-
-
+        this.currentLevel;
+        this.levels = [{
+            data: PIXI.loader.resources.level1.data
+        }];
     }
 
     init() {
@@ -22,13 +20,27 @@ export default class LevelSystem {
 
     }
 
+    loadLevel(levelNumber) {
+
+        let levelData = this.levels[levelNumber].data;
+
+        let level =  new LevelPrefab(this.settings, levelData);
+
+        return { newEntities: level.entities };
+
+    }
 
     update(time, nodes) {
 
-        nodes.map((node) => {
+        let result = {};
 
+        if (!this.currentLevel) {
 
-        });
+            this.currentLevel = 1;
+            result = this.loadLevel(this.currentLevel - 1);
+        }
+
+        return result;
     }
 }
 

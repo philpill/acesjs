@@ -1,44 +1,15 @@
 
-import Entity from '../entity';
-
-import DisplayComponent from '../components/display';
-import PositionComponent from '../components/position';
-import VelocityComponent from '../components/velocity';
-import InputComponent from '../components/input';
-import CollisionComponent from '../components/collision';
-import AnimationComponent from '../components/animation';
-
 import PlayerPrefab from './player';
 import SkyPrefab from './sky';
 import GroundPrefab from './ground';
 
 export default class LevelPrefab {
 
-    constructor(settings, url) {
+    constructor(settings, data) {
 
         this.settings = settings;
 
-        let level = new Entity();
-
-        return this.getLevelData(url)
-        .then(this.createLevel.bind(this))
-        .then((level) => {
-            console.log(level);
-
-            return level;
-            // return entities with level
-        });
-    }
-
-    getLevelData(url) {
-
-        return fetch(url)
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            return data;
-        });
+        return this.createLevel(data);
     }
 
     createLevel(data) {

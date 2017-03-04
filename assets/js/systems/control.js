@@ -26,6 +26,10 @@ export default class ControlSystem {
         this.isUp = key === this.settings.KEY.UP ? false : this.isUp;
         this.isRight = key === this.settings.KEY.RIGHT ? false : this.isRight;
         this.isDown = key === this.settings.KEY.DOWN ? false : this.isDown;
+
+        if (key === this.settings.KEY.P) {
+            // this.isPause = !this.isPause;
+        }
     }
 
     bind() {

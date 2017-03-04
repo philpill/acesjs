@@ -50,6 +50,8 @@ export default class PlayerPrefab {
 
         let positionComponent = new PositionComponent();
 
+        positionComponent.isPlayer = true;
+
         positionComponent.x = start[0] * settings.TILE;
         positionComponent.y = start[1] * settings.TILE;
 

@@ -53,6 +53,14 @@ export default class Engine {
 
             this.nodes.push({ entityId: entity.id, class: 'level', data: new LevelNode(entity.id, entity.components.position), isActive: true });
         }
+
+        return entity;
+    }
+
+    addEntities(entities) {
+        if (entities && entities.length) {
+            entities.map(this.addEntity.bind(this));
+        }
     }
 
     removeEntity(entity) {
@@ -133,9 +141,23 @@ export default class Engine {
                 entity.destroy();
             });
 
+            let results = [];
+
             this.systems.map((system) => {
-                system.update(dt, this.getNodesByClass(system.class));
+                results.push(system.update(dt, this.getNodesByClass(system.class)));
             });
+
+            results = results.filter((result) => { return result; });
+
+            let newEntities = results.map((result) => {
+                return result.newEntities;
+            })[0];
+
+            let deadEntities = results.map((result) => {
+                return result;
+            });
+
+            this.addEntities(newEntities);
         }
 
         before = now;

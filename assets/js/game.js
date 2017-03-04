@@ -23,9 +23,9 @@ export default class Game {
 
         PIXI.loader.add('player', '/static/img/player.png');
 
-        PIXI.loader.add('blue', '/static/img/blue.png');
-
         PIXI.loader.add('bg', '/static/img/bg.png');
+
+        PIXI.loader.add('level1', '/assets/json/levelone.json');
 
         PIXI.loader.load(this.onLoad.bind(this));
     }
@@ -48,18 +48,7 @@ export default class Game {
 
         this.engine.addSystem(new LevelSystem(this.settings));
 
-
-        let level = new LevelPrefab(this.settings, '/assets/json/levelone.json')
-        .then((level) => {
-
-            console.log(level);
-
-            level.entities.map((entity) => {
-                this.engine.addEntity(entity);
-            });
-
-            this.engine.init();
-        });
+        this.engine.init();
     }
 }
 

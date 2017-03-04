@@ -71,31 +71,31 @@
 	
 	var _engine2 = _interopRequireDefault(_engine);
 	
-	var _move = __webpack_require__(8);
+	var _move = __webpack_require__(9);
 	
 	var _move2 = _interopRequireDefault(_move);
 	
-	var _render = __webpack_require__(9);
+	var _render = __webpack_require__(10);
 	
 	var _render2 = _interopRequireDefault(_render);
 	
-	var _control = __webpack_require__(10);
+	var _control = __webpack_require__(11);
 	
 	var _control2 = _interopRequireDefault(_control);
 	
-	var _collision = __webpack_require__(11);
+	var _collision = __webpack_require__(12);
 	
 	var _collision2 = _interopRequireDefault(_collision);
 	
-	var _animation = __webpack_require__(12);
+	var _animation = __webpack_require__(13);
 	
 	var _animation2 = _interopRequireDefault(_animation);
 	
-	var _level = __webpack_require__(13);
+	var _level = __webpack_require__(14);
 	
 	var _level2 = _interopRequireDefault(_level);
 	
-	var _settings = __webpack_require__(14);
+	var _settings = __webpack_require__(15);
 	
 	var _settings2 = _interopRequireDefault(_settings);
 	
@@ -103,7 +103,7 @@
 	
 	var _player2 = _interopRequireDefault(_player);
 	
-	var _level3 = __webpack_require__(27);
+	var _level3 = __webpack_require__(26);
 	
 	var _level4 = _interopRequireDefault(_level3);
 	
@@ -124,16 +124,15 @@
 	
 	            PIXI.loader.add('player', '/static/img/player.png');
 	
-	            PIXI.loader.add('blue', '/static/img/blue.png');
-	
 	            PIXI.loader.add('bg', '/static/img/bg.png');
+	
+	            PIXI.loader.add('level1', '/assets/json/levelone.json');
 	
 	            PIXI.loader.load(this.onLoad.bind(this));
 	        }
 	    }, {
 	        key: 'onLoad',
 	        value: function onLoad() {
-	            var _this = this;
 	
 	            this.settings = new _settings2.default();
 	
@@ -151,16 +150,7 @@
 	
 	            this.engine.addSystem(new _level2.default(this.settings));
 	
-	            var level = new _level4.default(this.settings, '/assets/json/levelone.json').then(function (level) {
-	
-	                console.log(level);
-	
-	                level.entities.map(function (entity) {
-	                    _this.engine.addEntity(entity);
-	                });
-	
-	                _this.engine.init();
-	            });
+	            this.engine.init();
 	        }
 	    }]);
 	
@@ -201,7 +191,7 @@
 	
 	var _animation2 = _interopRequireDefault(_animation);
 	
-	var _level = __webpack_require__(26);
+	var _level = __webpack_require__(8);
 	
 	var _level2 = _interopRequireDefault(_level);
 	
@@ -259,6 +249,15 @@
 	            if (entity.components.position) {
 	
 	                this.nodes.push({ entityId: entity.id, class: 'level', data: new _level2.default(entity.id, entity.components.position), isActive: true });
+	            }
+	
+	            return entity;
+	        }
+	    }, {
+	        key: 'addEntities',
+	        value: function addEntities(entities) {
+	            if (entities && entities.length) {
+	                entities.map(this.addEntity.bind(this));
 	            }
 	        }
 	    }, {
@@ -338,22 +337,40 @@
 	            dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
 	
 	            if (!this.isPaused) {
+	                (function () {
 	
-	                this.nodes.filter(function (node) {
-	                    return !node.isActive;
-	                }).map(function (node) {
-	                    return node.entityId;
-	                }).filter(function (value, index, array) {
-	                    return array.indexOf(value) === index;
-	                }).map(function (id) {
-	                    var entity = _this.getEntityById(id);
-	                    console.log(entity);
-	                    entity.destroy();
-	                });
+	                    _this.nodes.filter(function (node) {
+	                        return !node.isActive;
+	                    }).map(function (node) {
+	                        return node.entityId;
+	                    }).filter(function (value, index, array) {
+	                        return array.indexOf(value) === index;
+	                    }).map(function (id) {
+	                        var entity = _this.getEntityById(id);
+	                        console.log(entity);
+	                        entity.destroy();
+	                    });
 	
-	                this.systems.map(function (system) {
-	                    system.update(dt, _this.getNodesByClass(system.class));
-	                });
+	                    var results = [];
+	
+	                    _this.systems.map(function (system) {
+	                        results.push(system.update(dt, _this.getNodesByClass(system.class)));
+	                    });
+	
+	                    results = results.filter(function (result) {
+	                        return result;
+	                    });
+	
+	                    var newEntities = results.map(function (result) {
+	                        return result.newEntities;
+	                    })[0];
+	
+	                    var deadEntities = results.map(function (result) {
+	                        return result;
+	                    });
+	
+	                    _this.addEntities(newEntities);
+	                })();
 	            }
 	
 	            before = now;
@@ -483,6 +500,27 @@
 /* 8 */
 /***/ function(module, exports) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var LevelNode = function LevelNode(entityId, positionComponent) {
+	    _classCallCheck(this, LevelNode);
+	
+	    this.entityId = entityId;
+	    this.position = positionComponent;
+	};
+	
+	exports.default = LevelNode;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -560,7 +598,7 @@
 	exports.default = MoveSystem;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -705,7 +743,7 @@
 	exports.default = RenderSystem;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -749,6 +787,10 @@
 	            this.isUp = key === this.settings.KEY.UP ? false : this.isUp;
 	            this.isRight = key === this.settings.KEY.RIGHT ? false : this.isRight;
 	            this.isDown = key === this.settings.KEY.DOWN ? false : this.isDown;
+	
+	            if (key === this.settings.KEY.P) {
+	                // this.isPause = !this.isPause;
+	            }
 	        }
 	    }, {
 	        key: 'bind',
@@ -800,7 +842,7 @@
 	exports.default = ControlSystem;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -909,7 +951,7 @@
 	exports.default = CollisionSystem;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1008,7 +1050,7 @@
 	exports.default = AnimationSystem;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1019,21 +1061,13 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _settings = __webpack_require__(14);
+	var _settings = __webpack_require__(15);
 	
 	var _settings2 = _interopRequireDefault(_settings);
 	
-	var _player = __webpack_require__(16);
+	var _level = __webpack_require__(26);
 	
-	var _player2 = _interopRequireDefault(_player);
-	
-	var _sky = __webpack_require__(24);
-	
-	var _sky2 = _interopRequireDefault(_sky);
-	
-	var _ground = __webpack_require__(25);
-	
-	var _ground2 = _interopRequireDefault(_ground);
+	var _level2 = _interopRequireDefault(_level);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -1046,18 +1080,38 @@
 	        this.class = 'level';
 	        this.settings = settings;
 	
-	        this.currentLevel = 1;
-	        this.levels = [];
+	        this.currentLevel;
+	        this.levels = [{
+	            data: PIXI.loader.resources.level1.data
+	        }];
 	    }
 	
 	    _createClass(LevelSystem, [{
 	        key: 'init',
 	        value: function init() {}
 	    }, {
+	        key: 'loadLevel',
+	        value: function loadLevel(levelNumber) {
+	
+	            var levelData = this.levels[levelNumber].data;
+	
+	            var level = new _level2.default(this.settings, levelData);
+	
+	            return { newEntities: level.entities };
+	        }
+	    }, {
 	        key: 'update',
 	        value: function update(time, nodes) {
 	
-	            nodes.map(function (node) {});
+	            var result = {};
+	
+	            if (!this.currentLevel) {
+	
+	                this.currentLevel = 1;
+	                result = this.loadLevel(this.currentLevel - 1);
+	            }
+	
+	            return result;
 	        }
 	    }]);
 	
@@ -1067,7 +1121,7 @@
 	exports.default = LevelSystem;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1085,13 +1139,12 @@
 	    this.FRICTION = 0.90;
 	    this.TILE = 16;
 	    this.MAP = [45, 30];
-	    this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 };
+	    this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
 	};
 	
 	exports.default = SettingsData;
 
 /***/ },
-/* 15 */,
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1172,6 +1225,8 @@
 	    display.isFocus = true;
 	
 	    var positionComponent = new _position2.default();
+	
+	    positionComponent.isPlayer = true;
 	
 	    positionComponent.x = start[0] * settings.TILE;
 	    positionComponent.y = start[1] * settings.TILE;
@@ -1306,6 +1361,8 @@
 	
 	    this.x = 0;
 	    this.y = 0;
+	
+	    this.isPlayer = false;
 	};
 	
 	exports.default = PositionComponent;
@@ -1550,27 +1607,6 @@
 
 /***/ },
 /* 26 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var LevelNode = function LevelNode(entityId, positionComponent) {
-	    _classCallCheck(this, LevelNode);
-	
-	    this.entityId = entityId;
-	    this.position = positionComponent;
-	};
-	
-	exports.default = LevelNode;
-
-/***/ },
-/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1580,34 +1616,6 @@
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _entity = __webpack_require__(17);
-	
-	var _entity2 = _interopRequireDefault(_entity);
-	
-	var _display = __webpack_require__(18);
-	
-	var _display2 = _interopRequireDefault(_display);
-	
-	var _position = __webpack_require__(19);
-	
-	var _position2 = _interopRequireDefault(_position);
-	
-	var _velocity = __webpack_require__(20);
-	
-	var _velocity2 = _interopRequireDefault(_velocity);
-	
-	var _input = __webpack_require__(21);
-	
-	var _input2 = _interopRequireDefault(_input);
-	
-	var _collision = __webpack_require__(22);
-	
-	var _collision2 = _interopRequireDefault(_collision);
-	
-	var _animation = __webpack_require__(23);
-	
-	var _animation2 = _interopRequireDefault(_animation);
 	
 	var _player = __webpack_require__(16);
 	
@@ -1626,32 +1634,15 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var LevelPrefab = function () {
-	    function LevelPrefab(settings, url) {
+	    function LevelPrefab(settings, data) {
 	        _classCallCheck(this, LevelPrefab);
 	
 	        this.settings = settings;
 	
-	        var level = new _entity2.default();
-	
-	        return this.getLevelData(url).then(this.createLevel.bind(this)).then(function (level) {
-	            console.log(level);
-	
-	            return level;
-	            // return entities with level
-	        });
+	        return this.createLevel(data);
 	    }
 	
 	    _createClass(LevelPrefab, [{
-	        key: 'getLevelData',
-	        value: function getLevelData(url) {
-	
-	            return fetch(url).then(function (response) {
-	                return response.json();
-	            }).then(function (data) {
-	                return data;
-	            });
-	        }
-	    }, {
 	        key: 'createLevel',
 	        value: function createLevel(data) {
 	
