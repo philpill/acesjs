@@ -48,6 +48,12 @@ export default class LevelPrefab {
                     let bg = new BackgroundPrefab(4, k * data.tilewidth, i * data.tilewidth, data.tileheight);
 
                     data.entities.push(bg);
+
+                } else if (val === 5) {
+
+                    let bg = new BackgroundPrefab(5, k * data.tilewidth, i * data.tilewidth, data.tileheight);
+
+                    data.entities.push(bg);
                 }
             }
         }

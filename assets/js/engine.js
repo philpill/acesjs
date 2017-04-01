@@ -12,6 +12,7 @@ export default class Engine {
         this.entities = [];
         this.systems = [];
         this.nodes = [];
+        this.typedNodes = {};
         this.isPaused = false;
     }
 
@@ -26,32 +27,50 @@ export default class Engine {
 
         if (entity.components.display && entity.components.position) {
 
-            this.nodes.push({ entityId: entity.id, class: 'render', data: new RenderNode(entity.id, entity.components.display, entity.components.position), isActive: true });
+            // render
+            this.typedNodes['render'] = this.typedNodes['render'] || [];
+
+            this.typedNodes['render'].push({ entityId: entity.id, class: 'render', data: new RenderNode(entity.id, entity.components.display, entity.components.position), isActive: true });
         }
 
         if (entity.components.animation && entity.components.display && entity.components.velocity) {
 
-            this.nodes.push({ entityId: entity.id, class: 'animation', data: new AnimationNode(entity.id, entity.components.animation, entity.components.display, entity.components.velocity), isActive: true });
+            this.typedNodes['animation'] = this.typedNodes['animation'] || [];
+
+            // animation
+            this.typedNodes['animation'].push({ entityId: entity.id, class: 'animation', data: new AnimationNode(entity.id, entity.components.animation, entity.components.display, entity.components.velocity), isActive: true });
         }
 
         if (entity.components.velocity && entity.components.position) {
 
-            this.nodes.push({ entityId: entity.id, class: 'move', data: new MoveNode(entity.id, entity.components.position, entity.components.velocity), isActive: true });
+            this.typedNodes['move'] = this.typedNodes['move'] || [];
+
+            // move
+            this.typedNodes['move'].push({ entityId: entity.id, class: 'move', data: new MoveNode(entity.id, entity.components.position, entity.components.velocity), isActive: true });
         }
 
         if (entity.components.velocity && entity.components.input) {
 
-            this.nodes.push({ entityId: entity.id, class: 'control', data: new ControlNode(entity.id, entity.components.control, entity.components.velocity), isActive: true });
+            this.typedNodes['control'] = this.typedNodes['control'] || [];
+
+            // control
+            this.typedNodes['control'].push({ entityId: entity.id, class: 'control', data: new ControlNode(entity.id, entity.components.control, entity.components.velocity), isActive: true });
         }
 
         if (entity.components.collision) {
 
-            this.nodes.push({ entityId: entity.id, class: 'collision', data: new CollisionNode(entity.id, entity.components.collision, entity.components.display, entity.components.velocity), isActive: true });
+            this.typedNodes['collision'] = this.typedNodes['collision'] || [];
+
+            // collision
+            this.typedNodes['collision'].push({ entityId: entity.id, class: 'collision', data: new CollisionNode(entity.id, entity.components.collision, entity.components.display, entity.components.velocity), isActive: true });
         }
 
-        if (entity.components.position) {
+        if (entity.components.position) { // need a second 'trigger' component or this will apply to all rendered objects
 
-            this.nodes.push({ entityId: entity.id, class: 'level', data: new LevelNode(entity.id, entity.components.position), isActive: true });
+            this.typedNodes['level'] = this.typedNodes['level'] || [];
+
+            // level
+            this.typedNodes['level'].push({ entityId: entity.id, class: 'level', data: new LevelNode(entity.id, entity.components.position), isActive: true });
         }
 
         return entity;
@@ -64,15 +83,19 @@ export default class Engine {
     }
 
     removeEntity(entity) {
-
         let entityId = entity.id;
-
         this.entities = this.entities.filter((entity) => {
             return entity.id !== entityId;
         });
+    }
 
-        this.nodes = this.nodes.filter((node) => {
-            return node.entityId !== entityId;
+    removeEntityById(entityId) {
+        return this.removeEntity({ id : entityId });
+    }
+
+    removeEntitiesById(ids) {
+        return ids.map((id) => {
+            return this.removeEntityById(id);
         });
     }
 
@@ -91,18 +114,6 @@ export default class Engine {
 
         this.systems = this.systems.filter((system) => {
             return !!system;
-        });
-    }
-
-    getNodesByClass(nodeClass) {
-        return this.nodes.filter((node) => {
-            return node.class === nodeClass;
-        });
-    }
-
-    getNodesByEntityId(entityId) {
-        return this.nodes.filter((node) => {
-            return node.entityId === entityId;
         });
     }
 
@@ -129,7 +140,11 @@ export default class Engine {
 
         if (!this.isPaused) {
 
-            this.nodes.filter((node) => {
+            let nodes = Object.keys(this.typedNodes).map((type) => {
+                return this.typedNodes[type];
+            });
+
+            [].concat.apply([], nodes).filter((node) => {
                 return !node.isActive;
             }).map((node) => {
                 return node.entityId;
@@ -144,7 +159,7 @@ export default class Engine {
             let results = [];
 
             this.systems.map((system) => {
-                results.push(system.update(dt, this.getNodesByClass(system.class)));
+                results.push(system.update(dt, this.typedNodes[system.class] || []));
             });
 
             results = results.filter((result) => { return result; });
@@ -154,7 +169,7 @@ export default class Engine {
             })[0];
 
             let deadEntities = results.map((result) => {
-                return result;
+                return result.deadEntities;
             });
 
             this.addEntities(newEntities);

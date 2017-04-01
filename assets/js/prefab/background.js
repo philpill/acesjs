@@ -15,6 +15,9 @@ export default class GroundPrefab {
 
         if (type === 4) {
             texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(48, 0, 14, tile));
+
+        } else if (type === 5) {
+            texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(64, 0, 14, tile));
         }
 
         let thing = new PIXI.Sprite(texture);

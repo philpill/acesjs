@@ -99,11 +99,11 @@
 	
 	var _settings2 = _interopRequireDefault(_settings);
 	
-	var _player = __webpack_require__(16);
+	var _player = __webpack_require__(17);
 	
 	var _player2 = _interopRequireDefault(_player);
 	
-	var _level3 = __webpack_require__(26);
+	var _level3 = __webpack_require__(16);
 	
 	var _level4 = _interopRequireDefault(_level3);
 	
@@ -206,6 +206,7 @@
 	        this.entities = [];
 	        this.systems = [];
 	        this.nodes = [];
+	        this.typedNodes = {};
 	        this.isPaused = false;
 	    }
 	
@@ -223,32 +224,51 @@
 	
 	            if (entity.components.display && entity.components.position) {
 	
-	                this.nodes.push({ entityId: entity.id, class: 'render', data: new _render2.default(entity.id, entity.components.display, entity.components.position), isActive: true });
+	                // render
+	                this.typedNodes['render'] = this.typedNodes['render'] || [];
+	
+	                this.typedNodes['render'].push({ entityId: entity.id, class: 'render', data: new _render2.default(entity.id, entity.components.display, entity.components.position), isActive: true });
 	            }
 	
 	            if (entity.components.animation && entity.components.display && entity.components.velocity) {
 	
-	                this.nodes.push({ entityId: entity.id, class: 'animation', data: new _animation2.default(entity.id, entity.components.animation, entity.components.display, entity.components.velocity), isActive: true });
+	                this.typedNodes['animation'] = this.typedNodes['animation'] || [];
+	
+	                // animation
+	                this.typedNodes['animation'].push({ entityId: entity.id, class: 'animation', data: new _animation2.default(entity.id, entity.components.animation, entity.components.display, entity.components.velocity), isActive: true });
 	            }
 	
 	            if (entity.components.velocity && entity.components.position) {
 	
-	                this.nodes.push({ entityId: entity.id, class: 'move', data: new _move2.default(entity.id, entity.components.position, entity.components.velocity), isActive: true });
+	                this.typedNodes['move'] = this.typedNodes['move'] || [];
+	
+	                // move
+	                this.typedNodes['move'].push({ entityId: entity.id, class: 'move', data: new _move2.default(entity.id, entity.components.position, entity.components.velocity), isActive: true });
 	            }
 	
 	            if (entity.components.velocity && entity.components.input) {
 	
-	                this.nodes.push({ entityId: entity.id, class: 'control', data: new _control2.default(entity.id, entity.components.control, entity.components.velocity), isActive: true });
+	                this.typedNodes['control'] = this.typedNodes['control'] || [];
+	
+	                // control
+	                this.typedNodes['control'].push({ entityId: entity.id, class: 'control', data: new _control2.default(entity.id, entity.components.control, entity.components.velocity), isActive: true });
 	            }
 	
 	            if (entity.components.collision) {
 	
-	                this.nodes.push({ entityId: entity.id, class: 'collision', data: new _collision2.default(entity.id, entity.components.collision, entity.components.display, entity.components.velocity), isActive: true });
+	                this.typedNodes['collision'] = this.typedNodes['collision'] || [];
+	
+	                // collision
+	                this.typedNodes['collision'].push({ entityId: entity.id, class: 'collision', data: new _collision2.default(entity.id, entity.components.collision, entity.components.display, entity.components.velocity), isActive: true });
 	            }
 	
 	            if (entity.components.position) {
+	                // need a second 'trigger' component or this will apply to all rendered objects
 	
-	                this.nodes.push({ entityId: entity.id, class: 'level', data: new _level2.default(entity.id, entity.components.position), isActive: true });
+	                this.typedNodes['level'] = this.typedNodes['level'] || [];
+	
+	                // level
+	                this.typedNodes['level'].push({ entityId: entity.id, class: 'level', data: new _level2.default(entity.id, entity.components.position), isActive: true });
 	            }
 	
 	            return entity;
@@ -263,15 +283,23 @@
 	    }, {
 	        key: 'removeEntity',
 	        value: function removeEntity(entity) {
-	
 	            var entityId = entity.id;
-	
 	            this.entities = this.entities.filter(function (entity) {
 	                return entity.id !== entityId;
 	            });
+	        }
+	    }, {
+	        key: 'removeEntityById',
+	        value: function removeEntityById(entityId) {
+	            return this.removeEntity({ id: entityId });
+	        }
+	    }, {
+	        key: 'removeEntitiesById',
+	        value: function removeEntitiesById(ids) {
+	            var _this = this;
 	
-	            this.nodes = this.nodes.filter(function (node) {
-	                return node.entityId !== entityId;
+	            return ids.map(function (id) {
+	                return _this.removeEntityById(id);
 	            });
 	        }
 	    }, {
@@ -295,20 +323,6 @@
 	            });
 	        }
 	    }, {
-	        key: 'getNodesByClass',
-	        value: function getNodesByClass(nodeClass) {
-	            return this.nodes.filter(function (node) {
-	                return node.class === nodeClass;
-	            });
-	        }
-	    }, {
-	        key: 'getNodesByEntityId',
-	        value: function getNodesByEntityId(entityId) {
-	            return this.nodes.filter(function (node) {
-	                return node.entityId === entityId;
-	            });
-	        }
-	    }, {
 	        key: 'getEntityById',
 	        value: function getEntityById(entityId) {
 	            return this.entities.filter(function (entity) {
@@ -318,7 +332,7 @@
 	    }, {
 	        key: 'update',
 	        value: function update() {
-	            var _this = this;
+	            var _this2 = this;
 	
 	            var before = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 	
@@ -339,22 +353,26 @@
 	            if (!this.isPaused) {
 	                (function () {
 	
-	                    _this.nodes.filter(function (node) {
+	                    var nodes = Object.keys(_this2.typedNodes).map(function (type) {
+	                        return _this2.typedNodes[type];
+	                    });
+	
+	                    [].concat.apply([], nodes).filter(function (node) {
 	                        return !node.isActive;
 	                    }).map(function (node) {
 	                        return node.entityId;
 	                    }).filter(function (value, index, array) {
 	                        return array.indexOf(value) === index;
 	                    }).map(function (id) {
-	                        var entity = _this.getEntityById(id);
+	                        var entity = _this2.getEntityById(id);
 	                        console.log(entity);
 	                        entity.destroy();
 	                    });
 	
 	                    var results = [];
 	
-	                    _this.systems.map(function (system) {
-	                        results.push(system.update(dt, _this.getNodesByClass(system.class)));
+	                    _this2.systems.map(function (system) {
+	                        results.push(system.update(dt, _this2.typedNodes[system.class] || []));
 	                    });
 	
 	                    results = results.filter(function (result) {
@@ -366,10 +384,10 @@
 	                    })[0];
 	
 	                    var deadEntities = results.map(function (result) {
-	                        return result;
+	                        return result.deadEntities;
 	                    });
 	
-	                    _this.addEntities(newEntities);
+	                    _this2.addEntities(newEntities);
 	                })();
 	            }
 	
@@ -1065,7 +1083,7 @@
 	
 	var _settings2 = _interopRequireDefault(_settings);
 	
-	var _level = __webpack_require__(26);
+	var _level = __webpack_require__(16);
 	
 	var _level2 = _interopRequireDefault(_level);
 	
@@ -1080,6 +1098,7 @@
 	        this.class = 'level';
 	        this.settings = settings;
 	
+	        this.isLoaded = false;
 	        this.currentLevel;
 	        this.levels = [{
 	            data: PIXI.loader.resources.level1.data
@@ -1092,11 +1111,8 @@
 	    }, {
 	        key: 'loadLevel',
 	        value: function loadLevel(levelNumber) {
-	
 	            var levelData = this.levels[levelNumber].data;
-	
 	            var level = new _level2.default(this.settings, levelData);
-	
 	            return level.entities;
 	        }
 	    }, {
@@ -1112,16 +1128,49 @@
 	            return ids;
 	        }
 	    }, {
+	        key: 'loadNextLevel',
+	        value: function loadNextLevel() {
+	            this.isLoaded = false;
+	            this.currentLevel++;
+	        }
+	    }, {
 	        key: 'update',
 	        value: function update(time, nodes) {
+	            var _this = this;
 	
 	            var result = {};
 	
-	            if (!this.currentLevel) {
-	                result.deadEntities = this.getAllEntityIds(nodes);
-	                this.currentLevel = 1;
+	            this.currentLevel = this.currentLevel || 1;
+	
+	            if (!this.isLoaded) {
 	                result.newEntities = this.loadLevel(this.currentLevel - 1);
+	                result.deadEntities = this.getAllEntityIds(nodes);
+	                this.isLoaded = true;
 	            }
+	
+	            nodes.map(function (node) {
+	
+	                // console.log(node);
+	
+	                var finishX = _this.levels[_this.currentLevel - 1].data.properties.finishX;
+	                var finishY = _this.levels[_this.currentLevel - 1].data.properties.finishY;
+	
+	                var x = node.data.position.x / _this.settings.TILE;
+	                var y = node.data.position.y / _this.settings.TILE;
+	
+	                // console.log(x + ' ' + y);
+	
+	                if (finishX === x && finishY === y) {
+	
+	                    console.log('FINISH');
+	
+	                    // this.loadNextLevel();
+	                }
+	            });
+	
+	            // console.log(this.levels[this.currentLevel]);
+	
+	            // console.log(this.levels[this.currentLevel - 1].data.properties.finishX);
 	
 	            return result;
 	        }
@@ -1166,31 +1215,148 @@
 	    value: true
 	});
 	
-	var _entity = __webpack_require__(17);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _player = __webpack_require__(17);
+	
+	var _player2 = _interopRequireDefault(_player);
+	
+	var _sky = __webpack_require__(25);
+	
+	var _sky2 = _interopRequireDefault(_sky);
+	
+	var _ground = __webpack_require__(26);
+	
+	var _ground2 = _interopRequireDefault(_ground);
+	
+	var _background = __webpack_require__(27);
+	
+	var _background2 = _interopRequireDefault(_background);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var LevelPrefab = function () {
+	    function LevelPrefab(settings, data) {
+	        _classCallCheck(this, LevelPrefab);
+	
+	        this.settings = settings;
+	
+	        return this.createLevel(data);
+	    }
+	
+	    _createClass(LevelPrefab, [{
+	        key: 'createLayer',
+	        value: function createLayer(data) {
+	
+	            var mapData = data.layers[0].data;
+	
+	            for (var i = 0, j = data.height; i < j; i++) {
+	
+	                for (var k = 0, l = data.width; k < l; k++) {
+	
+	                    var val = mapData[i * data.width + k];
+	
+	                    if (val === 1) {
+	
+	                        var ground = new _ground2.default(k * data.tilewidth, i * data.tilewidth, data.tileheight);
+	
+	                        data.entities.push(ground);
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'createBackgroundLayer',
+	        value: function createBackgroundLayer(data) {
+	
+	            var mapData = data.layers[1].data;
+	
+	            for (var i = 0, j = data.height; i < j; i++) {
+	
+	                for (var k = 0, l = data.width; k < l; k++) {
+	
+	                    var val = mapData[i * data.width + k];
+	
+	                    if (val === 4) {
+	
+	                        var bg = new _background2.default(4, k * data.tilewidth, i * data.tilewidth, data.tileheight);
+	
+	                        data.entities.push(bg);
+	                    } else if (val === 5) {
+	
+	                        var _bg = new _background2.default(5, k * data.tilewidth, i * data.tilewidth, data.tileheight);
+	
+	                        data.entities.push(_bg);
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'createLevel',
+	        value: function createLevel(data) {
+	
+	            var mapData = data.layers[0].data;
+	
+	            data.entities = [];
+	
+	            var sky = new _sky2.default(data.width, data.height, data.tileheight);
+	
+	            data.entities.push(sky);
+	
+	            this.createLayer(data);
+	
+	            this.createBackgroundLayer(data);
+	
+	            var player = new _player2.default(this.settings, [data.properties.startX, data.properties.startY]);
+	
+	            data.entities.push(player);
+	
+	            return data;
+	        }
+	    }]);
+	
+	    return LevelPrefab;
+	}();
+	
+	exports.default = LevelPrefab;
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _entity = __webpack_require__(18);
 	
 	var _entity2 = _interopRequireDefault(_entity);
 	
-	var _display = __webpack_require__(18);
+	var _display = __webpack_require__(19);
 	
 	var _display2 = _interopRequireDefault(_display);
 	
-	var _position = __webpack_require__(19);
+	var _position = __webpack_require__(20);
 	
 	var _position2 = _interopRequireDefault(_position);
 	
-	var _velocity = __webpack_require__(20);
+	var _velocity = __webpack_require__(21);
 	
 	var _velocity2 = _interopRequireDefault(_velocity);
 	
-	var _input = __webpack_require__(21);
+	var _input = __webpack_require__(22);
 	
 	var _input2 = _interopRequireDefault(_input);
 	
-	var _collision = __webpack_require__(22);
+	var _collision = __webpack_require__(23);
 	
 	var _collision2 = _interopRequireDefault(_collision);
 	
-	var _animation = __webpack_require__(23);
+	var _animation = __webpack_require__(24);
 	
 	var _animation2 = _interopRequireDefault(_animation);
 	
@@ -1257,7 +1423,7 @@
 	exports.default = PlayerPrefab;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1331,7 +1497,7 @@
 	exports.default = Entity;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1355,7 +1521,7 @@
 	exports.default = DisplayComponent;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1380,7 +1546,7 @@
 	exports.default = PositionComponent;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1409,7 +1575,7 @@
 	exports.default = VelocityComponent;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1429,7 +1595,7 @@
 	exports.default = InputComponent;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1456,7 +1622,7 @@
 	exports.default = CollisionComponent;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1488,7 +1654,7 @@
 	exports.default = AnimationComponent;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1497,15 +1663,15 @@
 	    value: true
 	});
 	
-	var _entity = __webpack_require__(17);
+	var _entity = __webpack_require__(18);
 	
 	var _entity2 = _interopRequireDefault(_entity);
 	
-	var _display = __webpack_require__(18);
+	var _display = __webpack_require__(19);
 	
 	var _display2 = _interopRequireDefault(_display);
 	
-	var _position = __webpack_require__(19);
+	var _position = __webpack_require__(20);
 	
 	var _position2 = _interopRequireDefault(_position);
 	
@@ -1542,7 +1708,7 @@
 	exports.default = SkyPrefab;
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1551,31 +1717,31 @@
 	    value: true
 	});
 	
-	var _entity = __webpack_require__(17);
+	var _entity = __webpack_require__(18);
 	
 	var _entity2 = _interopRequireDefault(_entity);
 	
-	var _display = __webpack_require__(18);
+	var _display = __webpack_require__(19);
 	
 	var _display2 = _interopRequireDefault(_display);
 	
-	var _position = __webpack_require__(19);
+	var _position = __webpack_require__(20);
 	
 	var _position2 = _interopRequireDefault(_position);
 	
-	var _velocity = __webpack_require__(20);
+	var _velocity = __webpack_require__(21);
 	
 	var _velocity2 = _interopRequireDefault(_velocity);
 	
-	var _input = __webpack_require__(21);
+	var _input = __webpack_require__(22);
 	
 	var _input2 = _interopRequireDefault(_input);
 	
-	var _collision = __webpack_require__(22);
+	var _collision = __webpack_require__(23);
 	
 	var _collision2 = _interopRequireDefault(_collision);
 	
-	var _animation = __webpack_require__(23);
+	var _animation = __webpack_require__(24);
 	
 	var _animation2 = _interopRequireDefault(_animation);
 	
@@ -1618,118 +1784,6 @@
 	exports.default = GroundPrefab;
 
 /***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _player = __webpack_require__(16);
-	
-	var _player2 = _interopRequireDefault(_player);
-	
-	var _sky = __webpack_require__(24);
-	
-	var _sky2 = _interopRequireDefault(_sky);
-	
-	var _ground = __webpack_require__(25);
-	
-	var _ground2 = _interopRequireDefault(_ground);
-	
-	var _background = __webpack_require__(27);
-	
-	var _background2 = _interopRequireDefault(_background);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var LevelPrefab = function () {
-	    function LevelPrefab(settings, data) {
-	        _classCallCheck(this, LevelPrefab);
-	
-	        this.settings = settings;
-	
-	        return this.createLevel(data);
-	    }
-	
-	    _createClass(LevelPrefab, [{
-	        key: 'createLayer',
-	        value: function createLayer(data) {
-	
-	            var mapData = data.layers[0].data;
-	
-	            for (var i = 0, j = data.height; i < j; i++) {
-	
-	                for (var k = 0, l = data.width; k < l; k++) {
-	
-	                    var val = mapData[i * data.width + k];
-	
-	                    if (val === 1) {
-	
-	                        var ground = new _ground2.default(k * data.tilewidth, i * data.tilewidth, data.tileheight);
-	
-	                        data.entities.push(ground);
-	                    }
-	                }
-	            }
-	        }
-	    }, {
-	        key: 'createBackgroundLayer',
-	        value: function createBackgroundLayer(data) {
-	
-	            var mapData = data.layers[1].data;
-	
-	            for (var i = 0, j = data.height; i < j; i++) {
-	
-	                for (var k = 0, l = data.width; k < l; k++) {
-	
-	                    var val = mapData[i * data.width + k];
-	
-	                    if (val === 4) {
-	
-	                        var bg = new _background2.default(4, k * data.tilewidth, i * data.tilewidth, data.tileheight);
-	
-	                        data.entities.push(bg);
-	                    }
-	                }
-	            }
-	        }
-	    }, {
-	        key: 'createLevel',
-	        value: function createLevel(data) {
-	
-	            var mapData = data.layers[0].data;
-	
-	            data.entities = [];
-	
-	            var sky = new _sky2.default(data.width, data.height, data.tileheight);
-	
-	            data.entities.push(sky);
-	
-	            this.createLayer(data);
-	
-	            this.createBackgroundLayer(data);
-	
-	            var player = new _player2.default(this.settings, [data.properties.startX, data.properties.startY]);
-	
-	            data.entities.push(player);
-	
-	            return data;
-	        }
-	    }]);
-	
-	    return LevelPrefab;
-	}();
-	
-	exports.default = LevelPrefab;
-
-/***/ },
 /* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1739,15 +1793,15 @@
 	    value: true
 	});
 	
-	var _entity = __webpack_require__(17);
+	var _entity = __webpack_require__(18);
 	
 	var _entity2 = _interopRequireDefault(_entity);
 	
-	var _display = __webpack_require__(18);
+	var _display = __webpack_require__(19);
 	
 	var _display2 = _interopRequireDefault(_display);
 	
-	var _position = __webpack_require__(19);
+	var _position = __webpack_require__(20);
 	
 	var _position2 = _interopRequireDefault(_position);
 	
@@ -1764,6 +1818,8 @@
 	
 	    if (type === 4) {
 	        texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(48, 0, 14, tile));
+	    } else if (type === 5) {
+	        texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(64, 0, 14, tile));
 	    }
 	
 	    var thing = new PIXI.Sprite(texture);
