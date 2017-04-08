@@ -1,4 +1,6 @@
-export default class VelocityComponent {
+import IComponent from './icomponent';
+
+export default class VelocityComponent implements IComponent {
 
     class: string;
     accelerationX: number;

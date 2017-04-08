@@ -1,4 +1,6 @@
-export default class AnimationComponent {
+import IComponent from './icomponent';
+
+export default class AnimationComponent implements IComponent {
 
     class: string;
     default: number[];
@@ -8,7 +10,7 @@ export default class AnimationComponent {
     currentAnimationProp: string;
     currentFrame: number;
 
-    constructor(data) {
+    constructor() {
 
         this.class = 'animation';
 

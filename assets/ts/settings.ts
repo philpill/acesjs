@@ -5,7 +5,14 @@ export default class Settings {
     FRICTION: number;
     TILE: number;
     MAP: number[];
-    KEY: { [key:string]:number; };
+    KEY: {
+        SPACE: number,
+        LEFT: number,
+        UP: number,
+        RIGHT: number,
+        DOWN: number,
+        P: number
+    };
 
     constructor() {
 

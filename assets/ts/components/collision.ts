@@ -1,4 +1,6 @@
-export default class CollisionComponent {
+import IComponent from './icomponent';
+
+export default class CollisionComponent implements IComponent {
 
     class: string;
     type: string;

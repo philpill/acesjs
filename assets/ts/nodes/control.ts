@@ -1,9 +1,10 @@
+import INode from './inode';
 import Input from '../components/input';
 import Display from '../components/display';
 import Velocity from '../components/velocity';
 import Collision from '../components/collision';
 
-export default class ControlNode {
+export default class ControlNode implements INode {
 
     entityId: number;
     velocity: Velocity;

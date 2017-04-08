@@ -1,8 +1,9 @@
+import INode from './inode';
 import Animation from '../components/animation';
 import Display from '../components/display';
 import Velocity from '../components/velocity';
 
-export default class AnimationNode {
+export default class AnimationNode implements INode {
 
     entityId: number;
     animation: Animation;

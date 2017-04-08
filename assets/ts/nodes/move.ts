@@ -1,7 +1,8 @@
+import INode from './inode';
 import Position from '../components/position';
 import Velocity from '../components/velocity';
 
-export default class MoveNode {
+export default class MoveNode implements INode {
 
     entityId: number;
     velocity: Velocity;

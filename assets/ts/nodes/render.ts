@@ -1,7 +1,8 @@
+import INode from './inode';
 import Display from '../components/display';
 import Position from '../components/position';
 
-export default class RenderNode {
+export default class RenderNode implements INode {
 
     entityId: number;
     display: Display;

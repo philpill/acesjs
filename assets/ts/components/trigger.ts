@@ -1,4 +1,6 @@
-export default class TriggerComponent {
+import IComponent from './icomponent';
+
+export default class TriggerComponent implements IComponent {
 
     class: string;
 

@@ -1,4 +1,6 @@
-export default class DisplayComponent {
+import IComponent from './icomponent';
+
+export default class DisplayComponent implements IComponent {
 
     class: string;
     sprite: any;

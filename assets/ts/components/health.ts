@@ -1,4 +1,6 @@
-export default class HealthComponent {
+import IComponent from './icomponent';
+
+export default class HealthComponent implements IComponent {
 
     class: string;
     health: number;

@@ -1,4 +1,6 @@
-export default class UserComponent {
+import IComponent from './icomponent';
+
+export default class UserComponent implements IComponent {
 
     class: string;
 

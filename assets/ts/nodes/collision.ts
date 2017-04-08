@@ -1,8 +1,9 @@
+import INode from './inode';
 import Display from '../components/display';
 import Velocity from '../components/velocity';
 import Collision from '../components/collision';
 
-export default class CollisionNode {
+export default class CollisionNode implements INode {
 
     entityId: number;
     display: Display;

@@ -1,4 +1,6 @@
-export default class PositionComponent {
+import IComponent from './icomponent';
+
+export default class PositionComponent implements IComponent {
 
     class: string;
     x: number;
