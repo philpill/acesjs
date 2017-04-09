@@ -11,17 +11,17 @@ import Velocity from '../components/velocity';
 interface INode {
 
     entityId: number;
-    data: {
-        animation?: Animation,
-        collision?: Collision,
-        display?: Display,
-        health?: Health,
-        input?: Input,
-        position?: Position,
-        trigger?: Trigger,
-        user?: User,
-        velocity?: Velocity
-    };
+
+    animation?: Animation;
+    collision?: Collision;
+    display?: Display;
+    health?: Health;
+    input?: Input;
+    position?: Position;
+    trigger?: Trigger;
+    user?: User;
+    velocity?: Velocity;
+
     isActive: boolean;
 }
 

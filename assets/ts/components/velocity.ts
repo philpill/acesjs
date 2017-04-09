@@ -12,6 +12,8 @@ export default class VelocityComponent implements IComponent {
     velocityX: number;
     velocityY: number;
 
+    isGrounded: boolean;
+
     constructor() {
 
         this.class = 'velocity';
@@ -24,5 +26,7 @@ export default class VelocityComponent implements IComponent {
 
         this.velocityX = 0;
         this.velocityY = 0;
+
+        this.isGrounded = false;
     }
 }

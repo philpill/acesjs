@@ -1,16 +1,19 @@
+/// <reference path="../../dts/pixi.js.d.ts" />
+
+import Sprite from '../sprite';
 import IComponent from './icomponent';
 
 export default class DisplayComponent implements IComponent {
 
     class: string;
-    sprite: any;
+    sprite: Sprite;
     isFocus: boolean;
 
-    constructor(data) {
+    constructor(sprite: Sprite) {
 
         this.class = 'display';
 
-        this.sprite = data.sprite;
+        this.sprite = sprite;
 
         this.isFocus = false;
     }

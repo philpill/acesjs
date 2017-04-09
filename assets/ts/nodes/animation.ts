@@ -10,10 +10,13 @@ export default class AnimationNode implements INode {
     display: Display;
     velocity: Velocity;
 
+    isActive: boolean;
+
     constructor (entityId: number, animationComponent: Animation, displayComponent: Display, velocityComponent: Velocity) {
         this.entityId = entityId;
         this.animation = animationComponent;
         this.display = displayComponent;
         this.velocity = velocityComponent;
+        this.isActive = true;
     }
 }

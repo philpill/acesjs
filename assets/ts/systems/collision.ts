@@ -1,6 +1,7 @@
 import ISystem from './isystem';
 import Settings from '../settings';
 import INode from '../nodes/inode';
+import Sprite from '../sprite';
 
 export default class CollisionSystem implements ISystem {
 
@@ -17,7 +18,11 @@ export default class CollisionSystem implements ISystem {
 
     }
 
-    isCollision(sprite1, sprite2) {
+    stop() {
+
+    }
+
+    isCollision(sprite1: Sprite, sprite2: Sprite) {
 
         let isCollision = false;
 
@@ -35,27 +40,27 @@ export default class CollisionSystem implements ISystem {
 
         let primaries = nodes.filter((node: INode) => {
 
-            return node.data.collision.type === 'primary';
+            return node.collision.type === 'primary';
         });
 
         let secondaries = nodes.filter((node: INode) => {
 
-            return node.data.collision.type !== 'primary';
+            return node.collision.type !== 'primary';
         });
 
         primaries.map((primary: INode) => {
 
-            primary.data.velocity.isGrounded = false;
+            primary.velocity.isGrounded = false;
 
             secondaries.map((secondary) => {
 
-                let sprite1 = primary.data.display.sprite;
+                let sprite1 = primary.display.sprite;
 
-                let sprite2 = secondary.data.display.sprite;
+                let sprite2 = secondary.display.sprite;
 
                 if (this.isCollision(sprite1, sprite2)) {
 
-                    let velocityData = primary.data.velocity;
+                    let velocityData = primary.velocity;
 
                     let errorMargin = this.settings.TILE/2;
 
@@ -95,7 +100,7 @@ export default class CollisionSystem implements ISystem {
                         velocityData.velocityX = Math.max(0, velocityData.velocityX);
                     }
 
-                    primary.data.collision.collide(secondary);
+                    primary.collision.collide(secondary);
                 }
             });
         });

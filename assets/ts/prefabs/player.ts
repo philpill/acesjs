@@ -1,4 +1,5 @@
 import Entity from './entity';
+import Sprite from '../sprite';
 
 import DisplayComponent from '../components/display';
 import PositionComponent from '../components/position';
@@ -15,23 +16,15 @@ export default class PlayerPrefab {
 
         let texture = PIXI.utils.TextureCache['/static/img/player.png'];
 
-        let sprite = new PIXI.Sprite(texture);
+        let sprite = new Sprite(texture);
 
 
+        sprite.data.texture.push(new PIXI.Rectangle(0, 0, 16, 32));
+        sprite.data.texture.push(new PIXI.Rectangle(16, 0, 16, 32));
+        sprite.data.texture.push(new PIXI.Rectangle(32, 0, 16, 32));
+        sprite.data.texture.push(new PIXI.Rectangle(48, 0, 16, 32));
 
-
-        // sprite.data = {};
-
-        // sprite.data.texture = [];
-
-        // sprite.data.texture.push(new PIXI.Rectangle(0, 0, 16, 32));
-        // sprite.data.texture.push(new PIXI.Rectangle(16, 0, 16, 32));
-        // sprite.data.texture.push(new PIXI.Rectangle(32, 0, 16, 32));
-        // sprite.data.texture.push(new PIXI.Rectangle(48, 0, 16, 32));
-
-        // texture.frame = sprite.data.texture[1];
-
-
+        texture.frame = sprite.data.texture[1];
 
         let player = new Entity();
 
@@ -49,7 +42,7 @@ export default class PlayerPrefab {
 
         collision.type = 'primary';
 
-        let display = new DisplayComponent({ sprite: sprite });
+        let display = new DisplayComponent(sprite);
 
         display.isFocus = true;
 

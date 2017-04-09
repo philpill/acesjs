@@ -1,4 +1,6 @@
+import {ITiledLevel} from '../itiled';
 
+import Entity from './entity';
 import PlayerPrefab from './player';
 import SkyPrefab from './sky';
 import GroundPrefab from './ground';
@@ -9,16 +11,16 @@ import Settings from '../settings';
 export default class LevelPrefab {
 
     settings: Settings;
-    entities: any[];
+    entities: Entity[];
+    data: ITiledLevel;
 
-    constructor(settings: Settings, data: any) {
+    constructor(settings: Settings, data: ITiledLevel) {
 
         this.settings = settings;
-
-        return this.createLevel(data);
+        this.data = data;
     }
 
-    createLayer(data) {
+    createLayer(data: ITiledLevel) {
 
         let mapData = data.layers[0].data;
 
@@ -38,7 +40,7 @@ export default class LevelPrefab {
         }
     }
 
-    createBackgroundLayer(data) {
+    createBackgroundLayer(data: ITiledLevel) {
 
         let mapData = data.layers[1].data;
 
@@ -64,7 +66,9 @@ export default class LevelPrefab {
         }
     }
 
-    createLevel(data) {
+    createLevel() {
+
+        let data = this.data;
 
         let mapData = data.layers[0].data;
 

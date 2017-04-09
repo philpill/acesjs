@@ -8,9 +8,12 @@ export default class MoveNode implements INode {
     velocity: Velocity;
     position: Position;
 
+    isActive: boolean;
+
     constructor (entityId, positionComponent, velocityComponent) {
         this.entityId = entityId;
         this.position = positionComponent;
         this.velocity = velocityComponent;
+        this.isActive = true;
     }
 }

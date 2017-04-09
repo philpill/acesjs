@@ -10,9 +10,12 @@ export default class ControlNode implements INode {
     velocity: Velocity;
     input: Input;
 
+    isActive: boolean;
+
     constructor (entityId: number, inputComponent: Input, velocityComponent: Velocity) {
         this.entityId = entityId;
         this.input = inputComponent;
         this.velocity = velocityComponent;
+        this.isActive = true;
     }
 }

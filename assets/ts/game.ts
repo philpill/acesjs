@@ -1,6 +1,13 @@
 import Settings from './settings';
 import Engine from './engine';
 
+import AnimationSystem from './systems/animation';
+import CollisionSystem from './systems/collision';
+import ControlSystem from './systems/control';
+import LevelSystem from './systems/level';
+import MoveSystem from './systems/move';
+import RenderSystem from './systems/render';
+
 export default class Game {
 
     private _engine: Engine;
@@ -25,17 +32,17 @@ export default class Game {
         this._settings = new Settings();
         this._engine = new Engine();
 
-        // this.engine.addSystem(new AnimationSystem(this.settings));
+        this._engine.addSystem(new AnimationSystem(this._settings));
 
-        // this.engine.addSystem(new MoveSystem(this.settings));
+        this._engine.addSystem(new MoveSystem(this._settings));
 
-        // this.engine.addSystem(new RenderSystem(this.settings));
+        this._engine.addSystem(new RenderSystem(this._settings));
 
-        // this.engine.addSystem(new ControlSystem(this.settings));
+        this._engine.addSystem(new ControlSystem(this._settings));
 
-        // this.engine.addSystem(new CollisionSystem(this.settings));
+        this._engine.addSystem(new CollisionSystem(this._settings));
 
-        // this.engine.addSystem(new LevelSystem(this.settings));
+        this._engine.addSystem(new LevelSystem(this._settings));
 
         this._engine.init();
     }

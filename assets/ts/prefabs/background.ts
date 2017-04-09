@@ -1,6 +1,7 @@
 import Entity from './entity';
 import DisplayComponent from '../components/display';
 import PositionComponent from '../components/position';
+import Sprite from '../sprite';
 
 export default class GroundPrefab {
 
@@ -8,7 +9,7 @@ export default class GroundPrefab {
 
         let ground = new Entity();
 
-        let texture;
+        let texture: PIXI.Texture;
 
         if (type === 4) {
             texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(48, 0, 14, tile));
@@ -17,12 +18,12 @@ export default class GroundPrefab {
             texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(64, 0, 14, tile));
         }
 
-        let sprite = new PIXI.Sprite(texture);
+        let sprite = new Sprite(texture);
 
         sprite.height = tile;
         sprite.width = tile;
 
-        let display = new DisplayComponent({ sprite: sprite });
+        let display = new DisplayComponent(sprite);
 
         ground.addComponent(display);
 

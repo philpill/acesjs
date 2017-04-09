@@ -19,18 +19,22 @@ export default class AnimationSystem implements ISystem {
 
     }
 
+    stop() {
+
+    }
+
     setAnimation(node: INode, prop: string) {
 
-        node.data.animation.currentAnimationProp = prop;
+        node.animation.currentAnimationProp = prop;
     }
 
     updateFrame(node: INode) {
 
-        let animationData = node.data.animation;
+        let animationData = node.animation;
 
-        let displayData = node.data.display;
+        let displayData = node.display;
 
-        let frames = animationData[node.data.animation.currentAnimationProp];
+        let frames = animationData[node.animation.currentAnimationProp];
 
         if (animationData.currentFrame + 1 >= frames.length) {
 
@@ -48,9 +52,9 @@ export default class AnimationSystem implements ISystem {
 
         nodes.map((node: INode) => {
 
-            let velocityData = node.data.velocity;
+            let velocityData = node.velocity;
 
-            let animationData = node.data.animation;
+            let animationData = node.animation;
 
             if (velocityData.velocityY > 0.01 || velocityData.velocityY < -0.01) {
 

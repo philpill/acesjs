@@ -26,7 +26,7 @@ export default class RenderSystem implements ISystem {
 
     init() {
 
-        this.stage = new PIXI.Stage();
+        this.stage = new PIXI.Application().stage;
 
         this.container = new PIXI.Container();
 
@@ -40,35 +40,39 @@ export default class RenderSystem implements ISystem {
         document.body.appendChild(this.renderer.view);
     }
 
+    stop() {
+
+    }
+
     update(time: number, nodes: INode[]) {
 
         // console.log('render update');
 
         for (var i = 0, j = nodes.length; i < j; i++) {
 
-            let id = nodes[i].data.entityId;
+            let id = nodes[i].entityId;
 
             if (!this.sprites.hasOwnProperty(id)) {
 
-                let sprite = nodes[i].data.display.sprite;
+                let sprite = nodes[i].display.sprite;
 
                 this.sprites[id] = sprite;
 
                 this.container.addChild(sprite);
             }
 
-            // console.log(nodes[i].data.position);
-            // console.log(nodes[i].data.display);
+            // console.log(nodes[i].position);
+            // console.log(nodes[i].display);
 
-            nodes[i].data.display.sprite.position.x = nodes[i].data.position.x;
-            nodes[i].data.display.sprite.position.y = nodes[i].data.position.y;
+            nodes[i].display.sprite.position.x = nodes[i].position.x;
+            nodes[i].display.sprite.position.y = nodes[i].position.y;
 
-            if (nodes[i].data.display.isFocus) {
+            if (nodes[i].display.isFocus) {
 
-                let x = nodes[i].data.display.sprite.x;
-                let width = nodes[i].data.display.sprite.width;
-                let y = nodes[i].data.display.sprite.y;
-                let height = nodes[i].data.display.sprite.height;
+                let x = nodes[i].display.sprite.x;
+                let width = nodes[i].display.sprite.width;
+                let y = nodes[i].display.sprite.y;
+                let height = nodes[i].display.sprite.height;
 
 
                 let mapWidth = this.settings.MAP[0] * this.settings.TILE;
@@ -95,8 +99,8 @@ export default class RenderSystem implements ISystem {
 
 
                 // test against map width * tilesize
-                if (nodes[i].data.display.sprite.x < 0 ||
-                    nodes[i].data.display.sprite.x + nodes[i].data.display.sprite.width > mapWidth) {
+                if (nodes[i].display.sprite.x < 0 ||
+                    nodes[i].display.sprite.x + nodes[i].display.sprite.width > mapWidth) {
                     console.log('EXIT');
                 }
 

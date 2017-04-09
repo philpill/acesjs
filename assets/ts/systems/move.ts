@@ -17,13 +17,17 @@ export default class MoveSystem implements ISystem {
 
     }
 
+    stop() {
+
+    }
+
     update(time: number, nodes: INode[]) {
 
         nodes.map((node: INode) => {
 
-            let velocityData = node.data.velocity;
+            let velocityData = node.velocity;
 
-            let positionData = node.data.position;
+            let positionData = node.position;
 
             if (!velocityData.isGrounded) {
                 // limit horizontal movement in the air

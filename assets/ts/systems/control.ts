@@ -23,11 +23,11 @@ export default class ControlSystem implements ISystem {
 
         let key = e.keyCode;
 
-        this.isJump = this.isJump | key === this.settings.KEY.SPACE;
-        this.isLeft = this.isLeft | key === this.settings.KEY.LEFT;
-        this.isUp = this.isUp | key === this.settings.KEY.UP;
-        this.isRight = this.isRight | key === this.settings.KEY.RIGHT;
-        this.isDown = this.isDown | key === this.settings.KEY.DOWN;
+        this.isJump = this.isJump || key === this.settings.KEY.SPACE;
+        this.isLeft = this.isLeft || key === this.settings.KEY.LEFT;
+        this.isUp = this.isUp || key === this.settings.KEY.UP;
+        this.isRight = this.isRight || key === this.settings.KEY.RIGHT;
+        this.isDown = this.isDown || key === this.settings.KEY.DOWN;
     }
 
     onKeyUp(e: KeyboardEvent) {
@@ -59,26 +59,30 @@ export default class ControlSystem implements ISystem {
         this.bind();
     }
 
+    stop() {
+
+    }
+
     update(time: number, nodes: INode[]) {
 
         for (let i = 0, j = nodes.length; i < j; i++) {
 
-            if (this.isUp && nodes[i].data.velocity.isGrounded) {
+            if (this.isUp && nodes[i].velocity.isGrounded) {
                 console.log('JUMP');
-                nodes[i].data.velocity.accelerationY = -nodes[i].data.velocity.maxAccelerationY;
-                nodes[i].data.velocity.velocityY = -0.3;
+                nodes[i].velocity.accelerationY = -nodes[i].velocity.maxAccelerationY;
+                nodes[i].velocity.velocityY = -0.3;
             } else {
-                nodes[i].data.velocity.accelerationY = 1;
+                nodes[i].velocity.accelerationY = 1;
             }
 
             if (this.isRight) {
                 // console.log('right');
-                nodes[i].data.velocity.accelerationX = nodes[i].data.velocity.maxAccelerationX;
+                nodes[i].velocity.accelerationX = nodes[i].velocity.maxAccelerationX;
             } else if (this.isLeft) {
                 // console.log('left');
-                nodes[i].data.velocity.accelerationX = -nodes[i].data.velocity.maxAccelerationX;
+                nodes[i].velocity.accelerationX = -nodes[i].velocity.maxAccelerationX;
             } else {
-                nodes[i].data.velocity.accelerationX = 0;
+                nodes[i].velocity.accelerationX = 0;
             }
         }
     }

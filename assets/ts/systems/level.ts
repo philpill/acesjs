@@ -28,10 +28,14 @@ export default class LevelSystem implements ISystem {
 
     }
 
+    stop() {
+
+    }
+
     loadLevel(levelNumber: number) {
         let levelData = this.levels[levelNumber].data;
         let level =  new LevelPrefab(this.settings, levelData);
-        return level.entities;
+        return level.createLevel().entities;
     }
 
     getAllEntityIds(nodes: INode[]) {
@@ -69,8 +73,8 @@ export default class LevelSystem implements ISystem {
             let finishX = this.levels[this.currentLevel - 1].data.properties.finishX;
             let finishY = this.levels[this.currentLevel - 1].data.properties.finishY;
 
-            let x = node.data.position.x / this.settings.TILE;
-            let y = node.data.position.y / this.settings.TILE;
+            let x = node.position.x / this.settings.TILE;
+            let y = node.position.y / this.settings.TILE;
 
             // console.log(x + ' ' + y);
 

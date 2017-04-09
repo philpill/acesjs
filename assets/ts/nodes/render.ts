@@ -8,9 +8,12 @@ export default class RenderNode implements INode {
     display: Display;
     position: Position;
 
+    isActive: boolean;
+
     constructor (entityId: number, displayComponent: Display, positionComponent: Position) {
         this.entityId = entityId;
         this.display = displayComponent;
         this.position = positionComponent;
+        this.isActive = true;
     }
 }
