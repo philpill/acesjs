@@ -2,6 +2,7 @@ import ISystem from './isystem';
 import Settings from '../settings';
 import INode from '../nodes/inode';
 import Sprite from '../sprite';
+import ITypedNode from '../itypedNode';
 
 export default class CollisionSystem implements ISystem {
 
@@ -36,31 +37,31 @@ export default class CollisionSystem implements ISystem {
         return isCollision;
     }
 
-    update(time: number, nodes: INode[]) {
+    update(time: number, nodes: ITypedNode[]) {
 
-        let primaries = nodes.filter((node: INode) => {
+        let primaries = nodes.filter((node: ITypedNode) => {
 
-            return node.collision.type === 'primary';
+            return node.data.collision.type === 'primary';
         });
 
-        let secondaries = nodes.filter((node: INode) => {
+        let secondaries = nodes.filter((node: ITypedNode) => {
 
-            return node.collision.type !== 'primary';
+            return node.data.collision.type !== 'primary';
         });
 
-        primaries.map((primary: INode) => {
+        primaries.map((primary: ITypedNode) => {
 
-            primary.velocity.isGrounded = false;
+            primary.data.velocity.isGrounded = false;
 
-            secondaries.map((secondary) => {
+            secondaries.map((secondary: ITypedNode) => {
 
-                let sprite1 = primary.display.sprite;
+                let sprite1 = primary.data.display.sprite;
 
-                let sprite2 = secondary.display.sprite;
+                let sprite2 = secondary.data.display.sprite;
 
                 if (this.isCollision(sprite1, sprite2)) {
 
-                    let velocityData = primary.velocity;
+                    let velocityData = primary.data.velocity;
 
                     let errorMargin = this.settings.TILE/2;
 
@@ -100,7 +101,7 @@ export default class CollisionSystem implements ISystem {
                         velocityData.velocityX = Math.max(0, velocityData.velocityX);
                     }
 
-                    primary.collision.collide(secondary);
+                    primary.data.collision.collide(secondary);
                 }
             });
         });

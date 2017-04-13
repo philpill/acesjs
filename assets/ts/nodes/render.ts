@@ -5,8 +5,9 @@ import Position from '../components/position';
 export default class RenderNode implements INode {
 
     entityId: number;
-    display: Display;
-    position: Position;
+
+        display: Display;
+        position: Position;
 
     isActive: boolean;
 

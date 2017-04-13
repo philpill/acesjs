@@ -1,6 +1,7 @@
 import ISystem from './isystem';
 import Settings from '../settings';
 import INode from '../nodes/inode';
+import ITypedNode from '../itypedNode';
 
 export default class MoveSystem implements ISystem {
 
@@ -21,13 +22,13 @@ export default class MoveSystem implements ISystem {
 
     }
 
-    update(time: number, nodes: INode[]) {
+    update(time: number, nodes: ITypedNode[]) {
 
-        nodes.map((node: INode) => {
+        nodes.map((node: ITypedNode) => {
 
-            let velocityData = node.velocity;
+            let velocityData = node.data.velocity;
 
-            let positionData = node.position;
+            let positionData = node.data.position;
 
             if (!velocityData.isGrounded) {
                 // limit horizontal movement in the air

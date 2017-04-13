@@ -210,14 +210,14 @@ exports["default"] = CollisionComponent;
 "use strict";
 
 exports.__esModule = true;
-var settings_1 = __webpack_require__(16);
+var settings_1 = __webpack_require__(22);
 var engine_1 = __webpack_require__(9);
-var animation_1 = __webpack_require__(17);
-var collision_1 = __webpack_require__(18);
-var control_1 = __webpack_require__(19);
-var level_1 = __webpack_require__(20);
-var move_1 = __webpack_require__(21);
-var render_1 = __webpack_require__(22);
+var animation_1 = __webpack_require__(23);
+var collision_1 = __webpack_require__(24);
+var control_1 = __webpack_require__(25);
+var level_1 = __webpack_require__(26);
+var move_1 = __webpack_require__(27);
+var render_1 = __webpack_require__(28);
 var Game = (function () {
     function Game() {
         console.log('GAME');
@@ -312,12 +312,12 @@ exports["default"] = VelocityComponent;
 "use strict";
 
 exports.__esModule = true;
-var move_1 = __webpack_require__(27);
-var render_1 = __webpack_require__(28);
-var control_1 = __webpack_require__(25);
-var collision_1 = __webpack_require__(24);
-var animation_1 = __webpack_require__(23);
-var level_1 = __webpack_require__(26);
+var move_1 = __webpack_require__(15);
+var render_1 = __webpack_require__(16);
+var control_1 = __webpack_require__(13);
+var collision_1 = __webpack_require__(12);
+var animation_1 = __webpack_require__(11);
+var level_1 = __webpack_require__(14);
 var Engine = (function () {
     function Engine() {
         this.entities = [];
@@ -339,7 +339,12 @@ var Engine = (function () {
         if (entity.components.animation && entity.components.display && entity.components.velocity) {
             this.typedNodes['animation'] = this.typedNodes['animation'] || [];
             // animation
-            this.typedNodes['animation'].push({ entityId: entity.id, "class": 'animation', data: new animation_1["default"](entity.id, entity.components.animation, entity.components.display, entity.components.velocity), isActive: true });
+            this.typedNodes['animation'].push({
+                entityId: entity.id,
+                "class": 'animation',
+                data: new animation_1["default"](entity.id, entity.components.animation, entity.components.display, entity.components.velocity),
+                isActive: true
+            });
         }
         if (entity.components.velocity && entity.components.position) {
             this.typedNodes['move'] = this.typedNodes['move'] || [];
@@ -455,14 +460,131 @@ var game_1 = __webpack_require__(5);
 var Main = (function () {
     function Main() {
         this.tbgscratch = new game_1["default"]();
+        this.tbgscratch.init();
     }
     return Main;
 }());
 exports["default"] = Main;
+new Main();
 
 
 /***/ }),
 /* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var AnimationNode = (function () {
+    function AnimationNode(entityId, animationComponent, displayComponent, velocityComponent) {
+        this.entityId = entityId;
+        this.animation = animationComponent;
+        this.display = displayComponent;
+        this.velocity = velocityComponent;
+        this.isActive = true;
+    }
+    return AnimationNode;
+}());
+exports["default"] = AnimationNode;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var CollisionNode = (function () {
+    function CollisionNode(entityId, collisionComponent, displayComponent, velocityComponent) {
+        this.entityId = entityId;
+        this.collision = collisionComponent;
+        this.display = displayComponent;
+        this.velocity = velocityComponent;
+        this.isActive = true;
+    }
+    return CollisionNode;
+}());
+exports["default"] = CollisionNode;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var ControlNode = (function () {
+    function ControlNode(entityId, inputComponent, velocityComponent) {
+        this.entityId = entityId;
+        this.input = inputComponent;
+        this.velocity = velocityComponent;
+        this.isActive = true;
+    }
+    return ControlNode;
+}());
+exports["default"] = ControlNode;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var LevelNode = (function () {
+    function LevelNode(entityId, positionComponent) {
+        this.entityId = entityId;
+        this.position = positionComponent;
+        this.isActive = true;
+    }
+    return LevelNode;
+}());
+exports["default"] = LevelNode;
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var MoveNode = (function () {
+    function MoveNode(entityId, positionComponent, velocityComponent) {
+        this.entityId = entityId;
+        this.position = positionComponent;
+        this.velocity = velocityComponent;
+        this.isActive = true;
+    }
+    return MoveNode;
+}());
+exports["default"] = MoveNode;
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var RenderNode = (function () {
+    function RenderNode(entityId, displayComponent, positionComponent) {
+        this.entityId = entityId;
+        this.display = displayComponent;
+        this.position = positionComponent;
+        this.isActive = true;
+    }
+    return RenderNode;
+}());
+exports["default"] = RenderNode;
+
+
+/***/ }),
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -499,7 +621,7 @@ exports["default"] = GroundPrefab;
 
 
 /***/ }),
-/* 12 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -534,16 +656,16 @@ exports["default"] = GroundPrefab;
 
 
 /***/ }),
-/* 13 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 exports.__esModule = true;
-var player_1 = __webpack_require__(14);
-var sky_1 = __webpack_require__(15);
-var ground_1 = __webpack_require__(12);
-var background_1 = __webpack_require__(11);
+var player_1 = __webpack_require__(20);
+var sky_1 = __webpack_require__(21);
+var ground_1 = __webpack_require__(18);
+var background_1 = __webpack_require__(17);
 var LevelPrefab = (function () {
     function LevelPrefab(settings, data) {
         this.settings = settings;
@@ -595,7 +717,7 @@ exports["default"] = LevelPrefab;
 
 
 /***/ }),
-/* 14 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -644,7 +766,7 @@ exports["default"] = PlayerPrefab;
 
 
 /***/ }),
-/* 15 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -675,7 +797,7 @@ exports["default"] = SkyPrefab;
 
 
 /***/ }),
-/* 16 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -695,7 +817,7 @@ exports["default"] = Settings;
 
 
 /***/ }),
-/* 17 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -712,12 +834,12 @@ var AnimationSystem = (function () {
     AnimationSystem.prototype.stop = function () {
     };
     AnimationSystem.prototype.setAnimation = function (node, prop) {
-        node.animation.currentAnimationProp = prop;
+        node.data.animation.currentAnimationProp = prop;
     };
     AnimationSystem.prototype.updateFrame = function (node) {
-        var animationData = node.animation;
-        var displayData = node.display;
-        var frames = animationData[node.animation.currentAnimationProp];
+        var animationData = node.data.animation;
+        var displayData = node.data.display;
+        var frames = animationData[animationData.currentAnimationProp];
         if (animationData.currentFrame + 1 >= frames.length) {
             animationData.currentFrame = 0;
         }
@@ -729,8 +851,8 @@ var AnimationSystem = (function () {
     AnimationSystem.prototype.update = function (dt, nodes) {
         var _this = this;
         nodes.map(function (node) {
-            var velocityData = node.velocity;
-            var animationData = node.animation;
+            var velocityData = node.data.velocity;
+            var animationData = node.data.animation;
             if (velocityData.velocityY > 0.01 || velocityData.velocityY < -0.01) {
                 // play jump animation
                 _this.setAnimation(node, 'jump');
@@ -760,7 +882,7 @@ exports["default"] = AnimationSystem;
 
 
 /***/ }),
-/* 18 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -788,18 +910,18 @@ var CollisionSystem = (function () {
     CollisionSystem.prototype.update = function (time, nodes) {
         var _this = this;
         var primaries = nodes.filter(function (node) {
-            return node.collision.type === 'primary';
+            return node.data.collision.type === 'primary';
         });
         var secondaries = nodes.filter(function (node) {
-            return node.collision.type !== 'primary';
+            return node.data.collision.type !== 'primary';
         });
         primaries.map(function (primary) {
-            primary.velocity.isGrounded = false;
+            primary.data.velocity.isGrounded = false;
             secondaries.map(function (secondary) {
-                var sprite1 = primary.display.sprite;
-                var sprite2 = secondary.display.sprite;
+                var sprite1 = primary.data.display.sprite;
+                var sprite2 = secondary.data.display.sprite;
                 if (_this.isCollision(sprite1, sprite2)) {
-                    var velocityData = primary.velocity;
+                    var velocityData = primary.data.velocity;
                     var errorMargin = _this.settings.TILE / 2;
                     var isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
                         sprite1.height + sprite1.y < sprite2.y + errorMargin;
@@ -827,7 +949,7 @@ var CollisionSystem = (function () {
                         velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
                         velocityData.velocityX = Math.max(0, velocityData.velocityX);
                     }
-                    primary.collision.collide(secondary);
+                    primary.data.collision.collide(secondary);
                 }
             });
         });
@@ -838,7 +960,7 @@ exports["default"] = CollisionSystem;
 
 
 /***/ }),
-/* 19 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -883,24 +1005,25 @@ var ControlSystem = (function () {
     };
     ControlSystem.prototype.update = function (time, nodes) {
         for (var i = 0, j = nodes.length; i < j; i++) {
-            if (this.isUp && nodes[i].velocity.isGrounded) {
+            var velocityData = nodes[i].data.velocity;
+            if (this.isUp && velocityData.isGrounded) {
                 console.log('JUMP');
-                nodes[i].velocity.accelerationY = -nodes[i].velocity.maxAccelerationY;
-                nodes[i].velocity.velocityY = -0.3;
+                velocityData.accelerationY = -velocityData.maxAccelerationY;
+                velocityData.velocityY = -0.3;
             }
             else {
-                nodes[i].velocity.accelerationY = 1;
+                velocityData.accelerationY = 1;
             }
             if (this.isRight) {
                 // console.log('right');
-                nodes[i].velocity.accelerationX = nodes[i].velocity.maxAccelerationX;
+                velocityData.accelerationX = velocityData.maxAccelerationX;
             }
             else if (this.isLeft) {
                 // console.log('left');
-                nodes[i].velocity.accelerationX = -nodes[i].velocity.maxAccelerationX;
+                velocityData.accelerationX = -velocityData.maxAccelerationX;
             }
             else {
-                nodes[i].velocity.accelerationX = 0;
+                velocityData.accelerationX = 0;
             }
         }
     };
@@ -910,13 +1033,13 @@ exports["default"] = ControlSystem;
 
 
 /***/ }),
-/* 20 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 exports.__esModule = true;
-var level_1 = __webpack_require__(13);
+var level_1 = __webpack_require__(19);
 var LevelSystem = (function () {
     function LevelSystem(settings) {
         this["class"] = 'level';
@@ -960,8 +1083,8 @@ var LevelSystem = (function () {
             // console.log(node);
             var finishX = _this.levels[_this.currentLevel - 1].data.properties.finishX;
             var finishY = _this.levels[_this.currentLevel - 1].data.properties.finishY;
-            var x = node.position.x / _this.settings.TILE;
-            var y = node.position.y / _this.settings.TILE;
+            var x = node.data.position.x / _this.settings.TILE;
+            var y = node.data.position.y / _this.settings.TILE;
             // console.log(x + ' ' + y);
             if (finishX === x && finishY === y) {
                 console.log('FINISH');
@@ -978,7 +1101,7 @@ exports["default"] = LevelSystem;
 
 
 /***/ }),
-/* 21 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -996,8 +1119,8 @@ var MoveSystem = (function () {
     MoveSystem.prototype.update = function (time, nodes) {
         var _this = this;
         nodes.map(function (node) {
-            var velocityData = node.velocity;
-            var positionData = node.position;
+            var velocityData = node.data.velocity;
+            var positionData = node.data.position;
             if (!velocityData.isGrounded) {
                 // limit horizontal movement in the air
                 velocityData.accelerationX = velocityData.accelerationX / 3;
@@ -1033,7 +1156,7 @@ exports["default"] = MoveSystem;
 
 
 /***/ }),
-/* 22 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1062,20 +1185,22 @@ var RenderSystem = (function () {
         // console.log('render update');
         for (var i = 0, j = nodes.length; i < j; i++) {
             var id = nodes[i].entityId;
+            var displayData = nodes[i].data.display;
+            var positionData = nodes[i].data.position;
             if (!this.sprites.hasOwnProperty(id)) {
-                var sprite = nodes[i].display.sprite;
+                var sprite = displayData.sprite;
                 this.sprites[id] = sprite;
                 this.container.addChild(sprite);
             }
             // console.log(nodes[i].position);
             // console.log(nodes[i].display);
-            nodes[i].display.sprite.position.x = nodes[i].position.x;
-            nodes[i].display.sprite.position.y = nodes[i].position.y;
-            if (nodes[i].display.isFocus) {
-                var x = nodes[i].display.sprite.x;
-                var width = nodes[i].display.sprite.width;
-                var y = nodes[i].display.sprite.y;
-                var height = nodes[i].display.sprite.height;
+            displayData.sprite.position.x = positionData.x;
+            displayData.sprite.position.y = positionData.y;
+            if (displayData.isFocus) {
+                var x = displayData.sprite.x;
+                var width = displayData.sprite.width;
+                var y = displayData.sprite.y;
+                var height = displayData.sprite.height;
                 var mapWidth = this.settings.MAP[0] * this.settings.TILE;
                 var mapHeight = this.settings.MAP[1] * this.settings.TILE;
                 var screenWidth = this.renderer.width;
@@ -1090,8 +1215,8 @@ var RenderSystem = (function () {
                 pivotY = y + screenHeight / 2 > mapHeight ? mapHeight - screenHeight / 2 : pivotY;
                 this.stage.pivot.y = pivotY;
                 // test against map width * tilesize
-                if (nodes[i].display.sprite.x < 0 ||
-                    nodes[i].display.sprite.x + nodes[i].display.sprite.width > mapWidth) {
+                if (displayData.sprite.x < 0 ||
+                    displayData.sprite.x + displayData.sprite.width > mapWidth) {
                     console.log('EXIT');
                 }
                 // console.log('x', this.stage.pivot.x);
@@ -1109,121 +1234,6 @@ var RenderSystem = (function () {
     return RenderSystem;
 }());
 exports["default"] = RenderSystem;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var AnimationNode = (function () {
-    function AnimationNode(entityId, animationComponent, displayComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.animation = animationComponent;
-        this.display = displayComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return AnimationNode;
-}());
-exports["default"] = AnimationNode;
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var CollisionNode = (function () {
-    function CollisionNode(entityId, collisionComponent, displayComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.collision = collisionComponent;
-        this.display = displayComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return CollisionNode;
-}());
-exports["default"] = CollisionNode;
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var ControlNode = (function () {
-    function ControlNode(entityId, inputComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.input = inputComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return ControlNode;
-}());
-exports["default"] = ControlNode;
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var LevelNode = (function () {
-    function LevelNode(entityId, positionComponent) {
-        this.entityId = entityId;
-        this.position = positionComponent;
-        this.isActive = true;
-    }
-    return LevelNode;
-}());
-exports["default"] = LevelNode;
-
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var MoveNode = (function () {
-    function MoveNode(entityId, positionComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.position = positionComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return MoveNode;
-}());
-exports["default"] = MoveNode;
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var RenderNode = (function () {
-    function RenderNode(entityId, displayComponent, positionComponent) {
-        this.entityId = entityId;
-        this.display = displayComponent;
-        this.position = positionComponent;
-        this.isActive = true;
-    }
-    return RenderNode;
-}());
-exports["default"] = RenderNode;
 
 
 /***/ })

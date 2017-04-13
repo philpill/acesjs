@@ -9,7 +9,6 @@ export default class AnimationNode implements INode {
     animation: Animation;
     display: Display;
     velocity: Velocity;
-
     isActive: boolean;
 
     constructor (entityId: number, animationComponent: Animation, displayComponent: Display, velocityComponent: Velocity) {

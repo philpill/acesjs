@@ -9,5 +9,9 @@ export default class Main {
     constructor() {
 
         this.tbgscratch = new Game();
+
+        this.tbgscratch.init();
     }
 }
+
+new Main();

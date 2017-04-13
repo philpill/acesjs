@@ -12,6 +12,7 @@ interface INode {
 
     entityId: number;
 
+
     animation?: Animation;
     collision?: Collision;
     display?: Display;
@@ -21,6 +22,8 @@ interface INode {
     trigger?: Trigger;
     user?: User;
     velocity?: Velocity;
+
+    class?: string;
 
     isActive: boolean;
 }

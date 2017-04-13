@@ -1,6 +1,7 @@
 import ISystem from './isystem';
 import Settings from '../settings';
 import INode from '../nodes/inode';
+import ITypedNode from '../itypedNode';
 
 export default class AnimationSystem implements ISystem {
 
@@ -23,18 +24,18 @@ export default class AnimationSystem implements ISystem {
 
     }
 
-    setAnimation(node: INode, prop: string) {
+    setAnimation(node: ITypedNode, prop: string) {
 
-        node.animation.currentAnimationProp = prop;
+        node.data.animation.currentAnimationProp = prop;
     }
 
-    updateFrame(node: INode) {
+    updateFrame(node: ITypedNode) {
 
-        let animationData = node.animation;
+        let animationData = node.data.animation;
 
-        let displayData = node.display;
+        let displayData = node.data.display;
 
-        let frames = animationData[node.animation.currentAnimationProp];
+        let frames = animationData[animationData.currentAnimationProp];
 
         if (animationData.currentFrame + 1 >= frames.length) {
 
@@ -48,13 +49,13 @@ export default class AnimationSystem implements ISystem {
         displayData.sprite.texture.frame = displayData.sprite.data.texture[frames[animationData.currentFrame]];
     }
 
-    update(dt: number, nodes: INode[]) {
+    update(dt: number, nodes: ITypedNode[]) {
 
-        nodes.map((node: INode) => {
+        nodes.map((node: ITypedNode) => {
 
-            let velocityData = node.velocity;
+            let velocityData = node.data.velocity;
 
-            let animationData = node.animation;
+            let animationData = node.data.animation;
 
             if (velocityData.velocityY > 0.01 || velocityData.velocityY < -0.01) {
 

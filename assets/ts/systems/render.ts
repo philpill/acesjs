@@ -1,6 +1,7 @@
 import ISystem from './isystem';
 import Settings from '../settings';
 import INode from '../nodes/inode';
+import ITypedNode from '../itypedNode';
 
 export default class RenderSystem implements ISystem {
 
@@ -44,7 +45,7 @@ export default class RenderSystem implements ISystem {
 
     }
 
-    update(time: number, nodes: INode[]) {
+    update(time: number, nodes: ITypedNode[]) {
 
         // console.log('render update');
 
@@ -52,9 +53,12 @@ export default class RenderSystem implements ISystem {
 
             let id = nodes[i].entityId;
 
+            let displayData = nodes[i].data.display;
+            let positionData = nodes[i].data.position;
+
             if (!this.sprites.hasOwnProperty(id)) {
 
-                let sprite = nodes[i].display.sprite;
+                let sprite = displayData.sprite;
 
                 this.sprites[id] = sprite;
 
@@ -64,15 +68,15 @@ export default class RenderSystem implements ISystem {
             // console.log(nodes[i].position);
             // console.log(nodes[i].display);
 
-            nodes[i].display.sprite.position.x = nodes[i].position.x;
-            nodes[i].display.sprite.position.y = nodes[i].position.y;
+            displayData.sprite.position.x = positionData.x;
+            displayData.sprite.position.y = positionData.y;
 
-            if (nodes[i].display.isFocus) {
+            if (displayData.isFocus) {
 
-                let x = nodes[i].display.sprite.x;
-                let width = nodes[i].display.sprite.width;
-                let y = nodes[i].display.sprite.y;
-                let height = nodes[i].display.sprite.height;
+                let x = displayData.sprite.x;
+                let width = displayData.sprite.width;
+                let y = displayData.sprite.y;
+                let height = displayData.sprite.height;
 
 
                 let mapWidth = this.settings.MAP[0] * this.settings.TILE;
@@ -99,8 +103,8 @@ export default class RenderSystem implements ISystem {
 
 
                 // test against map width * tilesize
-                if (nodes[i].display.sprite.x < 0 ||
-                    nodes[i].display.sprite.x + nodes[i].display.sprite.width > mapWidth) {
+                if (displayData.sprite.x < 0 ||
+                    displayData.sprite.x + displayData.sprite.width > mapWidth) {
                     console.log('EXIT');
                 }
 

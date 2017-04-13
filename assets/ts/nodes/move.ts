@@ -5,8 +5,10 @@ import Velocity from '../components/velocity';
 export default class MoveNode implements INode {
 
     entityId: number;
-    velocity: Velocity;
-    position: Position;
+
+        velocity: Velocity;
+        position: Position;
+
 
     isActive: boolean;
 

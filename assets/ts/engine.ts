@@ -6,13 +6,15 @@ import AnimationNode from './nodes/animation';
 import LevelNode from './nodes/level';
 import Entity from './prefabs/entity';
 import ISystem from './systems/isystem';
+import INode from './nodes/inode';
+import ITypedNode from './itypedNode';
 
 export default class Engine {
 
     entities: any[];
     systems: any[];
     nodes: any[];
-    typedNodes: any;
+    typedNodes: { [key: string] : ITypedNode[] };
     isPaused: boolean;
 
     constructor() {
@@ -46,7 +48,11 @@ export default class Engine {
             this.typedNodes['animation'] = this.typedNodes['animation'] || [];
 
             // animation
-            this.typedNodes['animation'].push({ entityId: entity.id, class: 'animation', data: new AnimationNode(entity.id, entity.components.animation, entity.components.display, entity.components.velocity), isActive: true });
+            this.typedNodes['animation'].push({
+                entityId: entity.id,
+                class: 'animation',
+                data: new AnimationNode(entity.id, entity.components.animation, entity.components.display, entity.components.velocity),
+                isActive: true });
         }
 
         if (entity.components.velocity && entity.components.position) {

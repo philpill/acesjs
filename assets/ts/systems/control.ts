@@ -1,6 +1,7 @@
 import ISystem from './isystem';
 import Settings from '../settings';
 import INode from '../nodes/inode';
+import ITypedNode from '../itypedNode';
 
 export default class ControlSystem implements ISystem {
 
@@ -63,26 +64,28 @@ export default class ControlSystem implements ISystem {
 
     }
 
-    update(time: number, nodes: INode[]) {
+    update(time: number, nodes: ITypedNode[]) {
 
         for (let i = 0, j = nodes.length; i < j; i++) {
 
-            if (this.isUp && nodes[i].velocity.isGrounded) {
+            let velocityData = nodes[i].data.velocity;
+
+            if (this.isUp && velocityData.isGrounded) {
                 console.log('JUMP');
-                nodes[i].velocity.accelerationY = -nodes[i].velocity.maxAccelerationY;
-                nodes[i].velocity.velocityY = -0.3;
+                velocityData.accelerationY = -velocityData.maxAccelerationY;
+                velocityData.velocityY = -0.3;
             } else {
-                nodes[i].velocity.accelerationY = 1;
+                velocityData.accelerationY = 1;
             }
 
             if (this.isRight) {
                 // console.log('right');
-                nodes[i].velocity.accelerationX = nodes[i].velocity.maxAccelerationX;
+                velocityData.accelerationX = velocityData.maxAccelerationX;
             } else if (this.isLeft) {
                 // console.log('left');
-                nodes[i].velocity.accelerationX = -nodes[i].velocity.maxAccelerationX;
+                velocityData.accelerationX = -velocityData.maxAccelerationX;
             } else {
-                nodes[i].velocity.accelerationX = 0;
+                velocityData.accelerationX = 0;
             }
         }
     }

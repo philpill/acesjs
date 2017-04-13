@@ -2,6 +2,7 @@ import ISystem from './isystem';
 import Settings from '../settings';
 import INode from '../nodes/inode';
 import LevelPrefab from '../prefabs/level';
+import ITypedNode from '../itypedNode';
 
 export default class LevelSystem implements ISystem {
 
@@ -38,9 +39,9 @@ export default class LevelSystem implements ISystem {
         return level.createLevel().entities;
     }
 
-    getAllEntityIds(nodes: INode[]) {
+    getAllEntityIds(nodes: ITypedNode[]) {
 
-        let ids = nodes.map((node: INode) => {
+        let ids = nodes.map((node: ITypedNode) => {
             return node.entityId;
         });
 
@@ -54,7 +55,7 @@ export default class LevelSystem implements ISystem {
         this.currentLevel++;
     }
 
-    update(time: number, nodes: INode[]) {
+    update(time: number, nodes: ITypedNode[]) {
 
         let result: any = {};
 
@@ -66,15 +67,15 @@ export default class LevelSystem implements ISystem {
             this.isLoaded = true;
         }
 
-        nodes.map((node: INode) => {
+        nodes.map((node: ITypedNode) => {
 
             // console.log(node);
 
             let finishX = this.levels[this.currentLevel - 1].data.properties.finishX;
             let finishY = this.levels[this.currentLevel - 1].data.properties.finishY;
 
-            let x = node.position.x / this.settings.TILE;
-            let y = node.position.y / this.settings.TILE;
+            let x = node.data.position.x / this.settings.TILE;
+            let y = node.data.position.y / this.settings.TILE;
 
             // console.log(x + ' ' + y);
 
