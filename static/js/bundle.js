@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 16);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -210,114 +210,12 @@ exports["default"] = CollisionComponent;
 "use strict";
 
 exports.__esModule = true;
-var settings_1 = __webpack_require__(22);
-var engine_1 = __webpack_require__(9);
-var animation_1 = __webpack_require__(23);
-var collision_1 = __webpack_require__(24);
-var control_1 = __webpack_require__(25);
-var level_1 = __webpack_require__(26);
-var move_1 = __webpack_require__(27);
-var render_1 = __webpack_require__(28);
-var Game = (function () {
-    function Game() {
-        console.log('GAME');
-    }
-    Game.prototype.init = function () {
-        PIXI.loader.add('player', '/static/img/player.png');
-        PIXI.loader.add('bg', '/static/img/bg.png');
-        PIXI.loader.add('level1', '/assets/json/levelone.json');
-        PIXI.loader.load(this._onLoad.bind(this));
-    };
-    Game.prototype._onLoad = function () {
-        this._settings = new settings_1["default"]();
-        this._engine = new engine_1["default"]();
-        this._engine.addSystem(new animation_1["default"](this._settings));
-        this._engine.addSystem(new move_1["default"](this._settings));
-        this._engine.addSystem(new render_1["default"](this._settings));
-        this._engine.addSystem(new control_1["default"](this._settings));
-        this._engine.addSystem(new collision_1["default"](this._settings));
-        this._engine.addSystem(new level_1["default"](this._settings));
-        this._engine.init();
-    };
-    return Game;
-}());
-exports["default"] = Game;
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var AnimationComponent = (function () {
-    function AnimationComponent() {
-        this["class"] = 'animation';
-        this["default"] = [0];
-        this.walkRight = [1, 2];
-        this.walkLeft = [2, 1];
-        this.jump = [3];
-        this.currentAnimationProp = 'default';
-        this.currentFrame = 0;
-    }
-    return AnimationComponent;
-}());
-exports["default"] = AnimationComponent;
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var InputComponent = (function () {
-    function InputComponent() {
-        this["class"] = 'input';
-    }
-    return InputComponent;
-}());
-exports["default"] = InputComponent;
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var VelocityComponent = (function () {
-    function VelocityComponent() {
-        this["class"] = 'velocity';
-        this.accelerationX = 0;
-        this.accelerationY = 0;
-        this.maxAccelerationX = 3;
-        this.maxAccelerationY = 4;
-        this.velocityX = 0;
-        this.velocityY = 0;
-        this.isGrounded = false;
-    }
-    return VelocityComponent;
-}());
-exports["default"] = VelocityComponent;
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var move_1 = __webpack_require__(15);
-var render_1 = __webpack_require__(16);
-var control_1 = __webpack_require__(13);
-var collision_1 = __webpack_require__(12);
-var animation_1 = __webpack_require__(11);
-var level_1 = __webpack_require__(14);
+var move_1 = __webpack_require__(21);
+var render_1 = __webpack_require__(22);
+var control_1 = __webpack_require__(19);
+var collision_1 = __webpack_require__(18);
+var animation_1 = __webpack_require__(17);
+var level_1 = __webpack_require__(20);
 var Engine = (function () {
     function Engine() {
         this.entities = [];
@@ -449,355 +347,7 @@ exports["default"] = Engine;
 
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/// <reference path="../dts/pixi.js.d.ts" />
-
-exports.__esModule = true;
-var game_1 = __webpack_require__(5);
-var Main = (function () {
-    function Main() {
-        this.tbgscratch = new game_1["default"]();
-        this.tbgscratch.init();
-    }
-    return Main;
-}());
-exports["default"] = Main;
-new Main();
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var AnimationNode = (function () {
-    function AnimationNode(entityId, animationComponent, displayComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.animation = animationComponent;
-        this.display = displayComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return AnimationNode;
-}());
-exports["default"] = AnimationNode;
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var CollisionNode = (function () {
-    function CollisionNode(entityId, collisionComponent, displayComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.collision = collisionComponent;
-        this.display = displayComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return CollisionNode;
-}());
-exports["default"] = CollisionNode;
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var ControlNode = (function () {
-    function ControlNode(entityId, inputComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.input = inputComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return ControlNode;
-}());
-exports["default"] = ControlNode;
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var LevelNode = (function () {
-    function LevelNode(entityId, positionComponent) {
-        this.entityId = entityId;
-        this.position = positionComponent;
-        this.isActive = true;
-    }
-    return LevelNode;
-}());
-exports["default"] = LevelNode;
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var MoveNode = (function () {
-    function MoveNode(entityId, positionComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.position = positionComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return MoveNode;
-}());
-exports["default"] = MoveNode;
-
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var RenderNode = (function () {
-    function RenderNode(entityId, displayComponent, positionComponent) {
-        this.entityId = entityId;
-        this.display = displayComponent;
-        this.position = positionComponent;
-        this.isActive = true;
-    }
-    return RenderNode;
-}());
-exports["default"] = RenderNode;
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var entity_1 = __webpack_require__(2);
-var display_1 = __webpack_require__(0);
-var position_1 = __webpack_require__(1);
-var sprite_1 = __webpack_require__(3);
-var GroundPrefab = (function () {
-    function GroundPrefab(type, x, y, tile) {
-        var ground = new entity_1["default"]();
-        var texture;
-        if (type === 4) {
-            texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(48, 0, 14, tile));
-        }
-        else if (type === 5) {
-            texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(64, 0, 14, tile));
-        }
-        var sprite = new sprite_1["default"](texture);
-        sprite.height = tile;
-        sprite.width = tile;
-        var display = new display_1["default"](sprite);
-        ground.addComponent(display);
-        var positionComponent = new position_1["default"]();
-        positionComponent.x = x;
-        positionComponent.y = y;
-        ground.addComponent(positionComponent);
-        return ground;
-    }
-    return GroundPrefab;
-}());
-exports["default"] = GroundPrefab;
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var entity_1 = __webpack_require__(2);
-var display_1 = __webpack_require__(0);
-var position_1 = __webpack_require__(1);
-var collision_1 = __webpack_require__(4);
-var sprite_1 = __webpack_require__(3);
-var GroundPrefab = (function () {
-    function GroundPrefab(x, y, tile) {
-        var ground = new entity_1["default"]();
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 14, tile));
-        var sprite = new sprite_1["default"](texture);
-        sprite.height = tile;
-        sprite.width = tile;
-        var display = new display_1["default"](sprite);
-        ground.addComponent(display);
-        var positionComponent = new position_1["default"]();
-        positionComponent.x = x;
-        positionComponent.y = y;
-        ground.addComponent(positionComponent);
-        var collision = new collision_1["default"]();
-        collision.type = 'secondary';
-        ground.addComponent(collision);
-        return ground;
-    }
-    return GroundPrefab;
-}());
-exports["default"] = GroundPrefab;
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var player_1 = __webpack_require__(20);
-var sky_1 = __webpack_require__(21);
-var ground_1 = __webpack_require__(18);
-var background_1 = __webpack_require__(17);
-var LevelPrefab = (function () {
-    function LevelPrefab(settings, data) {
-        this.settings = settings;
-        this.data = data;
-    }
-    LevelPrefab.prototype.createLayer = function (data) {
-        var mapData = data.layers[0].data;
-        for (var i = 0, j = data.height; i < j; i++) {
-            for (var k = 0, l = data.width; k < l; k++) {
-                var val = mapData[i * data.width + k];
-                if (val === 1) {
-                    var ground = new ground_1["default"](k * data.tilewidth, i * data.tilewidth, data.tileheight);
-                    data.entities.push(ground);
-                }
-            }
-        }
-    };
-    LevelPrefab.prototype.createBackgroundLayer = function (data) {
-        var mapData = data.layers[1].data;
-        for (var i = 0, j = data.height; i < j; i++) {
-            for (var k = 0, l = data.width; k < l; k++) {
-                var val = mapData[i * data.width + k];
-                if (val === 4) {
-                    var bg = new background_1["default"](4, k * data.tilewidth, i * data.tilewidth, data.tileheight);
-                    data.entities.push(bg);
-                }
-                else if (val === 5) {
-                    var bg = new background_1["default"](5, k * data.tilewidth, i * data.tilewidth, data.tileheight);
-                    data.entities.push(bg);
-                }
-            }
-        }
-    };
-    LevelPrefab.prototype.createLevel = function () {
-        var data = this.data;
-        var mapData = data.layers[0].data;
-        data.entities = [];
-        var sky = new sky_1["default"](data.width, data.height, data.tileheight);
-        data.entities.push(sky);
-        this.createLayer(data);
-        this.createBackgroundLayer(data);
-        var player = new player_1["default"](this.settings, [data.properties.startX, data.properties.startY]);
-        data.entities.push(player);
-        return data;
-    };
-    return LevelPrefab;
-}());
-exports["default"] = LevelPrefab;
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var entity_1 = __webpack_require__(2);
-var sprite_1 = __webpack_require__(3);
-var display_1 = __webpack_require__(0);
-var position_1 = __webpack_require__(1);
-var velocity_1 = __webpack_require__(8);
-var input_1 = __webpack_require__(7);
-var collision_1 = __webpack_require__(4);
-var animation_1 = __webpack_require__(6);
-var PlayerPrefab = (function () {
-    function PlayerPrefab(settings, start) {
-        var texture = PIXI.utils.TextureCache['/static/img/player.png'];
-        var sprite = new sprite_1["default"](texture);
-        sprite.data.texture.push(new PIXI.Rectangle(0, 0, 16, 32));
-        sprite.data.texture.push(new PIXI.Rectangle(16, 0, 16, 32));
-        sprite.data.texture.push(new PIXI.Rectangle(32, 0, 16, 32));
-        sprite.data.texture.push(new PIXI.Rectangle(48, 0, 16, 32));
-        texture.frame = sprite.data.texture[1];
-        var player = new entity_1["default"]();
-        var animation = new animation_1["default"]();
-        animation.walkRight = [1, 2];
-        animation.walkLeft = [2, 1];
-        animation.jump = [3];
-        animation["default"] = [0];
-        var collision = new collision_1["default"]();
-        collision.type = 'primary';
-        var display = new display_1["default"](sprite);
-        display.isFocus = true;
-        var positionComponent = new position_1["default"]();
-        positionComponent.isPlayer = true;
-        positionComponent.x = start[0] * settings.TILE;
-        positionComponent.y = start[1] * settings.TILE;
-        var velocityComponent = new velocity_1["default"]();
-        velocityComponent.accelerationY = settings.GRAVITY;
-        var inputComponent = new input_1["default"]();
-        player.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation);
-        return player;
-    }
-    return PlayerPrefab;
-}());
-exports["default"] = PlayerPrefab;
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var entity_1 = __webpack_require__(2);
-var display_1 = __webpack_require__(0);
-var position_1 = __webpack_require__(1);
-var sprite_1 = __webpack_require__(3);
-var SkyPrefab = (function () {
-    function SkyPrefab(width, height, tile) {
-        var sky = new entity_1["default"]();
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(33, 0, 14, tile));
-        var sprite = new sprite_1["default"](texture);
-        sprite.height = height * tile;
-        sprite.width = width * tile;
-        var display = new display_1["default"](sprite);
-        sky.addComponent(display);
-        var position = new position_1["default"]();
-        position.x = 0;
-        position.y = 0;
-        sky.addComponent(position);
-        return sky;
-    }
-    return SkyPrefab;
-}());
-exports["default"] = SkyPrefab;
-
-
-/***/ }),
-/* 22 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -817,7 +367,7 @@ exports["default"] = Settings;
 
 
 /***/ }),
-/* 23 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -882,7 +432,7 @@ exports["default"] = AnimationSystem;
 
 
 /***/ }),
-/* 24 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -960,7 +510,7 @@ exports["default"] = CollisionSystem;
 
 
 /***/ }),
-/* 25 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1004,9 +554,10 @@ var ControlSystem = (function () {
     ControlSystem.prototype.stop = function () {
     };
     ControlSystem.prototype.update = function (time, nodes) {
-        for (var i = 0, j = nodes.length; i < j; i++) {
-            var velocityData = nodes[i].data.velocity;
-            if (this.isUp && velocityData.isGrounded) {
+        var _this = this;
+        nodes.map(function (node) {
+            var velocityData = node.data.velocity;
+            if (_this.isUp && velocityData.isGrounded) {
                 console.log('JUMP');
                 velocityData.accelerationY = -velocityData.maxAccelerationY;
                 velocityData.velocityY = -0.3;
@@ -1014,18 +565,18 @@ var ControlSystem = (function () {
             else {
                 velocityData.accelerationY = 1;
             }
-            if (this.isRight) {
+            if (_this.isRight) {
                 // console.log('right');
                 velocityData.accelerationX = velocityData.maxAccelerationX;
             }
-            else if (this.isLeft) {
+            else if (_this.isLeft) {
                 // console.log('left');
                 velocityData.accelerationX = -velocityData.maxAccelerationX;
             }
             else {
                 velocityData.accelerationX = 0;
             }
-        }
+        });
     };
     return ControlSystem;
 }());
@@ -1033,13 +584,13 @@ exports["default"] = ControlSystem;
 
 
 /***/ }),
-/* 26 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 exports.__esModule = true;
-var level_1 = __webpack_require__(19);
+var level_1 = __webpack_require__(25);
 var LevelSystem = (function () {
     function LevelSystem(settings) {
         this["class"] = 'level';
@@ -1101,7 +652,7 @@ exports["default"] = LevelSystem;
 
 
 /***/ }),
-/* 27 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1156,7 +707,7 @@ exports["default"] = MoveSystem;
 
 
 /***/ }),
-/* 28 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1234,6 +785,483 @@ var RenderSystem = (function () {
     return RenderSystem;
 }());
 exports["default"] = RenderSystem;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var AnimationComponent = (function () {
+    function AnimationComponent() {
+        this["class"] = 'animation';
+        this["default"] = [0];
+        this.walkRight = [1, 2];
+        this.walkLeft = [2, 1];
+        this.jump = [3];
+        this.currentAnimationProp = 'default';
+        this.currentFrame = 0;
+    }
+    return AnimationComponent;
+}());
+exports["default"] = AnimationComponent;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var InputComponent = (function () {
+    function InputComponent() {
+        this["class"] = 'input';
+    }
+    return InputComponent;
+}());
+exports["default"] = InputComponent;
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var VelocityComponent = (function () {
+    function VelocityComponent() {
+        this["class"] = 'velocity';
+        this.accelerationX = 0;
+        this.accelerationY = 0;
+        this.maxAccelerationX = 3;
+        this.maxAccelerationY = 4;
+        this.velocityX = 0;
+        this.velocityY = 0;
+        this.isGrounded = false;
+    }
+    return VelocityComponent;
+}());
+exports["default"] = VelocityComponent;
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/// <reference path="../dts/pixi.js.d.ts" />
+
+exports.__esModule = true;
+var settings_1 = __webpack_require__(6);
+var engine_1 = __webpack_require__(5);
+var animation_1 = __webpack_require__(7);
+var collision_1 = __webpack_require__(8);
+var control_1 = __webpack_require__(9);
+var level_1 = __webpack_require__(10);
+var move_1 = __webpack_require__(11);
+var render_1 = __webpack_require__(12);
+var Main = (function () {
+    function Main() {
+        PIXI.loader.add('player', '/static/img/player.png');
+        PIXI.loader.add('bg', '/static/img/bg.png');
+        PIXI.loader.add('level1', '/assets/json/levelone.json');
+        PIXI.loader.load(this._onLoad.bind(this));
+    }
+    Main.prototype._onLoad = function () {
+        this._settings = new settings_1["default"]();
+        this._engine = new engine_1["default"]();
+        this._engine.addSystem(new animation_1["default"](this._settings));
+        this._engine.addSystem(new move_1["default"](this._settings));
+        this._engine.addSystem(new render_1["default"](this._settings));
+        this._engine.addSystem(new control_1["default"](this._settings));
+        this._engine.addSystem(new collision_1["default"](this._settings));
+        this._engine.addSystem(new level_1["default"](this._settings));
+        this._engine.init();
+    };
+    return Main;
+}());
+exports["default"] = Main;
+var tbgscratch = new Main();
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var AnimationNode = (function () {
+    function AnimationNode(entityId, animationComponent, displayComponent, velocityComponent) {
+        this.entityId = entityId;
+        this.animation = animationComponent;
+        this.display = displayComponent;
+        this.velocity = velocityComponent;
+        this.isActive = true;
+    }
+    return AnimationNode;
+}());
+exports["default"] = AnimationNode;
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var CollisionNode = (function () {
+    function CollisionNode(entityId, collisionComponent, displayComponent, velocityComponent) {
+        this.entityId = entityId;
+        this.collision = collisionComponent;
+        this.display = displayComponent;
+        this.velocity = velocityComponent;
+        this.isActive = true;
+    }
+    return CollisionNode;
+}());
+exports["default"] = CollisionNode;
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var ControlNode = (function () {
+    function ControlNode(entityId, inputComponent, velocityComponent) {
+        this.entityId = entityId;
+        this.input = inputComponent;
+        this.velocity = velocityComponent;
+        this.isActive = true;
+    }
+    return ControlNode;
+}());
+exports["default"] = ControlNode;
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var LevelNode = (function () {
+    function LevelNode(entityId, positionComponent) {
+        this.entityId = entityId;
+        this.position = positionComponent;
+        this.isActive = true;
+    }
+    return LevelNode;
+}());
+exports["default"] = LevelNode;
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var MoveNode = (function () {
+    function MoveNode(entityId, positionComponent, velocityComponent) {
+        this.entityId = entityId;
+        this.position = positionComponent;
+        this.velocity = velocityComponent;
+        this.isActive = true;
+    }
+    return MoveNode;
+}());
+exports["default"] = MoveNode;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var RenderNode = (function () {
+    function RenderNode(entityId, displayComponent, positionComponent) {
+        this.entityId = entityId;
+        this.display = displayComponent;
+        this.position = positionComponent;
+        this.isActive = true;
+    }
+    return RenderNode;
+}());
+exports["default"] = RenderNode;
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var entity_1 = __webpack_require__(2);
+var display_1 = __webpack_require__(0);
+var position_1 = __webpack_require__(1);
+var sprite_1 = __webpack_require__(3);
+var backgroundPrefab = (function (_super) {
+    __extends(backgroundPrefab, _super);
+    function backgroundPrefab(type, x, y, tile) {
+        var _this = _super.call(this) || this;
+        var spriteXMappings = [0, 0, 0, 0, 48, 64, 80, 96];
+        var spriteYMappings = [0, 0, 0, 0, 0, 0, 0, 0];
+        var spriteX = spriteXMappings[type];
+        var spriteY = spriteYMappings[type];
+        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, tile));
+        var sprite = new sprite_1["default"](texture);
+        sprite.height = tile;
+        sprite.width = tile;
+        var display = new display_1["default"](sprite);
+        _this.addComponent(display);
+        var positionComponent = new position_1["default"]();
+        positionComponent.x = x;
+        positionComponent.y = y;
+        _this.addComponent(positionComponent);
+        return _this;
+    }
+    return backgroundPrefab;
+}(entity_1["default"]));
+exports["default"] = backgroundPrefab;
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var entity_1 = __webpack_require__(2);
+var display_1 = __webpack_require__(0);
+var position_1 = __webpack_require__(1);
+var collision_1 = __webpack_require__(4);
+var sprite_1 = __webpack_require__(3);
+var GroundPrefab = (function (_super) {
+    __extends(GroundPrefab, _super);
+    function GroundPrefab(x, y, tile) {
+        var _this = _super.call(this) || this;
+        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 14, tile));
+        var sprite = new sprite_1["default"](texture);
+        sprite.height = tile;
+        sprite.width = tile;
+        var display = new display_1["default"](sprite);
+        _this.addComponent(display);
+        var positionComponent = new position_1["default"]();
+        positionComponent.x = x;
+        positionComponent.y = y;
+        _this.addComponent(positionComponent);
+        var collision = new collision_1["default"]();
+        collision.type = 'secondary';
+        _this.addComponent(collision);
+        return _this;
+    }
+    return GroundPrefab;
+}(entity_1["default"]));
+exports["default"] = GroundPrefab;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var player_1 = __webpack_require__(26);
+var sky_1 = __webpack_require__(27);
+var ground_1 = __webpack_require__(24);
+var background_1 = __webpack_require__(23);
+var LevelPrefab = (function () {
+    function LevelPrefab(settings, data) {
+        this.settings = settings;
+        this.data = data;
+    }
+    LevelPrefab.prototype.getGroundLayerEntities = function (data) {
+        var entities = [];
+        var mapData = data.layers[0].data;
+        for (var i = 0, j = data.height; i < j; i++) {
+            for (var k = 0, l = data.width; k < l; k++) {
+                var val = mapData[i * data.width + k];
+                if (val === 1) {
+                    var ground = new ground_1["default"](k * data.tilewidth, i * data.tilewidth, data.tileheight);
+                    entities.push(ground);
+                }
+            }
+        }
+        return entities;
+    };
+    LevelPrefab.prototype.getIndexedTypes = function (mapData, types) {
+        var indexedTypes = {};
+        // { 1: [1, 2, 3], 2: [4, 5, 6] }
+        types.map(function (type) {
+            indexedTypes[type] = mapData.reduce(function (a, e, i) {
+                if (e === type) {
+                    a.push(i);
+                }
+                return a;
+            }, []);
+        });
+        return indexedTypes;
+    };
+    LevelPrefab.prototype.getEntities = function (data, indexedTypes) {
+        var _this = this;
+        var entities = [];
+        var types = Object.keys(indexedTypes).map(Number);
+        var _loop_1 = function (type) {
+            var indexes = indexedTypes[type];
+            indexes.map(function (index) {
+                var entity = _this.getBackgroundEntity(type, data.width, data.tilewidth, index);
+                entities.push(entity);
+            });
+        };
+        for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
+            var type = types_1[_i];
+            _loop_1(type);
+        }
+        return entities;
+    };
+    LevelPrefab.prototype.getBackgroundEntity = function (entityType, levelWidth, tileSize, mapIndex) {
+        var x = mapIndex % levelWidth;
+        var y = Math.floor(mapIndex / levelWidth);
+        var entity = new background_1["default"](entityType, x * tileSize, y * tileSize, tileSize);
+        return entity;
+    };
+    LevelPrefab.prototype.getBackgroundLayerEntities = function (data) {
+        var mapData = data.layers[1].data;
+        var bgTypes = [4, 5, 6, 7];
+        var indexedTypes = this.getIndexedTypes(mapData, bgTypes);
+        var entities = this.getEntities(data, indexedTypes);
+        return entities;
+    };
+    LevelPrefab.prototype.createLevel = function () {
+        var data = this.data;
+        data.entities = [];
+        var sky = new sky_1["default"](data.width, data.height, data.tileheight);
+        var groundEntities = this.getGroundLayerEntities(data);
+        var bgEntities = this.getBackgroundLayerEntities(data);
+        var player = new player_1["default"](this.settings, [data.properties.startX, data.properties.startY]);
+        (_a = data.entities).push.apply(_a, [sky].concat(groundEntities, bgEntities, [player]));
+        return data;
+        var _a;
+    };
+    return LevelPrefab;
+}());
+exports["default"] = LevelPrefab;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var entity_1 = __webpack_require__(2);
+var sprite_1 = __webpack_require__(3);
+var display_1 = __webpack_require__(0);
+var position_1 = __webpack_require__(1);
+var velocity_1 = __webpack_require__(15);
+var input_1 = __webpack_require__(14);
+var collision_1 = __webpack_require__(4);
+var animation_1 = __webpack_require__(13);
+var PlayerPrefab = (function () {
+    function PlayerPrefab(settings, start) {
+        var texture = PIXI.utils.TextureCache['/static/img/player.png'];
+        var sprite = new sprite_1["default"](texture);
+        sprite.data.texture.push(new PIXI.Rectangle(0, 0, 16, 32));
+        sprite.data.texture.push(new PIXI.Rectangle(16, 0, 16, 32));
+        sprite.data.texture.push(new PIXI.Rectangle(32, 0, 16, 32));
+        sprite.data.texture.push(new PIXI.Rectangle(48, 0, 16, 32));
+        texture.frame = sprite.data.texture[1];
+        var player = new entity_1["default"]();
+        var animation = new animation_1["default"]();
+        animation.walkRight = [1, 2];
+        animation.walkLeft = [2, 1];
+        animation.jump = [3];
+        animation["default"] = [0];
+        var collision = new collision_1["default"]();
+        collision.type = 'primary';
+        var display = new display_1["default"](sprite);
+        display.isFocus = true;
+        var positionComponent = new position_1["default"]();
+        positionComponent.isPlayer = true;
+        positionComponent.x = start[0] * settings.TILE;
+        positionComponent.y = start[1] * settings.TILE;
+        var velocityComponent = new velocity_1["default"]();
+        velocityComponent.accelerationY = settings.GRAVITY;
+        var inputComponent = new input_1["default"]();
+        player.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation);
+        return player;
+    }
+    return PlayerPrefab;
+}());
+exports["default"] = PlayerPrefab;
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var entity_1 = __webpack_require__(2);
+var display_1 = __webpack_require__(0);
+var position_1 = __webpack_require__(1);
+var sprite_1 = __webpack_require__(3);
+var SkyPrefab = (function () {
+    function SkyPrefab(width, height, tile) {
+        var sky = new entity_1["default"]();
+        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(33, 0, 14, tile));
+        var sprite = new sprite_1["default"](texture);
+        sprite.height = height * tile;
+        sprite.width = width * tile;
+        var display = new display_1["default"](sprite);
+        sky.addComponent(display);
+        var position = new position_1["default"]();
+        position.x = 0;
+        position.y = 0;
+        sky.addComponent(position);
+        return sky;
+    }
+    return SkyPrefab;
+}());
+exports["default"] = SkyPrefab;
 
 
 /***/ })

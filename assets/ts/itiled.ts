@@ -11,7 +11,7 @@ interface ILayer {
 }
 
 interface IProperties {
-    [id: string] : any
+    [key: string] : any
 }
 
 interface IPropertyTypes {
@@ -37,17 +37,17 @@ export interface ITiledLevel {
 
     entities: any[];
 
-     height: number;
-     layers: ILayer[];
-     nextobjectid: number;
-     orientation: string;
-     properties: IProperties;
-     propertytypes: IPropertyTypes;
-     renderorder: string;
-     tileheight: number;
-     tilesets: ITileSet[];
-     tilewidth: number;
-     version: number;
-     width: number
+    height: number;
+    layers: ILayer[];
+    nextobjectid: number;
+    orientation: string;
+    properties: IProperties;
+    propertytypes: IPropertyTypes;
+    renderorder: string;
+    tileheight: number;
+    tilesets: ITileSet[];
+    tilewidth: number;
+    version: number;
+    width: number
 
 }

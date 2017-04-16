@@ -20,7 +20,9 @@ export default class LevelPrefab {
         this.data = data;
     }
 
-    createLayer(data: ITiledLevel) {
+    getGroundLayerEntities(data: ITiledLevel): Entity[] {
+
+        let entities: Entity[] = [];
 
         let mapData = data.layers[0].data;
 
@@ -34,57 +36,91 @@ export default class LevelPrefab {
 
                     let ground = new GroundPrefab(k * data.tilewidth, i * data.tilewidth, data.tileheight);
 
-                    data.entities.push(ground);
+                    entities.push(ground);
                 }
             }
         }
+
+        return entities;
     }
 
-    createBackgroundLayer(data: ITiledLevel) {
+    getIndexedTypes(mapData: number[], types: number[]): any {
+
+        let indexedTypes = { };
+
+        // { 1: [1, 2, 3], 2: [4, 5, 6] }
+        types.map((type: number) => {
+            indexedTypes[type] = mapData.reduce(function(a, e, i) {
+                if (e === type) {
+                    a.push(i);
+                }
+                return a;
+            }, []);
+        });
+
+        return indexedTypes;
+    }
+
+    getEntities(data: ITiledLevel, indexedTypes: any): Entity[] {
+
+        let entities: Entity[] = [];
+
+        let types = Object.keys(indexedTypes).map(Number);
+
+        for (const type of types) {
+
+            let indexes = indexedTypes[type];
+
+            indexes.map((index) => {
+
+                let entity = this.getBackgroundEntity(type, data.width, data.tilewidth, index);
+
+                entities.push(entity);
+            });
+        }
+
+        return entities;
+    }
+
+    getBackgroundEntity(entityType: number, levelWidth: number, tileSize: number, mapIndex: number): Entity {
+
+        let x = mapIndex % levelWidth;
+
+        let y = Math.floor(mapIndex/levelWidth);
+
+        let entity = new BackgroundPrefab(entityType, x * tileSize, y * tileSize, tileSize);
+
+        return entity;
+    }
+
+    getBackgroundLayerEntities(data: ITiledLevel): Entity[] {
 
         let mapData = data.layers[1].data;
 
-        for (var i = 0, j = data.height; i < j; i++) {
+        let bgTypes = [4, 5, 6, 7];
 
-            for (var k = 0, l = data.width; k < l; k++) {
+        let indexedTypes = this.getIndexedTypes(mapData, bgTypes);
 
-                let val = mapData[i * data.width + k];
+        let entities = this.getEntities(data, indexedTypes);
 
-                if (val === 4) {
-
-                    let bg = new BackgroundPrefab(4, k * data.tilewidth, i * data.tilewidth, data.tileheight);
-
-                    data.entities.push(bg);
-
-                } else if (val === 5) {
-
-                    let bg = new BackgroundPrefab(5, k * data.tilewidth, i * data.tilewidth, data.tileheight);
-
-                    data.entities.push(bg);
-                }
-            }
-        }
+        return entities;
     }
 
     createLevel() {
 
         let data = this.data;
 
-        let mapData = data.layers[0].data;
-
         data.entities = [];
 
         let sky = new SkyPrefab(data.width, data.height, data.tileheight);
 
-        data.entities.push(sky);
+        let groundEntities = this.getGroundLayerEntities(data);
 
-        this.createLayer(data);
-
-        this.createBackgroundLayer(data);
+        let bgEntities = this.getBackgroundLayerEntities(data);
 
         let player = new PlayerPrefab(this.settings, [data.properties.startX, data.properties.startY]);
 
-        data.entities.push(player);
+        data.entities.push(sky, ...groundEntities, ...bgEntities, player);
 
         return data;
     }

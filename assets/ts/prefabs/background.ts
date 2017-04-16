@@ -1,22 +1,23 @@
 import Entity from './entity';
 import DisplayComponent from '../components/display';
 import PositionComponent from '../components/position';
+import IComponent from '../components/icomponent';
 import Sprite from '../sprite';
 
-export default class GroundPrefab {
+export default class backgroundPrefab extends Entity {
 
     constructor(type: number, x: number, y: number, tile: number) {
 
-        let ground = new Entity();
+        super();
 
-        let texture: PIXI.Texture;
+        let spriteXMappings = [0, 0, 0, 0, 48, 64, 80, 96];
 
-        if (type === 4) {
-            texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(48, 0, 14, tile));
+        let spriteYMappings = [0, 0, 0, 0, 0, 0, 0, 0];
 
-        } else if (type === 5) {
-            texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(64, 0, 14, tile));
-        }
+        let spriteX = spriteXMappings[type];
+        let spriteY = spriteYMappings[type];
+
+        let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, tile));
 
         let sprite = new Sprite(texture);
 
@@ -25,15 +26,13 @@ export default class GroundPrefab {
 
         let display = new DisplayComponent(sprite);
 
-        ground.addComponent(display);
+        this.addComponent(display);
 
         let positionComponent = new PositionComponent();
 
         positionComponent.x = x;
         positionComponent.y = y;
 
-        ground.addComponent(positionComponent);
-
-        return ground;
+        this.addComponent(positionComponent);
     }
 }

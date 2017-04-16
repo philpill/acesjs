@@ -66,9 +66,9 @@ export default class ControlSystem implements ISystem {
 
     update(time: number, nodes: ITypedNode[]) {
 
-        for (let i = 0, j = nodes.length; i < j; i++) {
+        nodes.map((node: ITypedNode) => {
 
-            let velocityData = nodes[i].data.velocity;
+            let velocityData = node.data.velocity;
 
             if (this.isUp && velocityData.isGrounded) {
                 console.log('JUMP');
@@ -87,6 +87,6 @@ export default class ControlSystem implements ISystem {
             } else {
                 velocityData.accelerationX = 0;
             }
-        }
+        });
     }
 }

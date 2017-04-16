@@ -8,11 +8,11 @@ import CollisionComponent from '../components/collision';
 import AnimationComponent from '../components/animation';
 import Sprite from '../sprite';
 
-export default class GroundPrefab {
+export default class GroundPrefab extends Entity {
 
     constructor(x: number, y: number, tile: number) {
 
-        let ground = new Entity();
+        super();
 
         let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 14, tile));
 
@@ -23,21 +23,19 @@ export default class GroundPrefab {
 
         let display = new DisplayComponent(sprite);
 
-        ground.addComponent(display);
+        this.addComponent(display);
 
         let positionComponent = new PositionComponent();
 
         positionComponent.x = x;
         positionComponent.y = y;
 
-        ground.addComponent(positionComponent);
+        this.addComponent(positionComponent);
 
         let collision = new CollisionComponent();
 
         collision.type = 'secondary';
 
-        ground.addComponent(collision);
-
-        return ground;
+        this.addComponent(collision);
     }
 }

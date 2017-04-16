@@ -1,5 +1,5 @@
 {
     "compilerOptions": {
-        "lib": ["ES6", "DOM"]
+        "lib": ["DOM", "es2017"]
     }
 }

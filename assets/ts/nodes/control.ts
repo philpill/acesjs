@@ -1,8 +1,6 @@
 import INode from './inode';
 import Input from '../components/input';
-import Display from '../components/display';
 import Velocity from '../components/velocity';
-import Collision from '../components/collision';
 
 export default class ControlNode implements INode {
 
@@ -13,10 +11,8 @@ export default class ControlNode implements INode {
 
     constructor (entityId: number, inputComponent: Input, velocityComponent: Velocity) {
         this.entityId = entityId;
-
-            this.input = inputComponent;
-            this.velocity = velocityComponent;
-
+        this.input = inputComponent;
+        this.velocity = velocityComponent;
         this.isActive = true;
     }
 }
