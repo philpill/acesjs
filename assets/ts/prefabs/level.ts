@@ -34,7 +34,7 @@ export default class LevelPrefab {
 
                 if (val === 1) {
 
-                    let ground = new GroundPrefab(k * data.tilewidth, i * data.tilewidth, data.tileheight);
+                    let ground = new GroundPrefab(0, k * data.tilewidth, i * data.tilewidth);
 
                     entities.push(ground);
                 }
@@ -44,64 +44,50 @@ export default class LevelPrefab {
         return entities;
     }
 
-    getIndexedTypes(mapData: number[], types: number[]): any {
+    getPosition(levelWidth: number, tileSize: number): Function {
 
-        let indexedTypes = { };
+        return (mapIndex) => {
 
-        // { 1: [1, 2, 3], 2: [4, 5, 6] }
-        types.map((type: number) => {
-            indexedTypes[type] = mapData.reduce(function(a, e, i) {
-                if (e === type) {
-                    a.push(i);
-                }
-                return a;
-            }, []);
-        });
+            let x = (mapIndex % levelWidth) * tileSize;
 
-        return indexedTypes;
+            let y = (Math.floor(mapIndex/levelWidth)) * tileSize;
+
+            return [x, y];
+        };
     }
 
-    getEntities(data: ITiledLevel, indexedTypes: any): Entity[] {
+    getEnitiesByData(data: ITiledLevel): Entity[] {
 
-        let entities: Entity[] = [];
+        let entities = [];
 
-        let types = Object.keys(indexedTypes).map(Number);
-
-        for (const type of types) {
-
-            let indexes = indexedTypes[type];
-
-            indexes.map((index) => {
-
-                let entity = this.getBackgroundEntity(type, data.width, data.tilewidth, index);
-
-                entities.push(entity);
-            });
-        }
-
-        return entities;
-    }
-
-    getBackgroundEntity(entityType: number, levelWidth: number, tileSize: number, mapIndex: number): Entity {
-
-        let x = mapIndex % levelWidth;
-
-        let y = Math.floor(mapIndex/levelWidth);
-
-        let entity = new BackgroundPrefab(entityType, x * tileSize, y * tileSize, tileSize);
-
-        return entity;
-    }
-
-    getBackgroundLayerEntities(data: ITiledLevel): Entity[] {
-
+        // need to handle more than one layer
         let mapData = data.layers[1].data;
 
-        let bgTypes = [4, 5, 6, 7];
+        let getPositionByIndex = this.getPosition(data.width, data.tilewidth);
 
-        let indexedTypes = this.getIndexedTypes(mapData, bgTypes);
+        mapData.map((type: number, index: number) => {
 
-        let entities = this.getEntities(data, indexedTypes);
+            if (type !== 0) {
+
+                let entity;
+
+                let position = getPositionByIndex(index);
+
+                switch (type) {
+                    case 1:
+                        entity = new GroundPrefab(type, position[0], position[1]);
+                    break;
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        entity = new BackgroundPrefab(type, position[0], position[1]);
+                    break;
+                }
+
+                entities.push(entity);
+            }
+        });
 
         return entities;
     }
@@ -116,11 +102,11 @@ export default class LevelPrefab {
 
         let groundEntities = this.getGroundLayerEntities(data);
 
-        let bgEntities = this.getBackgroundLayerEntities(data);
+        let entities = this.getEnitiesByData(data);
 
         let player = new PlayerPrefab(this.settings, [data.properties.startX, data.properties.startY]);
 
-        data.entities.push(sky, ...groundEntities, ...bgEntities, player);
+        data.entities.push(sky, ...groundEntities, ...entities, player);
 
         return data;
     }

@@ -3,14 +3,19 @@ import DisplayComponent from '../components/display';
 import PositionComponent from '../components/position';
 import IComponent from '../components/icomponent';
 import Sprite from '../sprite';
+import Settings from '../settings';
 
 export default class backgroundPrefab extends Entity {
 
-    constructor(type: number, x: number, y: number, tile: number) {
+    constructor(type: number, x: number, y: number) {
 
         super();
 
-        let spriteXMappings = [0, 0, 0, 0, 48, 64, 80, 96];
+        let settings = new Settings();
+
+        let tile = settings.TILE;
+
+        let spriteXMappings = [0, 0, 16, 32, 48, 64, 80, 96];
 
         let spriteYMappings = [0, 0, 0, 0, 0, 0, 0, 0];
 

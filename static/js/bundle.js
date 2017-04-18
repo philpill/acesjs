@@ -1024,11 +1024,14 @@ var entity_1 = __webpack_require__(2);
 var display_1 = __webpack_require__(0);
 var position_1 = __webpack_require__(1);
 var sprite_1 = __webpack_require__(3);
+var settings_1 = __webpack_require__(6);
 var backgroundPrefab = (function (_super) {
     __extends(backgroundPrefab, _super);
-    function backgroundPrefab(type, x, y, tile) {
+    function backgroundPrefab(type, x, y) {
         var _this = _super.call(this) || this;
-        var spriteXMappings = [0, 0, 0, 0, 48, 64, 80, 96];
+        var settings = new settings_1["default"]();
+        var tile = settings.TILE;
+        var spriteXMappings = [0, 0, 16, 32, 48, 64, 80, 96];
         var spriteYMappings = [0, 0, 0, 0, 0, 0, 0, 0];
         var spriteX = spriteXMappings[type];
         var spriteY = spriteYMappings[type];
@@ -1071,11 +1074,18 @@ var display_1 = __webpack_require__(0);
 var position_1 = __webpack_require__(1);
 var collision_1 = __webpack_require__(4);
 var sprite_1 = __webpack_require__(3);
+var settings_1 = __webpack_require__(6);
 var GroundPrefab = (function (_super) {
     __extends(GroundPrefab, _super);
-    function GroundPrefab(x, y, tile) {
+    function GroundPrefab(type, x, y) {
         var _this = _super.call(this) || this;
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 14, tile));
+        var settings = new settings_1["default"]();
+        var tile = settings.TILE;
+        var spriteXMappings = [0, 0, 16, 32, 48, 64, 80, 96];
+        var spriteYMappings = [0, 0, 0, 0, 0, 0, 0, 0];
+        var spriteX = spriteXMappings[type];
+        var spriteY = spriteYMappings[type];
+        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, tile));
         var sprite = new sprite_1["default"](texture);
         sprite.height = tile;
         sprite.width = tile;
@@ -1118,54 +1128,43 @@ var LevelPrefab = (function () {
             for (var k = 0, l = data.width; k < l; k++) {
                 var val = mapData[i * data.width + k];
                 if (val === 1) {
-                    var ground = new ground_1["default"](k * data.tilewidth, i * data.tilewidth, data.tileheight);
+                    var ground = new ground_1["default"](0, k * data.tilewidth, i * data.tilewidth);
                     entities.push(ground);
                 }
             }
         }
         return entities;
     };
-    LevelPrefab.prototype.getIndexedTypes = function (mapData, types) {
-        var indexedTypes = {};
-        // { 1: [1, 2, 3], 2: [4, 5, 6] }
-        types.map(function (type) {
-            indexedTypes[type] = mapData.reduce(function (a, e, i) {
-                if (e === type) {
-                    a.push(i);
-                }
-                return a;
-            }, []);
-        });
-        return indexedTypes;
-    };
-    LevelPrefab.prototype.getEntities = function (data, indexedTypes) {
-        var _this = this;
-        var entities = [];
-        var types = Object.keys(indexedTypes).map(Number);
-        var _loop_1 = function (type) {
-            var indexes = indexedTypes[type];
-            indexes.map(function (index) {
-                var entity = _this.getBackgroundEntity(type, data.width, data.tilewidth, index);
-                entities.push(entity);
-            });
+    LevelPrefab.prototype.getPosition = function (levelWidth, tileSize) {
+        return function (mapIndex) {
+            var x = (mapIndex % levelWidth) * tileSize;
+            var y = (Math.floor(mapIndex / levelWidth)) * tileSize;
+            return [x, y];
         };
-        for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
-            var type = types_1[_i];
-            _loop_1(type);
-        }
-        return entities;
     };
-    LevelPrefab.prototype.getBackgroundEntity = function (entityType, levelWidth, tileSize, mapIndex) {
-        var x = mapIndex % levelWidth;
-        var y = Math.floor(mapIndex / levelWidth);
-        var entity = new background_1["default"](entityType, x * tileSize, y * tileSize, tileSize);
-        return entity;
-    };
-    LevelPrefab.prototype.getBackgroundLayerEntities = function (data) {
+    LevelPrefab.prototype.getEnitiesByData = function (data) {
+        var entities = [];
+        // need to handle more than one layer
         var mapData = data.layers[1].data;
-        var bgTypes = [4, 5, 6, 7];
-        var indexedTypes = this.getIndexedTypes(mapData, bgTypes);
-        var entities = this.getEntities(data, indexedTypes);
+        var getPositionByIndex = this.getPosition(data.width, data.tilewidth);
+        mapData.map(function (type, index) {
+            if (type !== 0) {
+                var entity = void 0;
+                var position = getPositionByIndex(index);
+                switch (type) {
+                    case 1:
+                        entity = new ground_1["default"](type, position[0], position[1]);
+                        break;
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        entity = new background_1["default"](type, position[0], position[1]);
+                        break;
+                }
+                entities.push(entity);
+            }
+        });
         return entities;
     };
     LevelPrefab.prototype.createLevel = function () {
@@ -1173,9 +1172,9 @@ var LevelPrefab = (function () {
         data.entities = [];
         var sky = new sky_1["default"](data.width, data.height, data.tileheight);
         var groundEntities = this.getGroundLayerEntities(data);
-        var bgEntities = this.getBackgroundLayerEntities(data);
+        var entities = this.getEnitiesByData(data);
         var player = new player_1["default"](this.settings, [data.properties.startX, data.properties.startY]);
-        (_a = data.entities).push.apply(_a, [sky].concat(groundEntities, bgEntities, [player]));
+        (_a = data.entities).push.apply(_a, [sky].concat(groundEntities, entities, [player]));
         return data;
         var _a;
     };
