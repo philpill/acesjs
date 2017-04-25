@@ -194,6 +194,12 @@ var CollisionComponent = (function () {
     function CollisionComponent() {
         this["class"] = 'collision';
         this.type = '';
+        this.isDamageCollision = false;
+        this.isTopObstacleCollision = false;
+        this.isBottomObstacleCollision = false;
+        this.isRightObstacleCollision = false;
+        this.isLeftObstacleCollision = false;
+        this.isTriggerCollision = false;
         this.collide = function () {
             // console.log('COLLIDE');
         };
@@ -221,7 +227,14 @@ var Engine = (function () {
         this.entities = [];
         this.systems = [];
         this.nodes = [];
-        this.typedNodes = {};
+        this.typedNodes = {
+            render: [],
+            animation: [],
+            move: [],
+            control: [],
+            obstacleCollision: [],
+            level: []
+        };
         this.isPaused = false;
     }
     Engine.prototype.init = function () {
@@ -229,40 +242,66 @@ var Engine = (function () {
     };
     Engine.prototype.addEntity = function (entity) {
         this.entities.push(entity);
-        if (entity.components.display && entity.components.position) {
+        var entityComponents = entity.components;
+        if (entityComponents.display && entityComponents.position) {
             // render
-            this.typedNodes['render'] = this.typedNodes['render'] || [];
-            this.typedNodes['render'].push({ entityId: entity.id, "class": 'render', data: new render_1["default"](entity.id, entity.components.display, entity.components.position), isActive: true });
+            var node = new render_1["default"](entity.id, entityComponents.display, entityComponents.position);
+            this.typedNodes['render'].push({
+                entityId: entity.id,
+                "class": 'render',
+                data: node,
+                isActive: true
+            });
         }
-        if (entity.components.animation && entity.components.display && entity.components.velocity) {
-            this.typedNodes['animation'] = this.typedNodes['animation'] || [];
+        if (entityComponents.animation && entityComponents.display && entityComponents.velocity) {
+            var node = new animation_1["default"](entity.id, entityComponents.animation, entityComponents.display, entityComponents.velocity);
             // animation
             this.typedNodes['animation'].push({
                 entityId: entity.id,
                 "class": 'animation',
-                data: new animation_1["default"](entity.id, entity.components.animation, entity.components.display, entity.components.velocity),
+                data: node,
                 isActive: true
             });
         }
-        if (entity.components.velocity && entity.components.position) {
-            this.typedNodes['move'] = this.typedNodes['move'] || [];
+        if (entityComponents.velocity && entityComponents.position && entityComponents.collision) {
+            var node = new move_1["default"](entity.id, entityComponents.position, entityComponents.velocity, entityComponents.collision);
             // move
-            this.typedNodes['move'].push({ entityId: entity.id, "class": 'move', data: new move_1["default"](entity.id, entity.components.position, entity.components.velocity), isActive: true });
+            this.typedNodes['move'].push({
+                entityId: entity.id,
+                "class": 'move',
+                data: node,
+                isActive: true
+            });
         }
-        if (entity.components.velocity && entity.components.input) {
-            this.typedNodes['control'] = this.typedNodes['control'] || [];
+        if (entityComponents.velocity && entityComponents.input) {
+            var node = new control_1["default"](entity.id, entityComponents.control, entityComponents.velocity);
             // control
-            this.typedNodes['control'].push({ entityId: entity.id, "class": 'control', data: new control_1["default"](entity.id, entity.components.control, entity.components.velocity), isActive: true });
+            this.typedNodes['control'].push({
+                entityId: entity.id,
+                "class": 'control',
+                data: node,
+                isActive: true
+            });
         }
-        if (entity.components.collision) {
-            this.typedNodes['collision'] = this.typedNodes['collision'] || [];
+        if (entityComponents.collision && entityComponents.display) {
+            var node = new collision_1["default"](entity.id, entityComponents.collision, entityComponents.display, entityComponents.velocity);
             // collision
-            this.typedNodes['collision'].push({ entityId: entity.id, "class": 'collision', data: new collision_1["default"](entity.id, entity.components.collision, entity.components.display, entity.components.velocity), isActive: true });
+            this.typedNodes['obstacleCollision'].push({
+                entityId: entity.id,
+                "class": 'collision',
+                data: node,
+                isActive: true
+            });
         }
-        if (entity.components.position) {
-            this.typedNodes['level'] = this.typedNodes['level'] || [];
+        if (entityComponents.position) {
+            var node = new level_1["default"](entity.id, entityComponents.position);
             // level
-            this.typedNodes['level'].push({ entityId: entity.id, "class": 'level', data: new level_1["default"](entity.id, entity.components.position), isActive: true });
+            this.typedNodes['level'].push({
+                entityId: entity.id,
+                "class": 'level',
+                data: node,
+                isActive: true
+            });
         }
         return entity;
     };
@@ -432,84 +471,7 @@ exports["default"] = AnimationSystem;
 
 
 /***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var CollisionSystem = (function () {
-    function CollisionSystem(settings) {
-        this["class"] = 'collision';
-        this.settings = settings;
-    }
-    CollisionSystem.prototype.init = function () {
-    };
-    CollisionSystem.prototype.stop = function () {
-    };
-    CollisionSystem.prototype.isCollision = function (sprite1, sprite2) {
-        var isCollision = false;
-        if (sprite1.x < sprite2.x + sprite2.width &&
-            sprite1.x + sprite1.width > sprite2.x &&
-            sprite1.y < sprite2.y + sprite2.height &&
-            sprite1.height + sprite1.y > sprite2.y) {
-            isCollision = true;
-        }
-        return isCollision;
-    };
-    CollisionSystem.prototype.update = function (time, nodes) {
-        var _this = this;
-        var primaries = nodes.filter(function (node) {
-            return node.data.collision.type === 'primary';
-        });
-        var secondaries = nodes.filter(function (node) {
-            return node.data.collision.type !== 'primary';
-        });
-        primaries.map(function (primary) {
-            primary.data.velocity.isGrounded = false;
-            secondaries.map(function (secondary) {
-                var sprite1 = primary.data.display.sprite;
-                var sprite2 = secondary.data.display.sprite;
-                if (_this.isCollision(sprite1, sprite2)) {
-                    var velocityData = primary.data.velocity;
-                    var errorMargin = _this.settings.TILE / 2;
-                    var isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
-                        sprite1.height + sprite1.y < sprite2.y + errorMargin;
-                    var isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
-                        sprite2.height + sprite2.y < sprite1.y + errorMargin;
-                    var isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
-                        sprite1.x + sprite1.width < sprite2.x + errorMargin;
-                    var isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
-                        sprite2.x + sprite2.width < sprite1.x + errorMargin;
-                    // check collision
-                    if (isBottomCollision) {
-                        // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
-                        velocityData.velocityY = Math.min(0, velocityData.velocityY);
-                        velocityData.isGrounded = true;
-                    }
-                    else if (isTopCollision) {
-                        // velocityData.accelerationY = Math.max(0, velocityData.accelerationY);
-                        velocityData.velocityY = Math.max(0, velocityData.velocityY);
-                    }
-                    else if (isRightCollision) {
-                        velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
-                        velocityData.velocityX = Math.min(0, velocityData.velocityX);
-                    }
-                    else if (isLeftCollision) {
-                        velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
-                        velocityData.velocityX = Math.max(0, velocityData.velocityX);
-                    }
-                    primary.data.collision.collide(secondary);
-                }
-            });
-        });
-    };
-    return CollisionSystem;
-}());
-exports["default"] = CollisionSystem;
-
-
-/***/ }),
+/* 8 */,
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -667,17 +629,32 @@ var MoveSystem = (function () {
     };
     MoveSystem.prototype.stop = function () {
     };
+    MoveSystem.prototype.getVelocityX = function (time, velocityData, collisionData) {
+        var velocity = velocityData.velocityX;
+        if (!collisionData.isBottomObstacleCollision) {
+            // limit horizontal movement in the air
+            velocityData.accelerationX = velocityData.accelerationX / 3;
+        }
+        velocity = (velocityData.velocityX + time * velocityData.accelerationX) * this.settings.FRICTION;
+        return velocity;
+    };
+    MoveSystem.prototype.getPositionX = function (time, positionData, velocityData) {
+        var position = positionData.x;
+        position += (velocityData.velocityX + time * velocityData.velocityX) * this.settings.TILE;
+        // stop movement at map boundaries - shift this to collision system
+        position = Math.max(0, position);
+        position = Math.min(position, this.settings.MAP[0] * this.settings.TILE - this.settings.TILE);
+        return position;
+    };
     MoveSystem.prototype.update = function (time, nodes) {
         var _this = this;
         nodes.map(function (node) {
             var velocityData = node.data.velocity;
             var positionData = node.data.position;
-            if (!velocityData.isGrounded) {
-                // limit horizontal movement in the air
-                velocityData.accelerationX = velocityData.accelerationX / 3;
-            }
-            velocityData.velocityX = (velocityData.velocityX + time * velocityData.accelerationX) * _this.settings.FRICTION;
-            if (velocityData.isGrounded) {
+            var collisionData = node.data.collision;
+            velocityData.velocityX = _this.getVelocityX(time, velocityData, collisionData);
+            positionData.x = _this.getPositionX(time, positionData, velocityData);
+            if (collisionData.isBottomObstacleCollision) {
                 // prevent any more downwards vertical movement
                 velocityData.velocityY = Math.max(0, velocityData.velocityY);
                 // round up to tile edge
@@ -686,14 +663,14 @@ var MoveSystem = (function () {
             else {
                 velocityData.velocityY = (velocityData.velocityY + time * velocityData.accelerationY);
             }
-            positionData.x += (velocityData.velocityX + time * velocityData.velocityX) * _this.settings.TILE;
-            // stop movement at map boundaries - shift this to collision system
-            positionData.x = Math.max(0, positionData.x);
-            positionData.x = Math.min(positionData.x, _this.settings.MAP[0] * _this.settings.TILE - _this.settings.TILE);
             // cap the velocity - anything more than 0.7 and the entity might fall
             // though the tile before collision is detected
             var velocityY = Math.min(velocityData.velocityY + time * velocityData.velocityY, 0.5);
             positionData.y += velocityY * _this.settings.TILE;
+            if (collisionData.isBottomObstacleCollision) {
+                // round up to tile edge
+                positionData.y = Math.floor(positionData.y / _this.settings.TILE) * _this.settings.TILE;
+            }
             positionData.y = Math.max(0, positionData.y);
             if (positionData.y > _this.settings.MAP[0] * _this.settings.TILE) {
                 console.log('OFF MAP');
@@ -859,7 +836,7 @@ exports.__esModule = true;
 var settings_1 = __webpack_require__(6);
 var engine_1 = __webpack_require__(5);
 var animation_1 = __webpack_require__(7);
-var collision_1 = __webpack_require__(8);
+var obstacleCollision_1 = __webpack_require__(28);
 var control_1 = __webpack_require__(9);
 var level_1 = __webpack_require__(10);
 var move_1 = __webpack_require__(11);
@@ -878,7 +855,7 @@ var Main = (function () {
         this._engine.addSystem(new move_1["default"](this._settings));
         this._engine.addSystem(new render_1["default"](this._settings));
         this._engine.addSystem(new control_1["default"](this._settings));
-        this._engine.addSystem(new collision_1["default"](this._settings));
+        this._engine.addSystem(new obstacleCollision_1["default"](this._settings));
         this._engine.addSystem(new level_1["default"](this._settings));
         this._engine.init();
     };
@@ -973,10 +950,11 @@ exports["default"] = LevelNode;
 
 exports.__esModule = true;
 var MoveNode = (function () {
-    function MoveNode(entityId, positionComponent, velocityComponent) {
+    function MoveNode(entityId, positionComponent, velocityComponent, collisionComponent) {
         this.entityId = entityId;
         this.position = positionComponent;
         this.velocity = velocityComponent;
+        this.collision = collisionComponent;
         this.isActive = true;
     }
     return MoveNode;
@@ -1031,10 +1009,8 @@ var backgroundPrefab = (function (_super) {
         var _this = _super.call(this) || this;
         var settings = new settings_1["default"]();
         var tile = settings.TILE;
-        var spriteXMappings = [0, 0, 16, 32, 48, 64, 80, 96];
-        var spriteYMappings = [0, 0, 0, 0, 0, 0, 0, 0];
-        var spriteX = spriteXMappings[type];
-        var spriteY = spriteYMappings[type];
+        var spriteX = Math.max(type * 16 - 16, 0);
+        var spriteY = 0;
         var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, tile));
         var sprite = new sprite_1["default"](texture);
         sprite.height = tile;
@@ -1081,25 +1057,34 @@ var GroundPrefab = (function (_super) {
         var _this = _super.call(this) || this;
         var settings = new settings_1["default"]();
         var tile = settings.TILE;
-        var spriteXMappings = [0, 0, 16, 32, 48, 64, 80, 96];
-        var spriteYMappings = [0, 0, 0, 0, 0, 0, 0, 0];
-        var spriteX = spriteXMappings[type];
-        var spriteY = spriteYMappings[type];
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, tile));
-        var sprite = new sprite_1["default"](texture);
-        sprite.height = tile;
-        sprite.width = tile;
-        var display = new display_1["default"](sprite);
+        var display = _this._getDisplayComponent(type, tile, tile);
         _this.addComponent(display);
-        var positionComponent = new position_1["default"]();
-        positionComponent.x = x;
-        positionComponent.y = y;
+        var positionComponent = _this._getPositionComponent(x, y);
         _this.addComponent(positionComponent);
-        var collision = new collision_1["default"]();
-        collision.type = 'secondary';
+        var collision = _this._getCollisionComponent();
         _this.addComponent(collision);
         return _this;
     }
+    GroundPrefab.prototype._getCollisionComponent = function () {
+        var collision = new collision_1["default"]();
+        collision.type = 'secondary';
+        return collision;
+    };
+    GroundPrefab.prototype._getPositionComponent = function (x, y) {
+        var positionComponent = new position_1["default"]();
+        positionComponent.x = x;
+        positionComponent.y = y;
+        return positionComponent;
+    };
+    GroundPrefab.prototype._getDisplayComponent = function (type, height, width) {
+        var spriteX = Math.max(type * 16 - 16, 0);
+        var spriteY = 0;
+        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, height));
+        var sprite = new sprite_1["default"](texture);
+        sprite.height = height;
+        sprite.width = width;
+        return new display_1["default"](sprite);
+    };
     return GroundPrefab;
 }(entity_1["default"]));
 exports["default"] = GroundPrefab;
@@ -1261,6 +1246,91 @@ var SkyPrefab = (function () {
     return SkyPrefab;
 }());
 exports["default"] = SkyPrefab;
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var ObstacleCollisionSystem = (function () {
+    function ObstacleCollisionSystem(settings) {
+        this["class"] = 'obstacleCollision';
+        this.settings = settings;
+    }
+    ObstacleCollisionSystem.prototype.init = function () {
+    };
+    ObstacleCollisionSystem.prototype.stop = function () {
+    };
+    ObstacleCollisionSystem.prototype.isCollision = function (sprite1, sprite2) {
+        var isCollision = false;
+        if (sprite1.x < sprite2.x + sprite2.width &&
+            sprite1.x + sprite1.width > sprite2.x &&
+            sprite1.y < sprite2.y + sprite2.height &&
+            sprite1.height + sprite1.y > sprite2.y) {
+            isCollision = true;
+        }
+        return isCollision;
+    };
+    ObstacleCollisionSystem.prototype.update = function (time, nodes) {
+        var _this = this;
+        var primaries = nodes.filter(function (node) {
+            return node.data.collision.type === 'primary';
+        });
+        var secondaries = nodes.filter(function (node) {
+            return node.data.collision.type !== 'primary';
+        });
+        primaries.map(function (primary) {
+            primary.data.velocity.isGrounded = false;
+            primary.data.collision.isBottomObstacleCollision = false;
+            secondaries.map(function (secondary) {
+                var sprite1 = primary.data.display.sprite;
+                var sprite2 = secondary.data.display.sprite;
+                if (_this.isCollision(sprite1, sprite2)) {
+                    var velocityData = primary.data.velocity;
+                    var collisionData = primary.data.collision;
+                    var errorMargin = _this.settings.TILE / 2;
+                    var isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
+                        sprite1.height + sprite1.y < sprite2.y + errorMargin;
+                    var isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
+                        sprite2.height + sprite2.y < sprite1.y + errorMargin;
+                    var isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
+                        sprite1.x + sprite1.width < sprite2.x + errorMargin;
+                    var isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
+                        sprite2.x + sprite2.width < sprite1.x + errorMargin;
+                    collisionData.isTopObstacleCollision = isTopCollision;
+                    collisionData.isBottomObstacleCollision = isBottomCollision;
+                    collisionData.isLeftObstacleCollision = isLeftCollision;
+                    collisionData.isRightObstacleCollision = isRightCollision;
+                    // SHIFT ALL THIS INTO MOVE SYSTEM
+                    // check collision
+                    if (isBottomCollision) {
+                        // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
+                        velocityData.velocityY = Math.min(0, velocityData.velocityY);
+                        velocityData.isGrounded = true;
+                    }
+                    else if (isTopCollision) {
+                        // velocityData.accelerationY = Math.max(0, velocityData.accelerationY);
+                        velocityData.velocityY = Math.max(0, velocityData.velocityY);
+                    }
+                    else if (isRightCollision) {
+                        velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
+                        velocityData.velocityX = Math.min(0, velocityData.velocityX);
+                    }
+                    else if (isLeftCollision) {
+                        velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
+                        velocityData.velocityX = Math.max(0, velocityData.velocityX);
+                    }
+                    primary.data.collision.collide(secondary);
+                }
+            });
+        });
+    };
+    return ObstacleCollisionSystem;
+}());
+exports["default"] = ObstacleCollisionSystem;
 
 
 /***/ })

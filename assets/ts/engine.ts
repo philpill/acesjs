@@ -22,7 +22,14 @@ export default class Engine {
         this.entities = [];
         this.systems = [];
         this.nodes = [];
-        this.typedNodes = {};
+        this.typedNodes = {
+            render: [],
+            animation: [],
+            move: [],
+            control: [],
+            obstacleCollision: [],
+            level: []
+        };
         this.isPaused = false;
     }
 
@@ -35,56 +42,73 @@ export default class Engine {
 
         this.entities.push(entity);
 
-        if (entity.components.display && entity.components.position) {
+        let entityComponents = entity.components;
+
+        if (entityComponents.display && entityComponents.position) {
 
             // render
-            this.typedNodes['render'] = this.typedNodes['render'] || [];
+            let node = new RenderNode(entity.id, entityComponents.display, entityComponents.position);
 
-            this.typedNodes['render'].push({ entityId: entity.id, class: 'render', data: new RenderNode(entity.id, entity.components.display, entity.components.position), isActive: true });
+            this.typedNodes['render'].push({
+                entityId: entity.id,
+                class: 'render',
+                data: node,
+                isActive: true });
         }
 
-        if (entity.components.animation && entity.components.display && entity.components.velocity) {
+        if (entityComponents.animation && entityComponents.display && entityComponents.velocity) {
 
-            this.typedNodes['animation'] = this.typedNodes['animation'] || [];
-
+            let node = new AnimationNode(entity.id, entityComponents.animation, entityComponents.display, entityComponents.velocity);
             // animation
             this.typedNodes['animation'].push({
                 entityId: entity.id,
                 class: 'animation',
-                data: new AnimationNode(entity.id, entity.components.animation, entity.components.display, entity.components.velocity),
+                data: node,
                 isActive: true });
         }
 
-        if (entity.components.velocity && entity.components.position) {
+        if (entityComponents.velocity && entityComponents.position && entityComponents.collision) {
 
-            this.typedNodes['move'] = this.typedNodes['move'] || [];
-
+            let node = new MoveNode(entity.id, entityComponents.position, entityComponents.velocity, entityComponents.collision);
             // move
-            this.typedNodes['move'].push({ entityId: entity.id, class: 'move', data: new MoveNode(entity.id, entity.components.position, entity.components.velocity), isActive: true });
+            this.typedNodes['move'].push({
+                entityId: entity.id,
+                class: 'move',
+                data: node,
+                isActive: true });
         }
 
-        if (entity.components.velocity && entity.components.input) {
+        if (entityComponents.velocity && entityComponents.input) {
 
-            this.typedNodes['control'] = this.typedNodes['control'] || [];
-
+            let node = new ControlNode(entity.id, entityComponents.control, entityComponents.velocity);
             // control
-            this.typedNodes['control'].push({ entityId: entity.id, class: 'control', data: new ControlNode(entity.id, entity.components.control, entity.components.velocity), isActive: true });
+            this.typedNodes['control'].push({
+                entityId: entity.id,
+                class: 'control',
+                data: node,
+                isActive: true });
         }
 
-        if (entity.components.collision) {
+        if (entityComponents.collision && entityComponents.display) {
 
-            this.typedNodes['collision'] = this.typedNodes['collision'] || [];
-
+            let node = new CollisionNode(entity.id, entityComponents.collision, entityComponents.display, entityComponents.velocity);
             // collision
-            this.typedNodes['collision'].push({ entityId: entity.id, class: 'collision', data: new CollisionNode(entity.id, entity.components.collision, entity.components.display, entity.components.velocity), isActive: true });
+            this.typedNodes['obstacleCollision'].push({
+                entityId: entity.id,
+                class: 'collision',
+                data: node,
+                isActive: true });
         }
 
-        if (entity.components.position) { // need a second 'trigger' component or this will apply to all rendered objects
+        if (entityComponents.position) { // need a second 'trigger' component or this will apply to all rendered objects
 
-            this.typedNodes['level'] = this.typedNodes['level'] || [];
-
+            let node = new LevelNode(entity.id, entityComponents.position);
             // level
-            this.typedNodes['level'].push({ entityId: entity.id, class: 'level', data: new LevelNode(entity.id, entity.components.position), isActive: true });
+            this.typedNodes['level'].push({
+                entityId: entity.id,
+                class: 'level',
+                data: node,
+                isActive: true });
         }
 
         return entity;

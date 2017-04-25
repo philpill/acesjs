@@ -4,14 +4,14 @@ import INode from '../nodes/inode';
 import Sprite from '../sprite';
 import ITypedNode from '../itypedNode';
 
-export default class CollisionSystem implements ISystem {
+export default class ObstacleCollisionSystem implements ISystem {
 
     class: string;
     settings: Settings;
 
     constructor(settings: Settings) {
 
-        this.class = 'collision';
+        this.class = 'obstacleCollision';
         this.settings = settings;
     }
 
@@ -52,6 +52,7 @@ export default class CollisionSystem implements ISystem {
         primaries.map((primary: ITypedNode) => {
 
             primary.data.velocity.isGrounded = false;
+            primary.data.collision.isBottomObstacleCollision = false;
 
             secondaries.map((secondary: ITypedNode) => {
 
@@ -62,6 +63,7 @@ export default class CollisionSystem implements ISystem {
                 if (this.isCollision(sprite1, sprite2)) {
 
                     let velocityData = primary.data.velocity;
+                    let collisionData = primary.data.collision;
 
                     let errorMargin = this.settings.TILE/2;
 
@@ -77,12 +79,19 @@ export default class CollisionSystem implements ISystem {
                     let isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
                         sprite2.x + sprite2.width < sprite1.x + errorMargin;
 
+                    collisionData.isTopObstacleCollision = isTopCollision;
+                    collisionData.isBottomObstacleCollision = isBottomCollision;
+                    collisionData.isLeftObstacleCollision = isLeftCollision;
+                    collisionData.isRightObstacleCollision = isRightCollision;
+
+
+                    // SHIFT ALL THIS INTO MOVE SYSTEM
+
                     // check collision
                     if (isBottomCollision) {
 
                         // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
                         velocityData.velocityY = Math.min(0, velocityData.velocityY);
-
                         velocityData.isGrounded = true;
 
                     } else if (isTopCollision) {
