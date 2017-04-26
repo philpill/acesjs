@@ -18,40 +18,50 @@ export default class MoveSystem implements ISystem {
         this.settings = settings;
     }
 
-    init() {
+    init() { }
 
+    stop() { }
+
+    getVelocityX(time: number, friction: number, velocity: number, acceleration: number, isGrounded: boolean) {
+
+        // limit horizontal movement in the air
+        acceleration = isGrounded ? acceleration : acceleration/3;
+
+        return (velocity + time * acceleration) * friction;
     }
 
-    stop() {
+    getPositionX(time: number, tile: number, position: number, velocity: number) {
 
-    }
-
-    getVelocityX(time: number, velocityData: VelocityComponent, collisionData: CollisionComponent) {
-
-        let velocity = velocityData.velocityX;
-
-        if (!collisionData.isBottomObstacleCollision) {
-            // limit horizontal movement in the air
-            velocityData.accelerationX = velocityData.accelerationX/3;
-        }
-
-        velocity = (velocityData.velocityX + time * velocityData.accelerationX) * this.settings.FRICTION;
-
-        return velocity;
-    }
-
-    getPositionX(time: number, positionData: PositionComponent, velocityData: VelocityComponent) {
-
-        let position = positionData.x;
-
-
-        position += (velocityData.velocityX + time * velocityData.velocityX) * this.settings.TILE;
+        position = position + (velocity + time * velocity) * tile;
 
         // stop movement at map boundaries - shift this to collision system
         position = Math.max(0, position);
-        position = Math.min(position, this.settings.MAP[0]*this.settings.TILE - this.settings.TILE);
+        position = Math.min(position, this.settings.MAP[0] * tile - tile);
 
         return position;
+    }
+
+    getVelocityY(time: number, velocity: number, acceleration: number, isGrounded: boolean) {
+
+        // prevent any more downwards vertical movement
+        velocity = isGrounded ? Math.max(0, velocity) : velocity + time * acceleration;
+
+        // cap the velocity - anything more than 0.7 and the entity might fall
+        // though the tile before collision is detected
+        return Math.min(velocity, 0.5);
+    }
+
+    getPositionY(time: number, tile: number, position: number, velocity: number, isGrounded: boolean) {
+
+        position = position + velocity * tile;
+
+        if (isGrounded) {
+
+            // round up to tile edge
+            position = Math.floor(position / tile) * tile;
+        }
+
+        return Math.max(0, position);
     }
 
     update(time: number, nodes: ITypedNode[]) {
@@ -64,41 +74,21 @@ export default class MoveSystem implements ISystem {
 
             let collisionData = node.data.collision;
 
-            velocityData.velocityX = this.getVelocityX(time, velocityData, collisionData);
+            let isGrounded = collisionData.isBottomObstacleCollision;
 
-            positionData.x = this.getPositionX(time, positionData, velocityData);
+            let tile = this.settings.TILE;
 
+            let friction = this.settings.FRICTION;
 
+            velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
 
+            positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX);
 
-            if (collisionData.isBottomObstacleCollision) {
+            velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
 
-                // prevent any more downwards vertical movement
-                velocityData.velocityY = Math.max(0, velocityData.velocityY);
-                            // round up to tile edge
-                positionData.y = Math.floor(positionData.y/this.settings.TILE)*this.settings.TILE;
+            positionData.y = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
 
-            } else {
-
-                velocityData.velocityY = (velocityData.velocityY + time * velocityData.accelerationY);
-            }
-
-
-            // cap the velocity - anything more than 0.7 and the entity might fall
-            // though the tile before collision is detected
-            let velocityY = Math.min(velocityData.velocityY + time * velocityData.velocityY, 0.5);
-
-            positionData.y += velocityY * this.settings.TILE;
-
-            if (collisionData.isBottomObstacleCollision) {
-
-                // round up to tile edge
-                positionData.y = Math.floor(positionData.y/this.settings.TILE)*this.settings.TILE;
-            }
-
-            positionData.y = Math.max(0, positionData.y);
-
-            if (positionData.y > this.settings.MAP[0]*this.settings.TILE) {
+            if (positionData.y > this.settings.MAP[0] * tile) {
                 console.log('OFF MAP');
                 node.isActive = false;
             }

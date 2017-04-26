@@ -2,25 +2,22 @@ import ISystem from './isystem';
 import Settings from '../settings';
 import INode from '../nodes/inode';
 import ITypedNode from '../itypedNode';
+import Sprite from '../sprite';
 
 export default class RenderSystem implements ISystem {
 
     class: string;
     settings: Settings;
     sprites: any;
-    stage: any;
-    container: any;
-    renderer: any;
+    stage: PIXI.Container;
+    container: PIXI.Container;
+    renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
 
     constructor(settings) {
 
         this.class = 'render';
 
         this.sprites = {};
-
-        this.stage = {};
-
-        this.container = {};
 
         this.settings = settings;
     }
@@ -45,79 +42,78 @@ export default class RenderSystem implements ISystem {
 
     }
 
-    update(time: number, nodes: ITypedNode[]) {
+    getPivotY(focusY: number): number {
 
-        // console.log('render update');
+        let pivotY = focusY;
 
-        for (var i = 0, j = nodes.length; i < j; i++) {
+        let mapHeight = this.settings.MAP[1] * this.settings.TILE;
 
-            let id = nodes[i].entityId;
+        let screenHeight = this.renderer.height;
 
-            let displayData = nodes[i].data.display;
-            let positionData = nodes[i].data.position;
+        pivotY = focusY < mapHeight/2 ? screenHeight/2 : focusY;
+        pivotY = focusY + screenHeight/2 > mapHeight ? mapHeight - screenHeight/2 : pivotY;
 
-            if (!this.sprites.hasOwnProperty(id)) {
+        return pivotY;
+    }
 
-                let sprite = displayData.sprite;
+    getPivotX(focusX: number): number {
 
-                this.sprites[id] = sprite;
+        let pivotX = focusX;
 
-                this.container.addChild(sprite);
-            }
+        let mapWidth = this.settings.MAP[0] * this.settings.TILE;
 
-            // console.log(nodes[i].position);
-            // console.log(nodes[i].display);
+        let screenWidth = this.renderer.width;
 
-            displayData.sprite.position.x = positionData.x;
-            displayData.sprite.position.y = positionData.y;
+        pivotX = focusX < screenWidth/2 ? screenWidth/2 : focusX;
+        pivotX = focusX + screenWidth/2 > mapWidth ? mapWidth - screenWidth/2 : pivotX;
 
-            if (displayData.isFocus) {
+        return pivotX;
+    }
 
-                let x = displayData.sprite.x;
-                let width = displayData.sprite.width;
-                let y = displayData.sprite.y;
-                let height = displayData.sprite.height;
+    addNewSprites(id: string, sprite: Sprite) {
 
+        this.sprites[id] = sprite;
 
-                let mapWidth = this.settings.MAP[0] * this.settings.TILE;
-                let mapHeight = this.settings.MAP[1] * this.settings.TILE;
+        this.container.addChild(sprite);
+    }
 
-                let screenWidth = this.renderer.width;
-                let screenHeight = this.renderer.height;
-
-                // console.log('mapWidth ', mapWidth);
-                // console.log('screenWidth ', screenWidth);
-
-                let pivotX = x < screenWidth/2 ? screenWidth/2 : x;
-                pivotX = x + screenWidth/2 > mapWidth ? mapWidth - screenWidth/2 : pivotX;
-
-                this.stage.pivot.x = pivotX;
-
-                // console.log(pivotX);
-
-                let pivotY = y < mapHeight/2 ? screenHeight/2 : y;
-                pivotY = y + screenHeight/2 > mapHeight ? mapHeight - screenHeight/2 : pivotY;
-
-                this.stage.pivot.y = pivotY;
-
-
-
-                // test against map width * tilesize
-                if (displayData.sprite.x < 0 ||
-                    displayData.sprite.x + displayData.sprite.width > mapWidth) {
-                    console.log('EXIT');
-                }
-
-                // console.log('x', this.stage.pivot.x);
-                // console.log('y', this.stage.pivot.y);
-            }
-        }
+    clearDeadSprites() {
 
         for (let id of Object.keys(this.sprites)) {
             if (!this.sprites[id]) {
                 delete this.sprites[id];
             }
         }
+    }
+
+    update(time: number, nodes: ITypedNode[]) {
+
+        nodes.map((node: ITypedNode) => {
+
+            let displayData = node.data.display;
+            let positionData = node.data.position;
+
+            !this.sprites[node.entityId] && this.addNewSprites(node.entityId, displayData.sprite);
+
+            displayData.sprite.position.x = positionData.x;
+            displayData.sprite.position.y = positionData.y;
+
+            if (displayData.isFocus) {
+
+                this.stage.pivot.x = this.getPivotX(displayData.sprite.x);
+                this.stage.pivot.y = this.getPivotY(displayData.sprite.y);
+
+                let mapWidth = this.settings.MAP[0] * this.settings.TILE;
+
+                // test against map width * tilesize
+                if (displayData.sprite.x < 0 ||
+                    displayData.sprite.x + displayData.sprite.width > mapWidth) {
+                    console.log('EXIT');
+                }
+            }
+        });
+
+        this.clearDeadSprites();
 
         this.renderer.render(this.stage);
     }

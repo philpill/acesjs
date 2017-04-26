@@ -71,9 +71,7 @@ export default class ControlSystem implements ISystem {
             let velocityData = node.data.velocity;
 
             if (this.isUp && velocityData.isGrounded) {
-                console.log('JUMP');
                 velocityData.accelerationY = -velocityData.maxAccelerationY;
-                velocityData.velocityY = -0.3;
             } else {
                 velocityData.accelerationY = 1;
             }

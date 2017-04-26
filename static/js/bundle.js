@@ -520,9 +520,7 @@ var ControlSystem = (function () {
         nodes.map(function (node) {
             var velocityData = node.data.velocity;
             if (_this.isUp && velocityData.isGrounded) {
-                console.log('JUMP');
                 velocityData.accelerationY = -velocityData.maxAccelerationY;
-                velocityData.velocityY = -0.3;
             }
             else {
                 velocityData.accelerationY = 1;
@@ -625,26 +623,34 @@ var MoveSystem = (function () {
         this["class"] = 'move';
         this.settings = settings;
     }
-    MoveSystem.prototype.init = function () {
+    MoveSystem.prototype.init = function () { };
+    MoveSystem.prototype.stop = function () { };
+    MoveSystem.prototype.getVelocityX = function (time, friction, velocity, acceleration, isGrounded) {
+        // limit horizontal movement in the air
+        acceleration = isGrounded ? acceleration : acceleration / 3;
+        return (velocity + time * acceleration) * friction;
     };
-    MoveSystem.prototype.stop = function () {
-    };
-    MoveSystem.prototype.getVelocityX = function (time, velocityData, collisionData) {
-        var velocity = velocityData.velocityX;
-        if (!collisionData.isBottomObstacleCollision) {
-            // limit horizontal movement in the air
-            velocityData.accelerationX = velocityData.accelerationX / 3;
-        }
-        velocity = (velocityData.velocityX + time * velocityData.accelerationX) * this.settings.FRICTION;
-        return velocity;
-    };
-    MoveSystem.prototype.getPositionX = function (time, positionData, velocityData) {
-        var position = positionData.x;
-        position += (velocityData.velocityX + time * velocityData.velocityX) * this.settings.TILE;
+    MoveSystem.prototype.getPositionX = function (time, tile, position, velocity) {
+        position = position + (velocity + time * velocity) * tile;
         // stop movement at map boundaries - shift this to collision system
         position = Math.max(0, position);
-        position = Math.min(position, this.settings.MAP[0] * this.settings.TILE - this.settings.TILE);
+        position = Math.min(position, this.settings.MAP[0] * tile - tile);
         return position;
+    };
+    MoveSystem.prototype.getVelocityY = function (time, velocity, acceleration, isGrounded) {
+        // prevent any more downwards vertical movement
+        velocity = isGrounded ? Math.max(0, velocity) : velocity + time * acceleration;
+        // cap the velocity - anything more than 0.7 and the entity might fall
+        // though the tile before collision is detected
+        return Math.min(velocity, 0.5);
+    };
+    MoveSystem.prototype.getPositionY = function (time, tile, position, velocity, isGrounded) {
+        position = position + velocity * tile;
+        if (isGrounded) {
+            // round up to tile edge
+            position = Math.floor(position / tile) * tile;
+        }
+        return Math.max(0, position);
     };
     MoveSystem.prototype.update = function (time, nodes) {
         var _this = this;
@@ -652,27 +658,14 @@ var MoveSystem = (function () {
             var velocityData = node.data.velocity;
             var positionData = node.data.position;
             var collisionData = node.data.collision;
-            velocityData.velocityX = _this.getVelocityX(time, velocityData, collisionData);
-            positionData.x = _this.getPositionX(time, positionData, velocityData);
-            if (collisionData.isBottomObstacleCollision) {
-                // prevent any more downwards vertical movement
-                velocityData.velocityY = Math.max(0, velocityData.velocityY);
-                // round up to tile edge
-                positionData.y = Math.floor(positionData.y / _this.settings.TILE) * _this.settings.TILE;
-            }
-            else {
-                velocityData.velocityY = (velocityData.velocityY + time * velocityData.accelerationY);
-            }
-            // cap the velocity - anything more than 0.7 and the entity might fall
-            // though the tile before collision is detected
-            var velocityY = Math.min(velocityData.velocityY + time * velocityData.velocityY, 0.5);
-            positionData.y += velocityY * _this.settings.TILE;
-            if (collisionData.isBottomObstacleCollision) {
-                // round up to tile edge
-                positionData.y = Math.floor(positionData.y / _this.settings.TILE) * _this.settings.TILE;
-            }
-            positionData.y = Math.max(0, positionData.y);
-            if (positionData.y > _this.settings.MAP[0] * _this.settings.TILE) {
+            var isGrounded = collisionData.isBottomObstacleCollision;
+            var tile = _this.settings.TILE;
+            var friction = _this.settings.FRICTION;
+            velocityData.velocityX = _this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
+            positionData.x = _this.getPositionX(time, tile, positionData.x, velocityData.velocityX);
+            velocityData.velocityY = _this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
+            positionData.y = _this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
+            if (positionData.y > _this.settings.MAP[0] * tile) {
                 console.log('OFF MAP');
                 node.isActive = false;
             }
@@ -694,8 +687,6 @@ var RenderSystem = (function () {
     function RenderSystem(settings) {
         this["class"] = 'render';
         this.sprites = {};
-        this.stage = {};
-        this.container = {};
         this.settings = settings;
     }
     RenderSystem.prototype.init = function () {
@@ -709,54 +700,54 @@ var RenderSystem = (function () {
     };
     RenderSystem.prototype.stop = function () {
     };
-    RenderSystem.prototype.update = function (time, nodes) {
-        // console.log('render update');
-        for (var i = 0, j = nodes.length; i < j; i++) {
-            var id = nodes[i].entityId;
-            var displayData = nodes[i].data.display;
-            var positionData = nodes[i].data.position;
-            if (!this.sprites.hasOwnProperty(id)) {
-                var sprite = displayData.sprite;
-                this.sprites[id] = sprite;
-                this.container.addChild(sprite);
-            }
-            // console.log(nodes[i].position);
-            // console.log(nodes[i].display);
-            displayData.sprite.position.x = positionData.x;
-            displayData.sprite.position.y = positionData.y;
-            if (displayData.isFocus) {
-                var x = displayData.sprite.x;
-                var width = displayData.sprite.width;
-                var y = displayData.sprite.y;
-                var height = displayData.sprite.height;
-                var mapWidth = this.settings.MAP[0] * this.settings.TILE;
-                var mapHeight = this.settings.MAP[1] * this.settings.TILE;
-                var screenWidth = this.renderer.width;
-                var screenHeight = this.renderer.height;
-                // console.log('mapWidth ', mapWidth);
-                // console.log('screenWidth ', screenWidth);
-                var pivotX = x < screenWidth / 2 ? screenWidth / 2 : x;
-                pivotX = x + screenWidth / 2 > mapWidth ? mapWidth - screenWidth / 2 : pivotX;
-                this.stage.pivot.x = pivotX;
-                // console.log(pivotX);
-                var pivotY = y < mapHeight / 2 ? screenHeight / 2 : y;
-                pivotY = y + screenHeight / 2 > mapHeight ? mapHeight - screenHeight / 2 : pivotY;
-                this.stage.pivot.y = pivotY;
-                // test against map width * tilesize
-                if (displayData.sprite.x < 0 ||
-                    displayData.sprite.x + displayData.sprite.width > mapWidth) {
-                    console.log('EXIT');
-                }
-                // console.log('x', this.stage.pivot.x);
-                // console.log('y', this.stage.pivot.y);
-            }
-        }
+    RenderSystem.prototype.getPivotY = function (focusY) {
+        var pivotY = focusY;
+        var mapHeight = this.settings.MAP[1] * this.settings.TILE;
+        var screenHeight = this.renderer.height;
+        pivotY = focusY < mapHeight / 2 ? screenHeight / 2 : focusY;
+        pivotY = focusY + screenHeight / 2 > mapHeight ? mapHeight - screenHeight / 2 : pivotY;
+        return pivotY;
+    };
+    RenderSystem.prototype.getPivotX = function (focusX) {
+        var pivotX = focusX;
+        var mapWidth = this.settings.MAP[0] * this.settings.TILE;
+        var screenWidth = this.renderer.width;
+        pivotX = focusX < screenWidth / 2 ? screenWidth / 2 : focusX;
+        pivotX = focusX + screenWidth / 2 > mapWidth ? mapWidth - screenWidth / 2 : pivotX;
+        return pivotX;
+    };
+    RenderSystem.prototype.addNewSprites = function (id, sprite) {
+        this.sprites[id] = sprite;
+        this.container.addChild(sprite);
+    };
+    RenderSystem.prototype.clearDeadSprites = function () {
         for (var _i = 0, _a = Object.keys(this.sprites); _i < _a.length; _i++) {
             var id = _a[_i];
             if (!this.sprites[id]) {
                 delete this.sprites[id];
             }
         }
+    };
+    RenderSystem.prototype.update = function (time, nodes) {
+        var _this = this;
+        nodes.map(function (node) {
+            var displayData = node.data.display;
+            var positionData = node.data.position;
+            !_this.sprites[node.entityId] && _this.addNewSprites(node.entityId, displayData.sprite);
+            displayData.sprite.position.x = positionData.x;
+            displayData.sprite.position.y = positionData.y;
+            if (displayData.isFocus) {
+                _this.stage.pivot.x = _this.getPivotX(displayData.sprite.x);
+                _this.stage.pivot.y = _this.getPivotY(displayData.sprite.y);
+                var mapWidth = _this.settings.MAP[0] * _this.settings.TILE;
+                // test against map width * tilesize
+                if (displayData.sprite.x < 0 ||
+                    displayData.sprite.x + displayData.sprite.width > mapWidth) {
+                    console.log('EXIT');
+                }
+            }
+        });
+        this.clearDeadSprites();
         this.renderer.render(this.stage);
     };
     return RenderSystem;
@@ -815,7 +806,7 @@ var VelocityComponent = (function () {
         this.accelerationX = 0;
         this.accelerationY = 0;
         this.maxAccelerationX = 3;
-        this.maxAccelerationY = 4;
+        this.maxAccelerationY = 20;
         this.velocityX = 0;
         this.velocityY = 0;
         this.isGrounded = false;
