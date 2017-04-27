@@ -1,6 +1,5 @@
 export default class Settings {
 
-
     GRAVITY: number;
     FRICTION: number;
     TILE: number;

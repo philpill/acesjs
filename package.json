@@ -4,13 +4,22 @@
   "description": ".",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "tsc ./test/**/*.ts --outDir ./test/js/ --module commonjs",
+    "test": "mocha test/**/*.js --reporter min",
+    "start": "python -m SimpleHTTPServer 8000",
+    "build": "webpack --watch"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/chai": "^3.5.1",
+    "@types/mocha": "^2.2.41",
+    "@types/pixi.js": "^4.4.3",
+    "chai": "^3.5.0",
     "copy-webpack-plugin": "^0.2.0",
+    "mocha": "^3.3.0",
     "ts-loader": "^2.0.3",
+    "typescript": "^2.3.1",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^1.12.1"
   }

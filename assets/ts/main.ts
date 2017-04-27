@@ -1,5 +1,3 @@
-/// <reference path="../dts/pixi.js.d.ts" />
-
 import Settings from './settings';
 import Engine from './engine';
 

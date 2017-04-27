@@ -1,5 +1,3 @@
-/// <reference path="../../dts/pixi.js.d.ts" />
-
 import Sprite from '../sprite';
 import IComponent from './icomponent';
 

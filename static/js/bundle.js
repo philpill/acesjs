@@ -71,7 +71,6 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/// <reference path="../../dts/pixi.js.d.ts" />
 
 exports.__esModule = true;
 var DisplayComponent = (function () {
@@ -158,7 +157,6 @@ exports["default"] = Entity;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/// <reference path="../dts/pixi.js.d.ts" />
 
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -190,6 +188,26 @@ exports["default"] = Sprite;
 "use strict";
 
 exports.__esModule = true;
+var Settings = (function () {
+    function Settings() {
+        this.GRAVITY = 1;
+        this.FRICTION = 0.90;
+        this.TILE = 16;
+        this.MAP = [45, 30];
+        this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
+    }
+    return Settings;
+}());
+exports["default"] = Settings;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
 var CollisionComponent = (function () {
     function CollisionComponent() {
         this["class"] = 'collision';
@@ -210,7 +228,7 @@ exports["default"] = CollisionComponent;
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -386,26 +404,6 @@ exports["default"] = Engine;
 
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var Settings = (function () {
-    function Settings() {
-        this.GRAVITY = 1;
-        this.FRICTION = 0.90;
-        this.TILE = 16;
-        this.MAP = [45, 30];
-        this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
-    }
-    return Settings;
-}());
-exports["default"] = Settings;
-
-
-/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -471,8 +469,7 @@ exports["default"] = AnimationSystem;
 
 
 /***/ }),
-/* 8 */,
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -544,7 +541,7 @@ exports["default"] = ControlSystem;
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -612,7 +609,7 @@ exports["default"] = LevelSystem;
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -674,6 +671,91 @@ var MoveSystem = (function () {
     return MoveSystem;
 }());
 exports["default"] = MoveSystem;
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var ObstacleCollisionSystem = (function () {
+    function ObstacleCollisionSystem(settings) {
+        this["class"] = 'obstacleCollision';
+        this.settings = settings;
+    }
+    ObstacleCollisionSystem.prototype.init = function () {
+    };
+    ObstacleCollisionSystem.prototype.stop = function () {
+    };
+    ObstacleCollisionSystem.prototype.isCollision = function (sprite1, sprite2) {
+        var isCollision = false;
+        if (sprite1.x < sprite2.x + sprite2.width &&
+            sprite1.x + sprite1.width > sprite2.x &&
+            sprite1.y < sprite2.y + sprite2.height &&
+            sprite1.height + sprite1.y > sprite2.y) {
+            isCollision = true;
+        }
+        return isCollision;
+    };
+    ObstacleCollisionSystem.prototype.update = function (time, nodes) {
+        var _this = this;
+        var primaries = nodes.filter(function (node) {
+            return node.data.collision.type === 'primary';
+        });
+        var secondaries = nodes.filter(function (node) {
+            return node.data.collision.type !== 'primary';
+        });
+        primaries.map(function (primary) {
+            primary.data.velocity.isGrounded = false;
+            primary.data.collision.isBottomObstacleCollision = false;
+            secondaries.map(function (secondary) {
+                var sprite1 = primary.data.display.sprite;
+                var sprite2 = secondary.data.display.sprite;
+                if (_this.isCollision(sprite1, sprite2)) {
+                    var velocityData = primary.data.velocity;
+                    var collisionData = primary.data.collision;
+                    var errorMargin = _this.settings.TILE / 2;
+                    var isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
+                        sprite1.height + sprite1.y < sprite2.y + errorMargin;
+                    var isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
+                        sprite2.height + sprite2.y < sprite1.y + errorMargin;
+                    var isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
+                        sprite1.x + sprite1.width < sprite2.x + errorMargin;
+                    var isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
+                        sprite2.x + sprite2.width < sprite1.x + errorMargin;
+                    collisionData.isTopObstacleCollision = isTopCollision;
+                    collisionData.isBottomObstacleCollision = isBottomCollision;
+                    collisionData.isLeftObstacleCollision = isLeftCollision;
+                    collisionData.isRightObstacleCollision = isRightCollision;
+                    // SHIFT ALL THIS INTO MOVE SYSTEM
+                    // check collision
+                    if (isBottomCollision) {
+                        // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
+                        velocityData.velocityY = Math.min(0, velocityData.velocityY);
+                        velocityData.isGrounded = true;
+                    }
+                    else if (isTopCollision) {
+                        // velocityData.accelerationY = Math.max(0, velocityData.accelerationY);
+                        velocityData.velocityY = Math.max(0, velocityData.velocityY);
+                    }
+                    else if (isRightCollision) {
+                        velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
+                        velocityData.velocityX = Math.min(0, velocityData.velocityX);
+                    }
+                    else if (isLeftCollision) {
+                        velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
+                        velocityData.velocityX = Math.max(0, velocityData.velocityX);
+                    }
+                    primary.data.collision.collide(secondary);
+                }
+            });
+        });
+    };
+    return ObstacleCollisionSystem;
+}());
+exports["default"] = ObstacleCollisionSystem;
 
 
 /***/ }),
@@ -821,16 +903,15 @@ exports["default"] = VelocityComponent;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/// <reference path="../dts/pixi.js.d.ts" />
 
 exports.__esModule = true;
-var settings_1 = __webpack_require__(6);
-var engine_1 = __webpack_require__(5);
+var settings_1 = __webpack_require__(4);
+var engine_1 = __webpack_require__(6);
 var animation_1 = __webpack_require__(7);
-var obstacleCollision_1 = __webpack_require__(28);
-var control_1 = __webpack_require__(9);
-var level_1 = __webpack_require__(10);
-var move_1 = __webpack_require__(11);
+var obstacleCollision_1 = __webpack_require__(11);
+var control_1 = __webpack_require__(8);
+var level_1 = __webpack_require__(9);
+var move_1 = __webpack_require__(10);
 var render_1 = __webpack_require__(12);
 var Main = (function () {
     function Main() {
@@ -993,7 +1074,7 @@ var entity_1 = __webpack_require__(2);
 var display_1 = __webpack_require__(0);
 var position_1 = __webpack_require__(1);
 var sprite_1 = __webpack_require__(3);
-var settings_1 = __webpack_require__(6);
+var settings_1 = __webpack_require__(4);
 var backgroundPrefab = (function (_super) {
     __extends(backgroundPrefab, _super);
     function backgroundPrefab(type, x, y) {
@@ -1039,9 +1120,9 @@ exports.__esModule = true;
 var entity_1 = __webpack_require__(2);
 var display_1 = __webpack_require__(0);
 var position_1 = __webpack_require__(1);
-var collision_1 = __webpack_require__(4);
+var collision_1 = __webpack_require__(5);
 var sprite_1 = __webpack_require__(3);
-var settings_1 = __webpack_require__(6);
+var settings_1 = __webpack_require__(4);
 var GroundPrefab = (function (_super) {
     __extends(GroundPrefab, _super);
     function GroundPrefab(type, x, y) {
@@ -1172,7 +1253,7 @@ var display_1 = __webpack_require__(0);
 var position_1 = __webpack_require__(1);
 var velocity_1 = __webpack_require__(15);
 var input_1 = __webpack_require__(14);
-var collision_1 = __webpack_require__(4);
+var collision_1 = __webpack_require__(5);
 var animation_1 = __webpack_require__(13);
 var PlayerPrefab = (function () {
     function PlayerPrefab(settings, start) {
@@ -1237,91 +1318,6 @@ var SkyPrefab = (function () {
     return SkyPrefab;
 }());
 exports["default"] = SkyPrefab;
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var ObstacleCollisionSystem = (function () {
-    function ObstacleCollisionSystem(settings) {
-        this["class"] = 'obstacleCollision';
-        this.settings = settings;
-    }
-    ObstacleCollisionSystem.prototype.init = function () {
-    };
-    ObstacleCollisionSystem.prototype.stop = function () {
-    };
-    ObstacleCollisionSystem.prototype.isCollision = function (sprite1, sprite2) {
-        var isCollision = false;
-        if (sprite1.x < sprite2.x + sprite2.width &&
-            sprite1.x + sprite1.width > sprite2.x &&
-            sprite1.y < sprite2.y + sprite2.height &&
-            sprite1.height + sprite1.y > sprite2.y) {
-            isCollision = true;
-        }
-        return isCollision;
-    };
-    ObstacleCollisionSystem.prototype.update = function (time, nodes) {
-        var _this = this;
-        var primaries = nodes.filter(function (node) {
-            return node.data.collision.type === 'primary';
-        });
-        var secondaries = nodes.filter(function (node) {
-            return node.data.collision.type !== 'primary';
-        });
-        primaries.map(function (primary) {
-            primary.data.velocity.isGrounded = false;
-            primary.data.collision.isBottomObstacleCollision = false;
-            secondaries.map(function (secondary) {
-                var sprite1 = primary.data.display.sprite;
-                var sprite2 = secondary.data.display.sprite;
-                if (_this.isCollision(sprite1, sprite2)) {
-                    var velocityData = primary.data.velocity;
-                    var collisionData = primary.data.collision;
-                    var errorMargin = _this.settings.TILE / 2;
-                    var isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
-                        sprite1.height + sprite1.y < sprite2.y + errorMargin;
-                    var isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
-                        sprite2.height + sprite2.y < sprite1.y + errorMargin;
-                    var isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
-                        sprite1.x + sprite1.width < sprite2.x + errorMargin;
-                    var isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
-                        sprite2.x + sprite2.width < sprite1.x + errorMargin;
-                    collisionData.isTopObstacleCollision = isTopCollision;
-                    collisionData.isBottomObstacleCollision = isBottomCollision;
-                    collisionData.isLeftObstacleCollision = isLeftCollision;
-                    collisionData.isRightObstacleCollision = isRightCollision;
-                    // SHIFT ALL THIS INTO MOVE SYSTEM
-                    // check collision
-                    if (isBottomCollision) {
-                        // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
-                        velocityData.velocityY = Math.min(0, velocityData.velocityY);
-                        velocityData.isGrounded = true;
-                    }
-                    else if (isTopCollision) {
-                        // velocityData.accelerationY = Math.max(0, velocityData.accelerationY);
-                        velocityData.velocityY = Math.max(0, velocityData.velocityY);
-                    }
-                    else if (isRightCollision) {
-                        velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
-                        velocityData.velocityX = Math.min(0, velocityData.velocityX);
-                    }
-                    else if (isLeftCollision) {
-                        velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
-                        velocityData.velocityX = Math.max(0, velocityData.velocityX);
-                    }
-                    primary.data.collision.collide(secondary);
-                }
-            });
-        });
-    };
-    return ObstacleCollisionSystem;
-}());
-exports["default"] = ObstacleCollisionSystem;
 
 
 /***/ })

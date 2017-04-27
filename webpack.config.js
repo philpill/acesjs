@@ -5,7 +5,6 @@ var path = require('path');
 var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
-var dir_js = path.resolve(__dirname, 'assets/js');
 var dir_ts = path.resolve(__dirname, 'assets/ts');
 var dir_libs = path.resolve(__dirname, 'libs');
 var dir_build = path.resolve(__dirname, 'static');
@@ -37,7 +36,7 @@ module.exports = {
                 to: 'libs'
             } // to: output.path
         ]),
-                new CopyWebpackPlugin([
+        new CopyWebpackPlugin([
             {
                 from: 'assets/img',
                 to: 'img'
