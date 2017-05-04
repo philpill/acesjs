@@ -1,6 +1,7 @@
 /* global __dirname */
 
 var path = require('path');
+var glob = require('glob');
 
 var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -13,7 +14,7 @@ var dir_build = path.resolve(__dirname, 'static');
 module.exports = {
     entry: {
         bundle: path.resolve(dir_ts, 'main.ts'),
-        test: path.resolve(dir_tests_ts, 'test.ts'),
+        test: glob.sync(dir_tests_ts + '/**/*.ts'),
     },
     output: {
         path: dir_build,

@@ -4,7 +4,7 @@
   "description": ".",
   "main": "app.js",
   "scripts": {
-    "test": "mocha ./static/js/test.js --reporter min",
+    "test": "istanbul cover _mocha ./static/js/test.js -- --compilers ts:ts-node/register",
     "start": "python -m SimpleHTTPServer 8000",
     "build": "webpack --watch"
   },
@@ -16,8 +16,11 @@
     "@types/pixi.js": "^4.4.3",
     "chai": "^3.5.0",
     "copy-webpack-plugin": "^0.2.0",
+    "glob": "^7.1.1",
+    "istanbul": "1.1.0-alpha.1",
     "mocha": "^3.3.0",
     "ts-loader": "^2.0.3",
+    "ts-node": "^3.0.3",
     "typescript": "^2.3.1",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^1.12.1"

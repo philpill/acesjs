@@ -63,41 +63,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 253);
+/******/ 	return __webpack_require__(__webpack_require__.s = 257);
 /******/ })
 /************************************************************************/
 /******/ ({
 
 /***/ 10:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var Settings = (function () {
-    function Settings() {
-        this.GRAVITY = 1;
-        this.FRICTION = 0.90;
-        this.TILE = 16;
-        this.MAP = [45, 30];
-        this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
-    }
-    return Settings;
-}());
-exports["default"] = Settings;
-
-
-/***/ }),
-
-/***/ 103:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(113);
-
-
-/***/ }),
-
-/***/ 11:
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -155,6 +126,46 @@ module.exports = {
   truncateThreshold: 40
 
 };
+
+
+/***/ }),
+
+/***/ 110:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var move_1 = __webpack_require__(28);
+var settings_1 = __webpack_require__(12);
+var chai = __webpack_require__(113);
+var assert = chai.assert;
+describe('MoveSystem', function () {
+    var settings;
+    var system;
+    beforeEach(function () {
+        settings = new settings_1["default"]();
+        system = new move_1["default"](settings);
+    });
+    describe('getVelocityX()', function () {
+        it('should return greater value when isGrounded', function () {
+            var groundedValue = system.getVelocityX(1, 1, 1, 1, true);
+            var nonGroundedValue = system.getVelocityX(1, 1, 1, 1, false);
+            assert.isTrue(groundedValue > nonGroundedValue, 'grounded horizontal velocity is not greater airborne velocity');
+        });
+    });
+    describe('getPositionX()', function () {
+        it('should not return less than zero', function () {
+            var value = system.getPositionX(1, 1, -20, 1);
+            assert.isTrue(value >= 0, 'x position is less than zero');
+        });
+        it('cannot be greater than the height of the map', function () {
+            var value = system.getPositionX(1, 1, 800, 1);
+            var max = settings.MAP[0] * settings.TILE - settings.TILE;
+            assert.isTrue(value <= max, 'x position is greater than map height boundary');
+        });
+    });
+});
 
 
 /***/ }),
@@ -296,8 +307,8 @@ function fromByteArray (uint8) {
 
 
 var base64 = __webpack_require__(111)
-var ieee754 = __webpack_require__(136)
-var isArray = __webpack_require__(137)
+var ieee754 = __webpack_require__(137)
+var isArray = __webpack_require__(138)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2082,6 +2093,14 @@ function isnan (val) {
 /***/ 113:
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__(114);
+
+
+/***/ }),
+
+/***/ 114:
+/***/ (function(module, exports, __webpack_require__) {
+
 /*!
  * chai
  * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
@@ -2107,7 +2126,7 @@ exports.AssertionError = __webpack_require__(46);
  * Utils for plugins (not exported)
  */
 
-var util = __webpack_require__(127);
+var util = __webpack_require__(128);
 
 /**
  * # .use(function)
@@ -2138,48 +2157,48 @@ exports.util = util;
  * Configuration
  */
 
-var config = __webpack_require__(11);
+var config = __webpack_require__(10);
 exports.config = config;
 
 /*!
  * Primary `Assertion` prototype
  */
 
-var assertion = __webpack_require__(114);
+var assertion = __webpack_require__(115);
 exports.use(assertion);
 
 /*!
  * Core Assertions
  */
 
-var core = __webpack_require__(115);
+var core = __webpack_require__(116);
 exports.use(core);
 
 /*!
  * Expect interface
  */
 
-var expect = __webpack_require__(117);
+var expect = __webpack_require__(118);
 exports.use(expect);
 
 /*!
  * Should interface
  */
 
-var should = __webpack_require__(118);
+var should = __webpack_require__(119);
 exports.use(should);
 
 /*!
  * Assert interface
  */
 
-var assert = __webpack_require__(116);
+var assert = __webpack_require__(117);
 exports.use(assert);
 
 
 /***/ }),
 
-/***/ 114:
+/***/ 115:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -2189,7 +2208,7 @@ exports.use(assert);
  * MIT Licensed
  */
 
-var config = __webpack_require__(11);
+var config = __webpack_require__(10);
 
 module.exports = function (_chai, util) {
   /*!
@@ -2317,7 +2336,7 @@ module.exports = function (_chai, util) {
 
 /***/ }),
 
-/***/ 115:
+/***/ 116:
 /***/ (function(module, exports) {
 
 /*!
@@ -4184,7 +4203,7 @@ module.exports = function (chai, _) {
 
 /***/ }),
 
-/***/ 116:
+/***/ 117:
 /***/ (function(module, exports) {
 
 /*!
@@ -5836,7 +5855,7 @@ module.exports = function (chai, util) {
 
 /***/ }),
 
-/***/ 117:
+/***/ 118:
 /***/ (function(module, exports) {
 
 /*!
@@ -5877,7 +5896,7 @@ module.exports = function (chai, util) {
 
 /***/ }),
 
-/***/ 118:
+/***/ 119:
 /***/ (function(module, exports) {
 
 /*!
@@ -6085,7 +6104,28 @@ module.exports = function (chai, util) {
 
 /***/ }),
 
-/***/ 119:
+/***/ 12:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var Settings = (function () {
+    function Settings() {
+        this.GRAVITY = 1;
+        this.FRICTION = 0.90;
+        this.TILE = 16;
+        this.MAP = [45, 30];
+        this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
+    }
+    return Settings;
+}());
+exports["default"] = Settings;
+
+
+/***/ }),
+
+/***/ 120:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -6100,7 +6140,7 @@ module.exports = function (chai, util) {
 
 var transferFlags = __webpack_require__(52);
 var flag = __webpack_require__(7);
-var config = __webpack_require__(11);
+var config = __webpack_require__(10);
 
 /*!
  * Module variables
@@ -6204,7 +6244,7 @@ module.exports = function (ctx, name, method, chainingBehavior) {
 
 /***/ }),
 
-/***/ 120:
+/***/ 121:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -6213,7 +6253,7 @@ module.exports = function (ctx, name, method, chainingBehavior) {
  * MIT Licensed
  */
 
-var config = __webpack_require__(11);
+var config = __webpack_require__(10);
 
 /**
  * ### .addMethod (ctx, name, method)
@@ -6255,7 +6295,7 @@ module.exports = function (ctx, name, method) {
 
 /***/ }),
 
-/***/ 121:
+/***/ 122:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -6264,7 +6304,7 @@ module.exports = function (ctx, name, method) {
  * MIT Licensed
  */
 
-var config = __webpack_require__(11);
+var config = __webpack_require__(10);
 var flag = __webpack_require__(7);
 
 /**
@@ -6310,7 +6350,7 @@ module.exports = function (ctx, name, getter) {
 
 /***/ }),
 
-/***/ 122:
+/***/ 123:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -6359,7 +6399,7 @@ module.exports = function (obj, types) {
 
 /***/ }),
 
-/***/ 123:
+/***/ 124:
 /***/ (function(module, exports) {
 
 /*!
@@ -6392,7 +6432,7 @@ module.exports = function getEnumerableProperties(object) {
 
 /***/ }),
 
-/***/ 124:
+/***/ 125:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -6450,7 +6490,7 @@ module.exports = function (obj, args) {
 
 /***/ }),
 
-/***/ 125:
+/***/ 126:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -6500,7 +6540,7 @@ module.exports = function(path, obj) {
 
 /***/ }),
 
-/***/ 126:
+/***/ 127:
 /***/ (function(module, exports) {
 
 /*!
@@ -6543,7 +6583,7 @@ module.exports = function getProperties(object) {
 
 /***/ }),
 
-/***/ 127:
+/***/ 128:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -6562,7 +6602,7 @@ var exports = module.exports = {};
  * test utility
  */
 
-exports.test = __webpack_require__(131);
+exports.test = __webpack_require__(132);
 
 /*!
  * type utility
@@ -6573,13 +6613,13 @@ exports.type = __webpack_require__(45);
 /*!
  * expectTypes utility
  */
-exports.expectTypes = __webpack_require__(122);
+exports.expectTypes = __webpack_require__(123);
 
 /*!
  * message utility
  */
 
-exports.getMessage = __webpack_require__(124);
+exports.getMessage = __webpack_require__(125);
 
 /*!
  * actual utility
@@ -6615,13 +6655,13 @@ exports.transferFlags = __webpack_require__(52);
  * Deep equal utility
  */
 
-exports.eql = __webpack_require__(132);
+exports.eql = __webpack_require__(133);
 
 /*!
  * Deep path value
  */
 
-exports.getPathValue = __webpack_require__(125);
+exports.getPathValue = __webpack_require__(126);
 
 /*!
  * Deep path info
@@ -6645,42 +6685,42 @@ exports.getName = __webpack_require__(48);
  * add Property
  */
 
-exports.addProperty = __webpack_require__(121);
+exports.addProperty = __webpack_require__(122);
 
 /*!
  * add Method
  */
 
-exports.addMethod = __webpack_require__(120);
+exports.addMethod = __webpack_require__(121);
 
 /*!
  * overwrite Property
  */
 
-exports.overwriteProperty = __webpack_require__(130);
+exports.overwriteProperty = __webpack_require__(131);
 
 /*!
  * overwrite Method
  */
 
-exports.overwriteMethod = __webpack_require__(129);
+exports.overwriteMethod = __webpack_require__(130);
 
 /*!
  * Add a chainable method
  */
 
-exports.addChainableMethod = __webpack_require__(119);
+exports.addChainableMethod = __webpack_require__(120);
 
 /*!
  * Overwrite chainable method
  */
 
-exports.overwriteChainableMethod = __webpack_require__(128);
+exports.overwriteChainableMethod = __webpack_require__(129);
 
 
 /***/ }),
 
-/***/ 128:
+/***/ 129:
 /***/ (function(module, exports) {
 
 /*!
@@ -6741,7 +6781,7 @@ module.exports = function (ctx, name, method, chainingBehavior) {
 
 /***/ }),
 
-/***/ 129:
+/***/ 130:
 /***/ (function(module, exports) {
 
 /*!
@@ -6800,7 +6840,7 @@ module.exports = function (ctx, name, method) {
 
 /***/ }),
 
-/***/ 130:
+/***/ 131:
 /***/ (function(module, exports) {
 
 /*!
@@ -6862,7 +6902,7 @@ module.exports = function (ctx, name, getter) {
 
 /***/ }),
 
-/***/ 131:
+/***/ 132:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -6897,15 +6937,15 @@ module.exports = function (obj, args) {
 
 /***/ }),
 
-/***/ 132:
+/***/ 133:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(133);
+module.exports = __webpack_require__(134);
 
 
 /***/ }),
 
-/***/ 133:
+/***/ 134:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -6918,7 +6958,7 @@ module.exports = __webpack_require__(133);
  * Module dependencies
  */
 
-var type = __webpack_require__(134);
+var type = __webpack_require__(135);
 
 /*!
  * Buffer.isBuffer browser shim
@@ -7169,15 +7209,15 @@ function objectEqual(a, b, m) {
 
 /***/ }),
 
-/***/ 134:
+/***/ 135:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(135);
+module.exports = __webpack_require__(136);
 
 
 /***/ }),
 
-/***/ 135:
+/***/ 136:
 /***/ (function(module, exports) {
 
 /*!
@@ -7326,7 +7366,7 @@ Library.prototype.test = function (obj, type) {
 
 /***/ }),
 
-/***/ 136:
+/***/ 137:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -7417,7 +7457,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 137:
+/***/ 138:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -7453,100 +7493,6 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
-
-
-/***/ }),
-
-/***/ 20:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var AnimationSystem = (function () {
-    function AnimationSystem(settings) {
-        this["class"] = 'animation';
-        this.settings = settings;
-        this.timer = 0;
-    }
-    AnimationSystem.prototype.init = function () {
-    };
-    AnimationSystem.prototype.stop = function () {
-    };
-    AnimationSystem.prototype.test = function () {
-        return 1;
-    };
-    AnimationSystem.prototype.setAnimation = function (node, prop) {
-        node.data.animation.currentAnimationProp = prop;
-    };
-    AnimationSystem.prototype.updateFrame = function (node) {
-        var animationData = node.data.animation;
-        var displayData = node.data.display;
-        var frames = animationData[animationData.currentAnimationProp];
-        if (animationData.currentFrame + 1 >= frames.length) {
-            animationData.currentFrame = 0;
-        }
-        else {
-            animationData.currentFrame++;
-        }
-        displayData.sprite.texture.frame = displayData.sprite.data.texture[frames[animationData.currentFrame]];
-    };
-    AnimationSystem.prototype.update = function (dt, nodes) {
-        var _this = this;
-        nodes.map(function (node) {
-            var velocityData = node.data.velocity;
-            var animationData = node.data.animation;
-            if (velocityData.velocityY > 0.01 || velocityData.velocityY < -0.01) {
-                // play jump animation
-                _this.setAnimation(node, 'jump');
-            }
-            else if (velocityData.velocityX > 0.1) {
-                //play right animation
-                _this.setAnimation(node, 'walkRight');
-            }
-            else if (velocityData.velocityX < -0.1) {
-                //play left animation
-                _this.setAnimation(node, 'walkLeft');
-            }
-            else {
-                _this.setAnimation(node, 'default');
-            }
-            _this.timer = _this.timer + dt;
-            if (_this.timer > 0.2) {
-                _this.updateFrame(node);
-                _this.timer = dt;
-            }
-            return node;
-        });
-    };
-    return AnimationSystem;
-}());
-exports["default"] = AnimationSystem;
-
-
-/***/ }),
-
-/***/ 253:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var animation_1 = __webpack_require__(20);
-var settings_1 = __webpack_require__(10);
-var chai = __webpack_require__(103);
-var assert = chai.assert;
-describe('Array', function () {
-    describe('#indexOf()', function () {
-        it('should return -1 when the value is not present', function () {
-            var settings = new settings_1["default"]();
-            var system = new animation_1["default"](settings);
-            var val = system.test();
-            console.log(val);
-            assert.equal(val, 2);
-        });
-    });
-});
 
 
 /***/ }),
@@ -7692,6 +7638,80 @@ Library.prototype.test = function(obj, type) {
 
 /***/ }),
 
+/***/ 257:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(110);
+
+
+/***/ }),
+
+/***/ 28:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var MoveSystem = (function () {
+    function MoveSystem(settings) {
+        this["class"] = 'move';
+        this.settings = settings;
+    }
+    MoveSystem.prototype.init = function () { };
+    MoveSystem.prototype.stop = function () { };
+    MoveSystem.prototype.getVelocityX = function (time, friction, velocity, acceleration, isGrounded) {
+        // limit horizontal movement in the air
+        acceleration = isGrounded ? acceleration : acceleration / 3;
+        return (velocity + time * acceleration) * friction;
+    };
+    MoveSystem.prototype.getPositionX = function (time, tile, position, velocity) {
+        position = position + (velocity + time * velocity) * tile;
+        // stop movement at map boundaries - shift this to collision system
+        position = Math.max(0, position);
+        position = Math.min(position, this.settings.MAP[0] * tile - tile);
+        return position;
+    };
+    MoveSystem.prototype.getVelocityY = function (time, velocity, acceleration, isGrounded) {
+        // prevent any more downwards vertical movement
+        velocity = isGrounded ? Math.max(0, velocity) : velocity + time * acceleration;
+        // cap the velocity - anything more than 0.7 and the entity might fall
+        // though the tile before collision is detected
+        return Math.min(velocity, 0.5);
+    };
+    MoveSystem.prototype.getPositionY = function (time, tile, position, velocity, isGrounded) {
+        position = position + velocity * tile;
+        if (isGrounded) {
+            // round up to tile edge
+            position = Math.floor(position / tile) * tile;
+        }
+        return Math.max(0, position);
+    };
+    MoveSystem.prototype.update = function (time, nodes) {
+        var _this = this;
+        nodes.map(function (node) {
+            var velocityData = node.data.velocity;
+            var positionData = node.data.position;
+            var collisionData = node.data.collision;
+            var isGrounded = collisionData.isBottomObstacleCollision;
+            var tile = _this.settings.TILE;
+            var friction = _this.settings.FRICTION;
+            velocityData.velocityX = _this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
+            positionData.x = _this.getPositionX(time, tile, positionData.x, velocityData.velocityX);
+            velocityData.velocityY = _this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
+            positionData.y = _this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
+            if (positionData.y > _this.settings.MAP[0] * tile) {
+                console.log('OFF MAP');
+                node.isActive = false;
+            }
+        });
+    };
+    return MoveSystem;
+}());
+exports["default"] = MoveSystem;
+
+
+/***/ }),
+
 /***/ 30:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7699,8 +7719,8 @@ Library.prototype.test = function(obj, type) {
 // https://github.com/joyent/node/blob/f8c335d0caf47f16d31413f89aa28eda3878e3aa/lib/util.js
 
 var getName = __webpack_require__(48);
-var getProperties = __webpack_require__(126);
-var getEnumerableProperties = __webpack_require__(123);
+var getProperties = __webpack_require__(127);
+var getEnumerableProperties = __webpack_require__(124);
 
 module.exports = inspect;
 
@@ -8424,7 +8444,7 @@ module.exports = function hasProperty(name, obj) {
  */
 
 var inspect = __webpack_require__(30);
-var config = __webpack_require__(11);
+var config = __webpack_require__(10);
 
 /**
  * ### .objDisplay (object)
