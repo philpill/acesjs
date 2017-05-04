@@ -24,6 +24,10 @@ export default class AnimationSystem implements ISystem {
 
     }
 
+    public test() {
+        return 1;
+    }
+
     setAnimation(node: ITypedNode, prop: string) {
 
         node.data.animation.currentAnimationProp = prop;

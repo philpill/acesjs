@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js';
+
 import Settings from './settings';
 import Engine from './engine';
 

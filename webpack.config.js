@@ -6,14 +6,18 @@ var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var dir_ts = path.resolve(__dirname, 'assets/ts');
+var dir_tests_ts = path.resolve(__dirname, 'test');
 var dir_libs = path.resolve(__dirname, 'libs');
 var dir_build = path.resolve(__dirname, 'static');
 
 module.exports = {
-    entry: path.resolve(dir_ts, 'main.ts'),
+    entry: {
+        bundle: path.resolve(dir_ts, 'main.ts'),
+        test: path.resolve(dir_tests_ts, 'test.ts'),
+    },
     output: {
         path: dir_build,
-        filename: 'js/bundle.js'
+        filename: 'js/[name].js'
     },
     devServer: {
         contentBase: dir_build,
@@ -30,12 +34,12 @@ module.exports = {
     },
     plugins: [
         // Simply copies the files over
-        new CopyWebpackPlugin([
-            {
-                from: 'assets/libs',
-                to: 'libs'
-            } // to: output.path
-        ]),
+        // new CopyWebpackPlugin([
+        //     {
+        //         from: 'assets/libs',
+        //         to: 'libs'
+        //     } // to: output.path
+        // ]),
         new CopyWebpackPlugin([
             {
                 from: 'assets/img',
