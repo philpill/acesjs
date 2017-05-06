@@ -1,11 +1,6 @@
 import ISystem from './isystem';
 import Settings from '../settings';
-import INode from '../nodes/inode';
 import ITypedNode from '../itypedNode';
-import VelocityComponent from '../components/velocity';
-import CollisionComponent from '../components/collision';
-import PositionComponent from '../components/position';
-
 
 export default class MoveSystem implements ISystem {
 
