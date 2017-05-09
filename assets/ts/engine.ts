@@ -1,7 +1,8 @@
 import MoveNode from './nodes/move';
 import RenderNode from './nodes/render';
 import ControlNode from './nodes/control';
-import CollisionNode from './nodes/collision';
+import ObstacleCollisionNode from './nodes/obstacleCollision';
+import TriggerCollisionNode from './nodes/triggerCollision';
 import AnimationNode from './nodes/animation';
 import LevelNode from './nodes/level';
 import Entity from './prefabs/entity';
@@ -28,6 +29,8 @@ export default class Engine {
             move: [],
             control: [],
             obstacleCollision: [],
+            triggerCollision: [],
+            damageCollision: [],
             level: []
         };
         this.isPaused = false;
@@ -91,16 +94,28 @@ export default class Engine {
 
         if (entityComponents.collision && entityComponents.display) {
 
-            let node = new CollisionNode(entity.id, entityComponents.collision, entityComponents.display, entityComponents.velocity);
+            let node = new ObstacleCollisionNode(entity.id, entityComponents.collision, entityComponents.display, entityComponents.velocity);
             // collision
             this.typedNodes['obstacleCollision'].push({
                 entityId: entity.id,
-                class: 'collision',
+                class: 'obstacleCollision',
                 data: node,
                 isActive: true });
         }
 
-        if (entityComponents.position) { // need a second 'trigger' component or this will apply to all rendered objects
+        if (entityComponents.collision && entityComponents.display && entityComponents.trigger) {
+
+            let node = new TriggerCollisionNode(entity.id, entityComponents.collision, entityComponents.display, entityComponents.velocity);
+            // collision
+            this.typedNodes['triggerCollision'].push({
+                entityId: entity.id,
+                class: 'triggerCollision',
+                data: node,
+                isActive: true });
+        }
+
+
+        if (entityComponents.position && entityComponents.input) { // need a second 'trigger' component or this will apply to all rendered objects
 
             let node = new LevelNode(entity.id, entityComponents.position);
             // level

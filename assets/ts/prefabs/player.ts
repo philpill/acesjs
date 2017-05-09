@@ -7,6 +7,7 @@ import VelocityComponent from '../components/velocity';
 import InputComponent from '../components/input';
 import CollisionComponent from '../components/collision';
 import AnimationComponent from '../components/animation';
+import TriggerComponent from '../components/trigger';
 
 import Settings from '../settings';
 
@@ -17,7 +18,6 @@ export default class PlayerPrefab {
         let texture = PIXI.utils.TextureCache['/static/img/player.png'];
 
         let sprite = new Sprite(texture);
-
 
         sprite.data.texture.push(new PIXI.Rectangle(0, 0, 16, 32));
         sprite.data.texture.push(new PIXI.Rectangle(16, 0, 16, 32));
@@ -47,8 +47,6 @@ export default class PlayerPrefab {
         display.isFocus = true;
 
         let positionComponent = new PositionComponent();
-
-        positionComponent.isPlayer = true;
 
         positionComponent.x = start[0] * settings.TILE;
         positionComponent.y = start[1] * settings.TILE;
