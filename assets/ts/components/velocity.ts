@@ -1,4 +1,5 @@
 import IComponent from './icomponent';
+import Settings from '../settings';
 
 export default class VelocityComponent implements IComponent {
 
@@ -14,12 +15,12 @@ export default class VelocityComponent implements IComponent {
 
     isGrounded: boolean;
 
-    constructor() {
+    constructor(settings: Settings) {
 
         this.class = 'velocity';
 
         this.accelerationX = 0;
-        this.accelerationY = 0;
+        this.accelerationY = settings.GRAVITY;
 
         this.maxAccelerationX = 3;
         this.maxAccelerationY = 20;

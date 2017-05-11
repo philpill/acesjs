@@ -8,6 +8,20 @@ import BackgroundPrefab from './background';
 
 import Settings from '../settings';
 
+class LevelPrefabData {
+
+    type: number;
+    index: number;
+    position: number[];
+
+    constructor(type, index, position) {
+
+        this.type = type;
+        this.index = index;
+        this.position = position;
+    }
+}
+
 export default class LevelPrefab {
 
     settings: Settings;
@@ -20,24 +34,43 @@ export default class LevelPrefab {
         this.data = data;
     }
 
-    getSignificantValues(data: ITiledLevel, layerIndex = 0): { type: number, position: number[] }[] {
 
-        let mapData = data.layers[layerIndex].data;
+    getPrefabData(data: number[]): LevelPrefabData[] {
 
-        let getPositionByIndex = this.getPositionFunc(data.width, data.tilewidth);
+        let values = data.map((type: number, index: number) => {
 
-        return mapData.map((type: number, index: number) => {
-
-            if (type !== 0) {
-
-                return { type: type, position: getPositionByIndex(index) };
-            }
+            return type === 0 ? null : new LevelPrefabData(type, index, [0, 0]);
         });
+
+        let filteredValues = values.filter(Boolean);
+
+        return filteredValues;
+    }
+
+
+    getPositionedPrefabData(data: LevelPrefabData[], mapWidth: number, tileWidth: number): LevelPrefabData[] {
+
+        let getPositionByIndex = this.getPositionFunc(mapWidth, tileWidth);
+
+        return data.map((val) => {
+
+            val.position = getPositionByIndex(val.index);
+
+            return val;
+        });
+    }
+
+
+    getValuesByLevelData(data: ITiledLevel, layerIndex: number): LevelPrefabData[] {
+
+        let values = this.getPrefabData(data.layers[layerIndex].data);
+
+        return this.getPositionedPrefabData(values, data.width, data.tilewidth);
     }
 
     getGroundEntities(data: ITiledLevel): Entity[] {
 
-        let values = this.getSignificantValues(data, 0);
+        let values = this.getValuesByLevelData(data, 0);
 
         return values.map((val) => {
             switch (val.type) {
@@ -61,7 +94,7 @@ export default class LevelPrefab {
 
     getBackgroundEntities(data: ITiledLevel): Entity[] {
 
-        let values = this.getSignificantValues(data, 1);
+        let values = this.getValuesByLevelData(data, 1);
 
         return values.map((val) => {
 

@@ -7,12 +7,12 @@ export default class DisplayComponent implements IComponent {
     sprite: Sprite;
     isFocus: boolean;
 
-    constructor(sprite: Sprite) {
+    constructor(sprite: Sprite, isFocus = false) {
 
         this.class = 'display';
 
         this.sprite = sprite;
 
-        this.isFocus = false;
+        this.isFocus = isFocus;
     }
 }

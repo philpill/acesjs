@@ -3,16 +3,19 @@ import Settings from '../settings';
 import INode from '../nodes/inode';
 import Sprite from '../sprite';
 import ITypedNode from '../itypedNode';
+import { ClassType } from '../enum'
 
 export default class DamageCollisionSystem implements ISystem {
 
     class: string;
     settings: Settings;
+    classType: ClassType;
 
     constructor(settings: Settings) {
 
         this.class = 'damageCollision';
         this.settings = settings;
+        this.classType = ClassType.DAMAGE_COLLISION;
     }
 
     init() {

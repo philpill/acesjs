@@ -35,9 +35,7 @@ export default class GroundPrefab extends Entity {
     }
 
     private _getCollisionComponent() {
-        let collision = new CollisionComponent();
-        collision.type = 'secondary';
-        return collision;
+        return new CollisionComponent('secondary');
     }
 
     private _getPositionComponent(x: number, y: number) {

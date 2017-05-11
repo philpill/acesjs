@@ -63,48 +63,20 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 222);
+/******/ 	return __webpack_require__(__webpack_require__.s = 223);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 10:
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ 100:
+/***/ 101:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 exports.__esModule = true;
-var move_1 = __webpack_require__(26);
-var settings_1 = __webpack_require__(11);
-var assert = __webpack_require__(101);
+var move_1 = __webpack_require__(27);
+var settings_1 = __webpack_require__(12);
+var assert = __webpack_require__(102);
 describe('MoveSystem', function () {
     var settings;
     var system;
@@ -155,7 +127,7 @@ describe('MoveSystem', function () {
 
 /***/ }),
 
-/***/ 101:
+/***/ 102:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -227,7 +199,7 @@ function isBuffer(b) {
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var util = __webpack_require__(220);
+var util = __webpack_require__(221);
 var hasOwn = Object.prototype.hasOwnProperty;
 var pSlice = Array.prototype.slice;
 var functionsHaveNames = (function () {
@@ -650,11 +622,39 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ }),
 
 /***/ 11:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 12:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -675,7 +675,7 @@ exports["default"] = Settings;
 
 /***/ }),
 
-/***/ 218:
+/***/ 219:
 /***/ (function(module, exports) {
 
 if (typeof Object.create === 'function') {
@@ -705,7 +705,7 @@ if (typeof Object.create === 'function') {
 
 /***/ }),
 
-/***/ 219:
+/***/ 220:
 /***/ (function(module, exports) {
 
 module.exports = function isBuffer(arg) {
@@ -717,7 +717,7 @@ module.exports = function isBuffer(arg) {
 
 /***/ }),
 
-/***/ 220:
+/***/ 221:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -1245,7 +1245,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(219);
+exports.isBuffer = __webpack_require__(220);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -1289,7 +1289,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(218);
+exports.inherits = __webpack_require__(219);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -1307,26 +1307,28 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10), __webpack_require__(41)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11), __webpack_require__(42)))
 
 /***/ }),
 
-/***/ 222:
+/***/ 223:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(100);
+module.exports = __webpack_require__(101);
 
 
 /***/ }),
 
-/***/ 26:
+/***/ 27:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 exports.__esModule = true;
+var enum_1 = __webpack_require__(7);
 var MoveSystem = (function () {
     function MoveSystem(settings) {
+        this.classType = enum_1.ClassType.MOVE;
         this["class"] = 'move';
         this.settings = settings;
     }
@@ -1385,7 +1387,7 @@ exports["default"] = MoveSystem;
 
 /***/ }),
 
-/***/ 41:
+/***/ 42:
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1568,6 +1570,35 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
+
+
+/***/ }),
+
+/***/ 7:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var TriggerType;
+(function (TriggerType) {
+    TriggerType[TriggerType["UNDEFINED"] = 0] = "UNDEFINED";
+    TriggerType[TriggerType["LEVELEXIT"] = 1] = "LEVELEXIT";
+    TriggerType[TriggerType["SWITCH"] = 2] = "SWITCH";
+})(TriggerType || (TriggerType = {}));
+exports.TriggerType = TriggerType;
+var ClassType;
+(function (ClassType) {
+    ClassType[ClassType["ANIMATION"] = 0] = "ANIMATION";
+    ClassType[ClassType["CONTROL"] = 1] = "CONTROL";
+    ClassType[ClassType["DAMAGE_COLLISION"] = 2] = "DAMAGE_COLLISION";
+    ClassType[ClassType["LEVEL"] = 3] = "LEVEL";
+    ClassType[ClassType["MOVE"] = 4] = "MOVE";
+    ClassType[ClassType["OBSTACLE_COLLISION"] = 5] = "OBSTACLE_COLLISION";
+    ClassType[ClassType["RENDER"] = 6] = "RENDER";
+    ClassType[ClassType["TRIGGER_COLLISION"] = 7] = "TRIGGER_COLLISION";
+})(ClassType || (ClassType = {}));
+exports.ClassType = ClassType;
 
 
 /***/ })

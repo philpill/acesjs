@@ -9,6 +9,7 @@ import Entity from './prefabs/entity';
 import ISystem from './systems/isystem';
 import INode from './nodes/inode';
 import ITypedNode from './itypedNode';
+import { ClassType } from './enum'
 
 export default class Engine {
 
@@ -23,16 +24,12 @@ export default class Engine {
         this.entities = [];
         this.systems = [];
         this.nodes = [];
-        this.typedNodes = {
-            render: [],
-            animation: [],
-            move: [],
-            control: [],
-            obstacleCollision: [],
-            triggerCollision: [],
-            damageCollision: [],
-            level: []
-        };
+        this.typedNodes = {};
+        Object.keys(ClassType).map((classType) => {
+
+            this.typedNodes[classType] = [];
+        });
+
         this.isPaused = false;
     }
 
@@ -52,9 +49,10 @@ export default class Engine {
             // render
             let node = new RenderNode(entity.id, entityComponents.display, entityComponents.position);
 
-            this.typedNodes['render'].push({
+            this.typedNodes[ClassType.RENDER].push({
                 entityId: entity.id,
                 class: 'render',
+                classType: ClassType.RENDER,
                 data: node,
                 isActive: true });
         }
@@ -63,9 +61,10 @@ export default class Engine {
 
             let node = new AnimationNode(entity.id, entityComponents.animation, entityComponents.display, entityComponents.velocity);
             // animation
-            this.typedNodes['animation'].push({
+            this.typedNodes[ClassType.ANIMATION].push({
                 entityId: entity.id,
                 class: 'animation',
+                classType: ClassType.ANIMATION,
                 data: node,
                 isActive: true });
         }
@@ -74,9 +73,10 @@ export default class Engine {
 
             let node = new MoveNode(entity.id, entityComponents.position, entityComponents.velocity, entityComponents.collision);
             // move
-            this.typedNodes['move'].push({
+            this.typedNodes[ClassType.MOVE].push({
                 entityId: entity.id,
                 class: 'move',
+                classType: ClassType.MOVE,
                 data: node,
                 isActive: true });
         }
@@ -85,9 +85,10 @@ export default class Engine {
 
             let node = new ControlNode(entity.id, entityComponents.control, entityComponents.velocity);
             // control
-            this.typedNodes['control'].push({
+            this.typedNodes[ClassType.CONTROL].push({
                 entityId: entity.id,
                 class: 'control',
+                classType: ClassType.CONTROL,
                 data: node,
                 isActive: true });
         }
@@ -96,9 +97,10 @@ export default class Engine {
 
             let node = new ObstacleCollisionNode(entity.id, entityComponents.collision, entityComponents.display, entityComponents.velocity);
             // collision
-            this.typedNodes['obstacleCollision'].push({
+            this.typedNodes[ClassType.OBSTACLE_COLLISION].push({
                 entityId: entity.id,
                 class: 'obstacleCollision',
+                classType: ClassType.OBSTACLE_COLLISION,
                 data: node,
                 isActive: true });
         }
@@ -107,9 +109,10 @@ export default class Engine {
 
             let node = new TriggerCollisionNode(entity.id, entityComponents.collision, entityComponents.display, entityComponents.velocity);
             // collision
-            this.typedNodes['triggerCollision'].push({
+            this.typedNodes[ClassType.TRIGGER_COLLISION].push({
                 entityId: entity.id,
                 class: 'triggerCollision',
+                classType: ClassType.TRIGGER_COLLISION,
                 data: node,
                 isActive: true });
         }
@@ -119,9 +122,10 @@ export default class Engine {
 
             let node = new LevelNode(entity.id, entityComponents.position);
             // level
-            this.typedNodes['level'].push({
+            this.typedNodes[ClassType.LEVEL].push({
                 entityId: entity.id,
                 class: 'level',
+                classType: ClassType.LEVEL,
                 data: node,
                 isActive: true });
         }
@@ -187,9 +191,11 @@ export default class Engine {
 
         if (!this.isPaused) {
 
-            let nodes = Object.keys(this.typedNodes).map((type) => {
-                return this.typedNodes[type];
+            let nodes = Object.keys(ClassType).map((classType) => {
+                return this.typedNodes[classType];
             });
+
+
 
             [].concat.apply([], nodes).filter((node) => {
                 return !node.isActive;
@@ -206,7 +212,7 @@ export default class Engine {
             let results = [];
 
             this.systems.map((system) => {
-                results.push(system.update(dt, this.typedNodes[system.class] || []));
+                results.push(system.update(dt, this.typedNodes[system.classType] || []));
             });
 
             results = results.filter((result) => { return result; });

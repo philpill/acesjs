@@ -1,3 +1,5 @@
+import { ClassType } from '../enum'
+
 interface ISystem {
 
     class: string;
@@ -5,6 +7,8 @@ interface ISystem {
     stop: Function;
 
     init: Function;
+
+    classType: ClassType;
 }
 
 export default ISystem;

@@ -1,7 +1,19 @@
 enum TriggerType {
-    UNDEFINED = 0x1,
-    LEVELEXIT = 0x2,
-    SWITCH = 0x3
+    UNDEFINED,
+    LEVELEXIT,
+    SWITCH
 }
 
-export { TriggerType };
+enum ClassType {
+
+    ANIMATION,
+    CONTROL,
+    DAMAGE_COLLISION,
+    LEVEL,
+    MOVE,
+    OBSTACLE_COLLISION,
+    RENDER,
+    TRIGGER_COLLISION
+}
+
+export { TriggerType, ClassType };

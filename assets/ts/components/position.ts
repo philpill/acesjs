@@ -6,11 +6,11 @@ export default class PositionComponent implements IComponent {
     x: number;
     y: number;
 
-    constructor() {
+    constructor(x = 0, y = 0) {
 
         this.class = 'position';
 
-        this.x = 0;
-        this.y = 0;
+        this.x = x;
+        this.y = y;
     }
 }

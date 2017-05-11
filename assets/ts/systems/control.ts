@@ -2,9 +2,11 @@ import ISystem from './isystem';
 import Settings from '../settings';
 import INode from '../nodes/inode';
 import ITypedNode from '../itypedNode';
+import { ClassType } from '../enum'
 
 export default class ControlSystem implements ISystem {
 
+    classType: ClassType;
     class: string;
     settings: Settings;
 
@@ -16,6 +18,7 @@ export default class ControlSystem implements ISystem {
 
     constructor(settings: Settings) {
 
+        this.classType = ClassType.CONTROL;
         this.class = 'control';
         this.settings = settings;
     }

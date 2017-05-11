@@ -3,14 +3,17 @@ import Settings from '../settings';
 import INode from '../nodes/inode';
 import Sprite from '../sprite';
 import ITypedNode from '../itypedNode';
+import { ClassType } from '../enum'
 
 export default class TriggerCollisionSystem implements ISystem {
 
+    classType: ClassType;
     class: string;
     settings: Settings;
 
     constructor(settings: Settings) {
 
+        this.classType = ClassType.TRIGGER_COLLISION;
         this.class = 'triggerCollision';
         this.settings = settings;
     }

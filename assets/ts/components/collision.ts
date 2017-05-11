@@ -16,11 +16,11 @@ export default class CollisionComponent implements IComponent {
     isRightObstacleCollision: boolean;
     isLeftObstacleCollision: boolean;
 
-    constructor() {
+    constructor(type: string) {
 
         this.class = 'collision';
 
-        this.type = '';
+        this.type = type;
 
         this.isDamageCollision = false;
 

@@ -3,9 +3,11 @@ import Settings from '../settings';
 import INode from '../nodes/inode';
 import LevelPrefab from '../prefabs/level';
 import ITypedNode from '../itypedNode';
+import { ClassType } from '../enum'
 
 export default class LevelSystem implements ISystem {
 
+    classType: ClassType;
     class: string;
     settings: Settings;
     isLoaded: boolean;
@@ -14,6 +16,7 @@ export default class LevelSystem implements ISystem {
 
     constructor(settings: Settings) {
 
+        this.classType = ClassType.LEVEL;
         this.class = 'level';
         this.settings = settings;
 

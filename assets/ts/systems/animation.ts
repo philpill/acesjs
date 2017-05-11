@@ -2,16 +2,19 @@ import ISystem from './isystem';
 import Settings from '../settings';
 import INode from '../nodes/inode';
 import ITypedNode from '../itypedNode';
+import { ClassType } from '../enum'
 
 export default class AnimationSystem implements ISystem {
 
     class: string;
     settings: Settings;
     timer: number;
+    classType: ClassType;
 
     constructor(settings: Settings) {
 
         this.class = 'animation';
+        this.classType = ClassType.ANIMATION;
         this.settings = settings;
         this.timer = 0;
     }
@@ -65,12 +68,12 @@ export default class AnimationSystem implements ISystem {
             } else if (velocityData.velocityX > 0.1) {
 
                 //play right animation
-                this.setAnimation(node, 'walkRight');
+                this.setAnimation(node, 'right');
 
             } else if (velocityData.velocityX < -0.1) {
 
                 //play left animation
-                this.setAnimation(node, 'walkLeft');
+                this.setAnimation(node, 'left');
 
             } else {
 

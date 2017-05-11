@@ -1,26 +1,34 @@
 import IComponent from './icomponent';
 
+class AnimationSet {
+
+    default?: number[];
+    right?: number[];
+    left?: number[];
+    jump?: number[];
+}
+
 export default class AnimationComponent implements IComponent {
 
     class: string;
     default: number[];
-    walkRight: number[];
-    walkLeft: number[];
+    right: number[];
+    left: number[];
     jump: number[];
     currentAnimationProp: string;
     currentFrame: number;
 
-    constructor() {
+    constructor(animations: AnimationSet) {
 
         this.class = 'animation';
 
-        this.default = [0];
+        this.default = animations.default;
 
-        this.walkRight = [1, 2];
+        this.right = animations.right;
 
-        this.walkLeft = [2, 1];
+        this.left = animations.left;
 
-        this.jump = [3];
+        this.jump = animations.jump;
 
         this.currentAnimationProp = 'default';
 

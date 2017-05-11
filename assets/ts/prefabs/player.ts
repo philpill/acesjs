@@ -11,9 +11,11 @@ import TriggerComponent from '../components/trigger';
 
 import Settings from '../settings';
 
-export default class PlayerPrefab {
+export default class PlayerPrefab extends Entity {
 
     constructor(settings: Settings, start: [number, number]) {
+
+        super();
 
         let texture = PIXI.utils.TextureCache['/static/img/player.png'];
 
@@ -26,39 +28,23 @@ export default class PlayerPrefab {
 
         texture.frame = sprite.data.texture[1];
 
-        let player = new Entity();
+        let display = new DisplayComponent(sprite, true);
 
-        let animation = new AnimationComponent();
+        let animation = new AnimationComponent({
+            right: [1, 2],
+            left: [2, 1],
+            jump: [3],
+            default: [0]
+        });
 
-        animation.walkRight = [1, 2];
+        let collision = new CollisionComponent('primary');
 
-        animation.walkLeft = [2, 1];
+        let positionComponent = new PositionComponent(start[0] * settings.TILE, start[1] * settings.TILE);
 
-        animation.jump = [3];
-
-        animation.default = [0];
-
-        let collision = new CollisionComponent();
-
-        collision.type = 'primary';
-
-        let display = new DisplayComponent(sprite);
-
-        display.isFocus = true;
-
-        let positionComponent = new PositionComponent();
-
-        positionComponent.x = start[0] * settings.TILE;
-        positionComponent.y = start[1] * settings.TILE;
-
-        let velocityComponent = new VelocityComponent();
-
-        velocityComponent.accelerationY = settings.GRAVITY;
+        let velocityComponent = new VelocityComponent(settings);
 
         let inputComponent = new InputComponent();
 
-        player.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation);
-
-        return player;
+        this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation);
     }
 }

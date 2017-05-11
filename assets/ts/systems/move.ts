@@ -1,14 +1,17 @@
 import ISystem from './isystem';
 import Settings from '../settings';
 import ITypedNode from '../itypedNode';
+import { ClassType } from '../enum'
 
 export default class MoveSystem implements ISystem {
 
+    classType: ClassType;
     class: string;
     settings: Settings;
 
     constructor(settings) {
 
+        this.classType = ClassType.MOVE;
         this.class = 'move';
         this.settings = settings;
     }

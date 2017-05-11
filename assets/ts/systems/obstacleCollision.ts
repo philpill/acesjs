@@ -3,14 +3,17 @@ import Settings from '../settings';
 import INode from '../nodes/inode';
 import Sprite from '../sprite';
 import ITypedNode from '../itypedNode';
+import { ClassType } from '../enum'
 
 export default class ObstacleCollisionSystem implements ISystem {
 
+    classType: ClassType;
     class: string;
     settings: Settings;
 
     constructor(settings: Settings) {
 
+        this.classType = ClassType.OBSTACLE_COLLISION;
         this.class = 'obstacleCollision';
         this.settings = settings;
     }
@@ -83,7 +86,6 @@ export default class ObstacleCollisionSystem implements ISystem {
                     collisionData.isBottomObstacleCollision = isBottomCollision;
                     collisionData.isLeftObstacleCollision = isLeftCollision;
                     collisionData.isRightObstacleCollision = isRightCollision;
-
 
                     // SHIFT ALL THIS INTO MOVE SYSTEM
 

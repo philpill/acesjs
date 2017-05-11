@@ -3,9 +3,11 @@ import Settings from '../settings';
 import INode from '../nodes/inode';
 import ITypedNode from '../itypedNode';
 import Sprite from '../sprite';
+import { ClassType } from '../enum'
 
 export default class RenderSystem implements ISystem {
 
+    classType: ClassType;
     class: string;
     settings: Settings;
     sprites: any;
@@ -15,6 +17,7 @@ export default class RenderSystem implements ISystem {
 
     constructor(settings) {
 
+        this.classType = ClassType.RENDER;
         this.class = 'render';
 
         this.sprites = {};
