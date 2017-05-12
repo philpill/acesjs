@@ -4,6 +4,7 @@ import IComponent from './icomponent';
 export default class DisplayComponent implements IComponent {
 
     class: string;
+
     sprite: Sprite;
     isFocus: boolean;
 

@@ -3,6 +3,7 @@ import IComponent from './icomponent';
 export default class DamageComponent implements IComponent {
 
     class: string;
+
     damage: number;
 
     constructor(data) {

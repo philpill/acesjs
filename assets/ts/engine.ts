@@ -103,6 +103,12 @@ export default class Engine {
         return ids.map(this.removeEntityById.bind(this));
     }
 
+    destroyEntities(entities: Entity[]) {
+        return entities.map((entity) => {
+            return entity.destroy();
+        });
+    }
+
     addSystem(system: ISystem) {
         this.systems.push(system);
         system.init();
@@ -119,6 +125,32 @@ export default class Engine {
     getEntitiesById(entityId: string) {
         return this.entities.filter((entity: Entity) => {
             return entity.id === entityId;
+        });
+    }
+
+    getEntitiesByInactiveNodes(nodes: Node[]) {
+
+        return nodes.filter((node) => {
+            return !node.isActive;
+        }).map((node) => {
+            return node.entityId;
+        }).filter((value, index, array) => {
+            return array.indexOf(value) === index;
+        }).map((id) => {
+            return this.getEntitiesById(id);
+        }).reduce((acc, entities) => {
+            return acc.concat(entities);
+        }, []);
+    }
+
+    filterInactiveNodes(nodes: Node[]) {
+
+        let inactiveEntities = this.getEntitiesByInactiveNodes(nodes);
+
+        this.destroyEntities(inactiveEntities);
+
+        return nodes.filter((node) => {
+            return node.isActive;
         });
     }
 
@@ -139,19 +171,7 @@ export default class Engine {
 
         if (!this.isPaused) {
 
-            this.nodes.filter((node) => {
-                return !node.isActive;
-            }).map((node) => {
-                return node.entityId;
-            }).filter((value, index, array) => {
-                return array.indexOf(value) === index;
-            }).map((id) => {
-                return this.getEntitiesById(id);
-            }).map((entities) => {
-                return entities.map((entity) => {
-                    return entity.destroy();
-                });
-            });
+            this.nodes = this.filterInactiveNodes(this.nodes);
 
             let results = [];
 

@@ -6791,7 +6791,12 @@ var Entity = (function () {
         this.components[componentClass] = null;
     };
     Entity.prototype.destroy = function () {
+        var _this = this;
         console.log('destroy');
+        this.isActive = false;
+        Object.keys(this.components).map(function (component) {
+            _this.components[component] = null;
+        });
     };
     return Entity;
 }());
@@ -20216,6 +20221,11 @@ var Engine = (function () {
     Engine.prototype.removeEntitiesById = function (ids) {
         return ids.map(this.removeEntityById.bind(this));
     };
+    Engine.prototype.destroyEntities = function (entities) {
+        return entities.map(function (entity) {
+            return entity.destroy();
+        });
+    };
     Engine.prototype.addSystem = function (system) {
         this.systems.push(system);
         system.init();
@@ -20232,6 +20242,27 @@ var Engine = (function () {
             return entity.id === entityId;
         });
     };
+    Engine.prototype.getEntitiesByInactiveNodes = function (nodes) {
+        var _this = this;
+        return nodes.filter(function (node) {
+            return !node.isActive;
+        }).map(function (node) {
+            return node.entityId;
+        }).filter(function (value, index, array) {
+            return array.indexOf(value) === index;
+        }).map(function (id) {
+            return _this.getEntitiesById(id);
+        }).reduce(function (acc, entities) {
+            return acc.concat(entities);
+        }, []);
+    };
+    Engine.prototype.filterInactiveNodes = function (nodes) {
+        var inactiveEntities = this.getEntitiesByInactiveNodes(nodes);
+        this.destroyEntities(inactiveEntities);
+        return nodes.filter(function (node) {
+            return node.isActive;
+        });
+    };
     Engine.prototype.update = function (before) {
         var _this = this;
         if (before === void 0) { before = 0; }
@@ -20243,19 +20274,7 @@ var Engine = (function () {
         var dt = (now - before) / 1000;
         dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
         if (!this.isPaused) {
-            this.nodes.filter(function (node) {
-                return !node.isActive;
-            }).map(function (node) {
-                return node.entityId;
-            }).filter(function (value, index, array) {
-                return array.indexOf(value) === index;
-            }).map(function (id) {
-                return _this.getEntitiesById(id);
-            }).map(function (entities) {
-                return entities.map(function (entity) {
-                    return entity.destroy();
-                });
-            });
+            this.nodes = this.filterInactiveNodes(this.nodes);
             var results_1 = [];
             this.systems.map(function (system) {
                 var nodes = _this.nodes.filter(function (node) {

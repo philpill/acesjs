@@ -11,6 +11,7 @@ class AnimationSet {
 export default class AnimationComponent implements IComponent {
 
     class: string;
+
     default: number[];
     right: number[];
     left: number[];

@@ -44,5 +44,9 @@ export default class Entity {
 
     destroy() {
         console.log('destroy');
+        this.isActive = false;
+        Object.keys(this.components).map((component) => {
+            this.components[component] = null;
+        });
     }
 }

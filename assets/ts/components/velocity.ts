@@ -4,6 +4,7 @@ import Settings from '../settings';
 export default class VelocityComponent implements IComponent {
 
     class: string;
+
     accelerationX: number;
     accelerationY: number;
 
