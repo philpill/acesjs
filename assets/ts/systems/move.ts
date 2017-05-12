@@ -1,18 +1,16 @@
 import ISystem from './isystem';
+import Node from '../nodes/node';
 import Settings from '../settings';
-import ITypedNode from '../itypedNode';
 import { ClassType } from '../enum'
 
 export default class MoveSystem implements ISystem {
 
     classType: ClassType;
-    class: string;
     settings: Settings;
 
     constructor(settings) {
 
         this.classType = ClassType.MOVE;
-        this.class = 'move';
         this.settings = settings;
     }
 
@@ -62,15 +60,15 @@ export default class MoveSystem implements ISystem {
         return Math.max(0, position);
     }
 
-    update(time: number, nodes: ITypedNode[]) {
+    update(time: number, nodes: Node[]) {
 
-        nodes.map((node: ITypedNode) => {
+        nodes.map((node: Node) => {
 
-            let velocityData = node.data.velocity;
+            let velocityData = node.velocity;
 
-            let positionData = node.data.position;
+            let positionData = node.position;
 
-            let collisionData = node.data.collision;
+            let collisionData = node.collision;
 
             let isGrounded = collisionData.isBottomObstacleCollision;
 

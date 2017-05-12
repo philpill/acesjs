@@ -13,7 +13,8 @@ enum ClassType {
     MOVE,
     OBSTACLE_COLLISION,
     RENDER,
-    TRIGGER_COLLISION
+    TRIGGER_COLLISION,
+    ACTIVATE
 }
 
 export { TriggerType, ClassType };

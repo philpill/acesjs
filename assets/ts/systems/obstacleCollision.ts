@@ -1,20 +1,17 @@
 import ISystem from './isystem';
 import Settings from '../settings';
-import INode from '../nodes/inode';
+import Node from '../nodes/node';
 import Sprite from '../sprite';
-import ITypedNode from '../itypedNode';
 import { ClassType } from '../enum'
 
 export default class ObstacleCollisionSystem implements ISystem {
 
     classType: ClassType;
-    class: string;
     settings: Settings;
 
     constructor(settings: Settings) {
 
         this.classType = ClassType.OBSTACLE_COLLISION;
-        this.class = 'obstacleCollision';
         this.settings = settings;
     }
 
@@ -40,33 +37,33 @@ export default class ObstacleCollisionSystem implements ISystem {
         return isCollision;
     }
 
-    update(time: number, nodes: ITypedNode[]) {
+    update(time: number, nodes: Node[]) {
 
-        let primaries = nodes.filter((node: ITypedNode) => {
+        let primaries = nodes.filter((node: Node) => {
 
-            return node.data.collision.type === 'primary';
+            return node.collision.type === 'primary';
         });
 
-        let secondaries = nodes.filter((node: ITypedNode) => {
+        let secondaries = nodes.filter((node: Node) => {
 
-            return node.data.collision.type !== 'primary';
+            return node.collision.type !== 'primary';
         });
 
-        primaries.map((primary: ITypedNode) => {
+        primaries.map((primary: Node) => {
 
-            primary.data.velocity.isGrounded = false;
-            primary.data.collision.isBottomObstacleCollision = false;
+            primary.velocity.isGrounded = false;
+            primary.collision.isBottomObstacleCollision = false;
 
-            secondaries.map((secondary: ITypedNode) => {
+            secondaries.map((secondary: Node) => {
 
-                let sprite1 = primary.data.display.sprite;
+                let sprite1 = primary.display.sprite;
 
-                let sprite2 = secondary.data.display.sprite;
+                let sprite2 = secondary.display.sprite;
 
                 if (this.isCollision(sprite1, sprite2)) {
 
-                    let velocityData = primary.data.velocity;
-                    let collisionData = primary.data.collision;
+                    let velocityData = primary.velocity;
+                    let collisionData = primary.collision;
 
                     let errorMargin = this.settings.TILE/2;
 
@@ -112,7 +109,7 @@ export default class ObstacleCollisionSystem implements ISystem {
                         velocityData.velocityX = Math.max(0, velocityData.velocityX);
                     }
 
-                    primary.data.collision.collide(secondary);
+                    primary.collision.collide(secondary);
                 }
             });
         });

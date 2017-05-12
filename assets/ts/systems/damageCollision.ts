@@ -1,19 +1,16 @@
 import ISystem from './isystem';
 import Settings from '../settings';
-import INode from '../nodes/inode';
+import Node from '../nodes/node';
 import Sprite from '../sprite';
-import ITypedNode from '../itypedNode';
 import { ClassType } from '../enum'
 
 export default class DamageCollisionSystem implements ISystem {
 
-    class: string;
     settings: Settings;
     classType: ClassType;
 
     constructor(settings: Settings) {
 
-        this.class = 'damageCollision';
         this.settings = settings;
         this.classType = ClassType.DAMAGE_COLLISION;
     }
@@ -40,27 +37,27 @@ export default class DamageCollisionSystem implements ISystem {
         return isCollision;
     }
 
-    update(time: number, nodes: ITypedNode[]) {
+    update(time: number, nodes: Node[]) {
 
-        let primaries = nodes.filter((node: ITypedNode) => {
+        let primaries = nodes.filter((node: Node) => {
 
-            return node.data.collision.type === 'primary';
+            return node.collision.type === 'primary';
         });
 
-        let secondaries = nodes.filter((node: ITypedNode) => {
+        let secondaries = nodes.filter((node: Node) => {
 
-            return node.data.collision.type !== 'primary';
+            return node.collision.type !== 'primary';
         });
 
-        primaries.map((primary: ITypedNode) => {
+        primaries.map((primary: Node) => {
 
-            primary.data.velocity.isGrounded = false;
+            primary.velocity.isGrounded = false;
 
-            secondaries.map((secondary: ITypedNode) => {
+            secondaries.map((secondary: Node) => {
 
-                let sprite1 = primary.data.display.sprite;
+                let sprite1 = primary.display.sprite;
 
-                let sprite2 = secondary.data.display.sprite;
+                let sprite2 = secondary.display.sprite;
 
                 if (this.isCollision(sprite1, sprite2)) {
 

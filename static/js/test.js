@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 223);
+/******/ 	return __webpack_require__(__webpack_require__.s = 217);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -199,7 +199,7 @@ function isBuffer(b) {
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var util = __webpack_require__(221);
+var util = __webpack_require__(215);
 var hasOwn = Object.prototype.hasOwnProperty;
 var pSlice = Array.prototype.slice;
 var functionsHaveNames = (function () {
@@ -675,7 +675,7 @@ exports["default"] = Settings;
 
 /***/ }),
 
-/***/ 219:
+/***/ 213:
 /***/ (function(module, exports) {
 
 if (typeof Object.create === 'function') {
@@ -705,7 +705,7 @@ if (typeof Object.create === 'function') {
 
 /***/ }),
 
-/***/ 220:
+/***/ 214:
 /***/ (function(module, exports) {
 
 module.exports = function isBuffer(arg) {
@@ -717,7 +717,7 @@ module.exports = function isBuffer(arg) {
 
 /***/ }),
 
-/***/ 221:
+/***/ 215:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -1245,7 +1245,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(220);
+exports.isBuffer = __webpack_require__(214);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -1289,7 +1289,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(219);
+exports.inherits = __webpack_require__(213);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -1311,7 +1311,7 @@ function hasOwnProperty(obj, prop) {
 
 /***/ }),
 
-/***/ 223:
+/***/ 217:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(101);
@@ -1329,7 +1329,6 @@ var enum_1 = __webpack_require__(7);
 var MoveSystem = (function () {
     function MoveSystem(settings) {
         this.classType = enum_1.ClassType.MOVE;
-        this["class"] = 'move';
         this.settings = settings;
     }
     MoveSystem.prototype.init = function () { };
@@ -1364,9 +1363,9 @@ var MoveSystem = (function () {
     MoveSystem.prototype.update = function (time, nodes) {
         var _this = this;
         nodes.map(function (node) {
-            var velocityData = node.data.velocity;
-            var positionData = node.data.position;
-            var collisionData = node.data.collision;
+            var velocityData = node.velocity;
+            var positionData = node.position;
+            var collisionData = node.collision;
             var isGrounded = collisionData.isBottomObstacleCollision;
             var tile = _this.settings.TILE;
             var friction = _this.settings.FRICTION;
@@ -1597,6 +1596,7 @@ var ClassType;
     ClassType[ClassType["OBSTACLE_COLLISION"] = 5] = "OBSTACLE_COLLISION";
     ClassType[ClassType["RENDER"] = 6] = "RENDER";
     ClassType[ClassType["TRIGGER_COLLISION"] = 7] = "TRIGGER_COLLISION";
+    ClassType[ClassType["ACTIVATE"] = 8] = "ACTIVATE";
 })(ClassType || (ClassType = {}));
 exports.ClassType = ClassType;
 

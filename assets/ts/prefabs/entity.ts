@@ -4,7 +4,7 @@ export default class Entity {
 
     id: string;
     isActive: boolean;
-    components: any;
+    components: { [id: string] : IComponent; };
 
     constructor() {
 

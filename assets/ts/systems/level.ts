@@ -1,14 +1,12 @@
 import ISystem from './isystem';
 import Settings from '../settings';
-import INode from '../nodes/inode';
+import Node from '../nodes/node';
 import LevelPrefab from '../prefabs/level';
-import ITypedNode from '../itypedNode';
 import { ClassType } from '../enum'
 
 export default class LevelSystem implements ISystem {
 
     classType: ClassType;
-    class: string;
     settings: Settings;
     isLoaded: boolean;
     currentLevel: number;
@@ -17,7 +15,6 @@ export default class LevelSystem implements ISystem {
     constructor(settings: Settings) {
 
         this.classType = ClassType.LEVEL;
-        this.class = 'level';
         this.settings = settings;
 
         this.isLoaded = false;
@@ -42,9 +39,9 @@ export default class LevelSystem implements ISystem {
         return level.createLevel().entities;
     }
 
-    getAllEntityIds(nodes: ITypedNode[]) {
+    getAllEntityIds(nodes: Node[]) {
 
-        let ids = nodes.map((node: ITypedNode) => {
+        let ids = nodes.map((node: Node) => {
             return node.entityId;
         });
 
@@ -58,7 +55,7 @@ export default class LevelSystem implements ISystem {
         this.currentLevel++;
     }
 
-    update(time: number, nodes: ITypedNode[]) {
+    update(time: number, nodes: Node[]) {
 
         let result: any = {};
 
@@ -70,15 +67,15 @@ export default class LevelSystem implements ISystem {
             this.isLoaded = true;
         }
 
-        nodes.map((node: ITypedNode) => {
+        nodes.map((node: Node) => {
 
             // console.log(node);
 
             let finishX = this.levels[this.currentLevel - 1].data.properties.finishX;
             let finishY = this.levels[this.currentLevel - 1].data.properties.finishY;
 
-            let x = node.data.position.x / this.settings.TILE;
-            let y = node.data.position.y / this.settings.TILE;
+            let x = node.position.x / this.settings.TILE;
+            let y = node.position.y / this.settings.TILE;
 
             // console.log(x + ' ' + y);
 

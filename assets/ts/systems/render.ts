@@ -1,14 +1,12 @@
 import ISystem from './isystem';
 import Settings from '../settings';
-import INode from '../nodes/inode';
-import ITypedNode from '../itypedNode';
+import Node from '../nodes/node';
 import Sprite from '../sprite';
 import { ClassType } from '../enum'
 
 export default class RenderSystem implements ISystem {
 
     classType: ClassType;
-    class: string;
     settings: Settings;
     sprites: any;
     stage: PIXI.Container;
@@ -18,7 +16,6 @@ export default class RenderSystem implements ISystem {
     constructor(settings) {
 
         this.classType = ClassType.RENDER;
-        this.class = 'render';
 
         this.sprites = {};
 
@@ -89,12 +86,12 @@ export default class RenderSystem implements ISystem {
         }
     }
 
-    update(time: number, nodes: ITypedNode[]) {
+    update(time: number, nodes: Node[]) {
 
-        nodes.map((node: ITypedNode) => {
+        nodes.map((node: Node) => {
 
-            let displayData = node.data.display;
-            let positionData = node.data.position;
+            let displayData = node.display;
+            let positionData = node.position;
 
             !this.sprites[node.entityId] && this.addNewSprites(node.entityId, displayData.sprite);
 

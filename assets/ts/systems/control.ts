@@ -1,13 +1,11 @@
 import ISystem from './isystem';
 import Settings from '../settings';
-import INode from '../nodes/inode';
-import ITypedNode from '../itypedNode';
+import Node from '../nodes/node';
 import { ClassType } from '../enum'
 
 export default class ControlSystem implements ISystem {
 
     classType: ClassType;
-    class: string;
     settings: Settings;
 
     isJump: any;
@@ -19,7 +17,6 @@ export default class ControlSystem implements ISystem {
     constructor(settings: Settings) {
 
         this.classType = ClassType.CONTROL;
-        this.class = 'control';
         this.settings = settings;
     }
 
@@ -67,11 +64,11 @@ export default class ControlSystem implements ISystem {
 
     }
 
-    update(time: number, nodes: ITypedNode[]) {
+    update(time: number, nodes: Node[]) {
 
-        nodes.map((node: ITypedNode) => {
+        nodes.map((node: Node) => {
 
-            let velocityData = node.data.velocity;
+            let velocityData = node.velocity;
 
             if (this.isUp && velocityData.isGrounded) {
                 velocityData.accelerationY = -velocityData.maxAccelerationY;

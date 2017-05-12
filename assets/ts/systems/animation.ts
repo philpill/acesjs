@@ -1,19 +1,16 @@
 import ISystem from './isystem';
 import Settings from '../settings';
-import INode from '../nodes/inode';
-import ITypedNode from '../itypedNode';
+import Node from '../nodes/node';
 import { ClassType } from '../enum'
 
 export default class AnimationSystem implements ISystem {
 
-    class: string;
     settings: Settings;
     timer: number;
     classType: ClassType;
 
     constructor(settings: Settings) {
 
-        this.class = 'animation';
         this.classType = ClassType.ANIMATION;
         this.settings = settings;
         this.timer = 0;
@@ -27,16 +24,16 @@ export default class AnimationSystem implements ISystem {
 
     }
 
-    setAnimation(node: ITypedNode, prop: string) {
+    setAnimation(node: Node, prop: string) {
 
-        node.data.animation.currentAnimationProp = prop;
+        node.animation.currentAnimationProp = prop;
     }
 
-    updateFrame(node: ITypedNode) {
+    updateFrame(node: Node) {
 
-        let animationData = node.data.animation;
+        let animationData = node.animation;
 
-        let displayData = node.data.display;
+        let displayData = node.display;
 
         let frames = animationData[animationData.currentAnimationProp];
 
@@ -52,13 +49,13 @@ export default class AnimationSystem implements ISystem {
         displayData.sprite.texture.frame = displayData.sprite.data.texture[frames[animationData.currentFrame]];
     }
 
-    update(dt: number, nodes: ITypedNode[]) {
+    update(dt: number, nodes: Node[]) {
 
-        nodes.map((node: ITypedNode) => {
+        nodes.map((node: Node) => {
 
-            let velocityData = node.data.velocity;
+            let velocityData = node.velocity;
 
-            let animationData = node.data.animation;
+            let animationData = node.animation;
 
             if (velocityData.velocityY > 0.01 || velocityData.velocityY < -0.01) {
 

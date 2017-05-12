@@ -1811,6 +1811,7 @@ var ClassType;
     ClassType[ClassType["OBSTACLE_COLLISION"] = 5] = "OBSTACLE_COLLISION";
     ClassType[ClassType["RENDER"] = 6] = "RENDER";
     ClassType[ClassType["TRIGGER_COLLISION"] = 7] = "TRIGGER_COLLISION";
+    ClassType[ClassType["ACTIVATE"] = 8] = "ACTIVATE";
 })(ClassType || (ClassType = {}));
 exports.ClassType = ClassType;
 
@@ -6837,7 +6838,6 @@ var enum_1 = __webpack_require__(7);
 var MoveSystem = (function () {
     function MoveSystem(settings) {
         this.classType = enum_1.ClassType.MOVE;
-        this["class"] = 'move';
         this.settings = settings;
     }
     MoveSystem.prototype.init = function () { };
@@ -6872,9 +6872,9 @@ var MoveSystem = (function () {
     MoveSystem.prototype.update = function (time, nodes) {
         var _this = this;
         nodes.map(function (node) {
-            var velocityData = node.data.velocity;
-            var positionData = node.data.position;
-            var collisionData = node.data.collision;
+            var velocityData = node.velocity;
+            var positionData = node.position;
+            var collisionData = node.collision;
             var isGrounded = collisionData.isBottomObstacleCollision;
             var tile = _this.settings.TILE;
             var friction = _this.settings.FRICTION;
@@ -19318,7 +19318,7 @@ exports["default"] = CollisionComponent;
 
 
 var punycode = __webpack_require__(196);
-var util = __webpack_require__(218);
+var util = __webpack_require__(212);
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;
@@ -20153,24 +20153,13 @@ global.PIXI = exports; // eslint-disable-line
 "use strict";
 
 exports.__esModule = true;
-var move_1 = __webpack_require__(209);
-var render_1 = __webpack_require__(211);
-var control_1 = __webpack_require__(207);
-var obstacleCollision_1 = __webpack_require__(210);
-var triggerCollision_1 = __webpack_require__(212);
-var animation_1 = __webpack_require__(206);
-var level_1 = __webpack_require__(208);
+var node_1 = __webpack_require__(206);
 var enum_1 = __webpack_require__(7);
 var Engine = (function () {
     function Engine() {
-        var _this = this;
         this.entities = [];
         this.systems = [];
         this.nodes = [];
-        this.typedNodes = {};
-        Object.keys(enum_1.ClassType).map(function (classType) {
-            _this.typedNodes[classType] = [];
-        });
         this.isPaused = false;
     }
     Engine.prototype.init = function () {
@@ -20179,84 +20168,35 @@ var Engine = (function () {
     Engine.prototype.addEntity = function (entity) {
         this.entities.push(entity);
         var entityComponents = entity.components;
-        if (entityComponents.display && entityComponents.position) {
-            // render
-            var node = new render_1["default"](entity.id, entityComponents.display, entityComponents.position);
-            this.typedNodes[enum_1.ClassType.RENDER].push({
-                entityId: entity.id,
-                "class": 'render',
-                classType: enum_1.ClassType.RENDER,
-                data: node,
-                isActive: true
-            });
-        }
-        if (entityComponents.animation && entityComponents.display && entityComponents.velocity) {
-            var node = new animation_1["default"](entity.id, entityComponents.animation, entityComponents.display, entityComponents.velocity);
-            // animation
-            this.typedNodes[enum_1.ClassType.ANIMATION].push({
-                entityId: entity.id,
-                "class": 'animation',
-                classType: enum_1.ClassType.ANIMATION,
-                data: node,
-                isActive: true
-            });
-        }
-        if (entityComponents.velocity && entityComponents.position && entityComponents.collision) {
-            var node = new move_1["default"](entity.id, entityComponents.position, entityComponents.velocity, entityComponents.collision);
-            // move
-            this.typedNodes[enum_1.ClassType.MOVE].push({
-                entityId: entity.id,
-                "class": 'move',
-                classType: enum_1.ClassType.MOVE,
-                data: node,
-                isActive: true
-            });
-        }
-        if (entityComponents.velocity && entityComponents.input) {
-            var node = new control_1["default"](entity.id, entityComponents.control, entityComponents.velocity);
-            // control
-            this.typedNodes[enum_1.ClassType.CONTROL].push({
-                entityId: entity.id,
-                "class": 'control',
-                classType: enum_1.ClassType.CONTROL,
-                data: node,
-                isActive: true
-            });
-        }
-        if (entityComponents.collision && entityComponents.display) {
-            var node = new obstacleCollision_1["default"](entity.id, entityComponents.collision, entityComponents.display, entityComponents.velocity);
-            // collision
-            this.typedNodes[enum_1.ClassType.OBSTACLE_COLLISION].push({
-                entityId: entity.id,
-                "class": 'obstacleCollision',
-                classType: enum_1.ClassType.OBSTACLE_COLLISION,
-                data: node,
-                isActive: true
-            });
-        }
-        if (entityComponents.collision && entityComponents.display && entityComponents.trigger) {
-            var node = new triggerCollision_1["default"](entity.id, entityComponents.collision, entityComponents.display, entityComponents.velocity);
-            // collision
-            this.typedNodes[enum_1.ClassType.TRIGGER_COLLISION].push({
-                entityId: entity.id,
-                "class": 'triggerCollision',
-                classType: enum_1.ClassType.TRIGGER_COLLISION,
-                data: node,
-                isActive: true
-            });
-        }
-        if (entityComponents.position && entityComponents.input) {
-            var node = new level_1["default"](entity.id, entityComponents.position);
-            // level
-            this.typedNodes[enum_1.ClassType.LEVEL].push({
-                entityId: entity.id,
-                "class": 'level',
-                classType: enum_1.ClassType.LEVEL,
-                data: node,
-                isActive: true
-            });
-        }
+        var nodes = this.generateNodes(entity.id, entityComponents);
+        (_a = this.nodes).push.apply(_a, nodes);
         return entity;
+        var _a;
+    };
+    Engine.prototype.generateNodes = function (entityId, components) {
+        var nodes = [];
+        if (components.display && components.position) {
+            nodes.push(new node_1["default"](entityId, enum_1.ClassType.RENDER, components));
+        }
+        if (components.animation && components.display && components.velocity) {
+            nodes.push(new node_1["default"](entityId, enum_1.ClassType.ANIMATION, components));
+        }
+        if (components.velocity && components.position && components.collision) {
+            nodes.push(new node_1["default"](entityId, enum_1.ClassType.MOVE, components));
+        }
+        if (components.velocity && components.input) {
+            nodes.push(new node_1["default"](entityId, enum_1.ClassType.CONTROL, components));
+        }
+        if (components.collision && components.display) {
+            nodes.push(new node_1["default"](entityId, enum_1.ClassType.OBSTACLE_COLLISION, components));
+        }
+        if (components.collision && components.display && components.trigger) {
+            nodes.push(new node_1["default"](entityId, enum_1.ClassType.TRIGGER_COLLISION, components));
+        }
+        if (components.position && components.input) {
+            nodes.push(new node_1["default"](entityId, enum_1.ClassType.LEVEL, components));
+        }
+        return nodes;
     };
     Engine.prototype.addEntities = function (entities) {
         if (entities && entities.length) {
@@ -20303,10 +20243,7 @@ var Engine = (function () {
         var dt = (now - before) / 1000;
         dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
         if (!this.isPaused) {
-            var nodes = Object.keys(enum_1.ClassType).map(function (classType) {
-                return _this.typedNodes[classType];
-            });
-            [].concat.apply([], nodes).filter(function (node) {
+            this.nodes.filter(function (node) {
                 return !node.isActive;
             }).map(function (node) {
                 return node.entityId;
@@ -20314,12 +20251,17 @@ var Engine = (function () {
                 return array.indexOf(value) === index;
             }).map(function (id) {
                 return _this.getEntitiesById(id);
-            }).map(function (entity) {
-                return entity.destroy();
+            }).map(function (entities) {
+                return entities.map(function (entity) {
+                    return entity.destroy();
+                });
             });
             var results_1 = [];
             this.systems.map(function (system) {
-                results_1.push(system.update(dt, _this.typedNodes[system.classType] || []));
+                var nodes = _this.nodes.filter(function (node) {
+                    return node.classType === system.classType;
+                });
+                results_1.push(system.update(dt, nodes || []));
             });
             results_1 = results_1.filter(function (result) { return result; });
             var newEntities = results_1.map(function (result) {
@@ -20348,7 +20290,6 @@ exports.__esModule = true;
 var enum_1 = __webpack_require__(7);
 var AnimationSystem = (function () {
     function AnimationSystem(settings) {
-        this["class"] = 'animation';
         this.classType = enum_1.ClassType.ANIMATION;
         this.settings = settings;
         this.timer = 0;
@@ -20358,11 +20299,11 @@ var AnimationSystem = (function () {
     AnimationSystem.prototype.stop = function () {
     };
     AnimationSystem.prototype.setAnimation = function (node, prop) {
-        node.data.animation.currentAnimationProp = prop;
+        node.animation.currentAnimationProp = prop;
     };
     AnimationSystem.prototype.updateFrame = function (node) {
-        var animationData = node.data.animation;
-        var displayData = node.data.display;
+        var animationData = node.animation;
+        var displayData = node.display;
         var frames = animationData[animationData.currentAnimationProp];
         if (animationData.currentFrame + 1 >= frames.length) {
             animationData.currentFrame = 0;
@@ -20375,8 +20316,8 @@ var AnimationSystem = (function () {
     AnimationSystem.prototype.update = function (dt, nodes) {
         var _this = this;
         nodes.map(function (node) {
-            var velocityData = node.data.velocity;
-            var animationData = node.data.animation;
+            var velocityData = node.velocity;
+            var animationData = node.animation;
             if (velocityData.velocityY > 0.01 || velocityData.velocityY < -0.01) {
                 // play jump animation
                 _this.setAnimation(node, 'jump');
@@ -20416,7 +20357,6 @@ var enum_1 = __webpack_require__(7);
 var ControlSystem = (function () {
     function ControlSystem(settings) {
         this.classType = enum_1.ClassType.CONTROL;
-        this["class"] = 'control';
         this.settings = settings;
     }
     ControlSystem.prototype.onKeyDown = function (e) {
@@ -20454,7 +20394,7 @@ var ControlSystem = (function () {
     ControlSystem.prototype.update = function (time, nodes) {
         var _this = this;
         nodes.map(function (node) {
-            var velocityData = node.data.velocity;
+            var velocityData = node.velocity;
             if (_this.isUp && velocityData.isGrounded) {
                 velocityData.accelerationY = -velocityData.maxAccelerationY;
             }
@@ -20486,12 +20426,11 @@ exports["default"] = ControlSystem;
 "use strict";
 
 exports.__esModule = true;
-var level_1 = __webpack_require__(215);
+var level_1 = __webpack_require__(209);
 var enum_1 = __webpack_require__(7);
 var LevelSystem = (function () {
     function LevelSystem(settings) {
         this.classType = enum_1.ClassType.LEVEL;
-        this["class"] = 'level';
         this.settings = settings;
         this.isLoaded = false;
         this.currentLevel;
@@ -20532,8 +20471,8 @@ var LevelSystem = (function () {
             // console.log(node);
             var finishX = _this.levels[_this.currentLevel - 1].data.properties.finishX;
             var finishY = _this.levels[_this.currentLevel - 1].data.properties.finishY;
-            var x = node.data.position.x / _this.settings.TILE;
-            var y = node.data.position.y / _this.settings.TILE;
+            var x = node.position.x / _this.settings.TILE;
+            var y = node.position.y / _this.settings.TILE;
             // console.log(x + ' ' + y);
             if (finishX === x && finishY === y) {
                 console.log('FINISH');
@@ -20560,7 +20499,6 @@ var enum_1 = __webpack_require__(7);
 var ObstacleCollisionSystem = (function () {
     function ObstacleCollisionSystem(settings) {
         this.classType = enum_1.ClassType.OBSTACLE_COLLISION;
-        this["class"] = 'obstacleCollision';
         this.settings = settings;
     }
     ObstacleCollisionSystem.prototype.init = function () {
@@ -20580,20 +20518,20 @@ var ObstacleCollisionSystem = (function () {
     ObstacleCollisionSystem.prototype.update = function (time, nodes) {
         var _this = this;
         var primaries = nodes.filter(function (node) {
-            return node.data.collision.type === 'primary';
+            return node.collision.type === 'primary';
         });
         var secondaries = nodes.filter(function (node) {
-            return node.data.collision.type !== 'primary';
+            return node.collision.type !== 'primary';
         });
         primaries.map(function (primary) {
-            primary.data.velocity.isGrounded = false;
-            primary.data.collision.isBottomObstacleCollision = false;
+            primary.velocity.isGrounded = false;
+            primary.collision.isBottomObstacleCollision = false;
             secondaries.map(function (secondary) {
-                var sprite1 = primary.data.display.sprite;
-                var sprite2 = secondary.data.display.sprite;
+                var sprite1 = primary.display.sprite;
+                var sprite2 = secondary.display.sprite;
                 if (_this.isCollision(sprite1, sprite2)) {
-                    var velocityData = primary.data.velocity;
-                    var collisionData = primary.data.collision;
+                    var velocityData = primary.velocity;
+                    var collisionData = primary.collision;
                     var errorMargin = _this.settings.TILE / 2;
                     var isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
                         sprite1.height + sprite1.y < sprite2.y + errorMargin;
@@ -20626,7 +20564,7 @@ var ObstacleCollisionSystem = (function () {
                         velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
                         velocityData.velocityX = Math.max(0, velocityData.velocityX);
                     }
-                    primary.data.collision.collide(secondary);
+                    primary.collision.collide(secondary);
                 }
             });
         });
@@ -20647,7 +20585,6 @@ var enum_1 = __webpack_require__(7);
 var RenderSystem = (function () {
     function RenderSystem(settings) {
         this.classType = enum_1.ClassType.RENDER;
-        this["class"] = 'render';
         this.sprites = {};
         this.settings = settings;
     }
@@ -20693,8 +20630,8 @@ var RenderSystem = (function () {
     RenderSystem.prototype.update = function (time, nodes) {
         var _this = this;
         nodes.map(function (node) {
-            var displayData = node.data.display;
-            var positionData = node.data.position;
+            var displayData = node.display;
+            var positionData = node.position;
             !_this.sprites[node.entityId] && _this.addNewSprites(node.entityId, displayData.sprite);
             displayData.sprite.position.x = positionData.x;
             displayData.sprite.position.y = positionData.y;
@@ -40314,7 +40251,7 @@ core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(222)(module), __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(216)(module), __webpack_require__(11)))
 
 /***/ }),
 /* 197 */
@@ -41340,137 +41277,34 @@ var tbgscratch = new Main();
 "use strict";
 
 exports.__esModule = true;
-var AnimationNode = (function () {
-    function AnimationNode(entityId, animationComponent, displayComponent, velocityComponent) {
+var NodeComponents = (function () {
+    function NodeComponents() {
+    }
+    return NodeComponents;
+}());
+exports.NodeComponents = NodeComponents;
+var Node = (function () {
+    function Node(entityId, classType, components) {
         this.entityId = entityId;
-        this.animation = animationComponent;
-        this.display = displayComponent;
-        this.velocity = velocityComponent;
+        this.classType = classType;
+        this.animation = components.animation;
+        this.collision = components.collision;
+        this.display = components.display;
+        this.health = components.health;
+        this.input = components.input;
+        this.position = components.position;
+        this.trigger = components.trigger;
+        this.user = components.user;
+        this.velocity = components.velocity;
         this.isActive = true;
     }
-    return AnimationNode;
+    return Node;
 }());
-exports["default"] = AnimationNode;
+exports["default"] = Node;
 
 
 /***/ }),
 /* 207 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var ControlNode = (function () {
-    function ControlNode(entityId, inputComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.input = inputComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return ControlNode;
-}());
-exports["default"] = ControlNode;
-
-
-/***/ }),
-/* 208 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var LevelNode = (function () {
-    function LevelNode(entityId, positionComponent) {
-        this.entityId = entityId;
-        this.position = positionComponent;
-        this.isActive = true;
-    }
-    return LevelNode;
-}());
-exports["default"] = LevelNode;
-
-
-/***/ }),
-/* 209 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var MoveNode = (function () {
-    function MoveNode(entityId, positionComponent, velocityComponent, collisionComponent) {
-        this.entityId = entityId;
-        this.position = positionComponent;
-        this.velocity = velocityComponent;
-        this.collision = collisionComponent;
-        this.isActive = true;
-    }
-    return MoveNode;
-}());
-exports["default"] = MoveNode;
-
-
-/***/ }),
-/* 210 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var ObstacleCollisionNode = (function () {
-    function ObstacleCollisionNode(entityId, collisionComponent, displayComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.collision = collisionComponent;
-        this.display = displayComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return ObstacleCollisionNode;
-}());
-exports["default"] = ObstacleCollisionNode;
-
-
-/***/ }),
-/* 211 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var RenderNode = (function () {
-    function RenderNode(entityId, displayComponent, positionComponent) {
-        this.entityId = entityId;
-        this.display = displayComponent;
-        this.position = positionComponent;
-        this.isActive = true;
-    }
-    return RenderNode;
-}());
-exports["default"] = RenderNode;
-
-
-/***/ }),
-/* 212 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var TriggerCollisionNode = (function () {
-    function TriggerCollisionNode(entityId, collisionComponent, displayComponent, velocityComponent) {
-        this.entityId = entityId;
-        this.collision = collisionComponent;
-        this.display = displayComponent;
-        this.velocity = velocityComponent;
-        this.isActive = true;
-    }
-    return TriggerCollisionNode;
-}());
-exports["default"] = TriggerCollisionNode;
-
-
-/***/ }),
-/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41517,7 +41351,7 @@ exports["default"] = backgroundPrefab;
 
 
 /***/ }),
-/* 214 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41577,16 +41411,16 @@ exports["default"] = GroundPrefab;
 
 
 /***/ }),
-/* 215 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 exports.__esModule = true;
-var player_1 = __webpack_require__(216);
-var sky_1 = __webpack_require__(217);
-var ground_1 = __webpack_require__(214);
-var background_1 = __webpack_require__(213);
+var player_1 = __webpack_require__(210);
+var sky_1 = __webpack_require__(211);
+var ground_1 = __webpack_require__(208);
+var background_1 = __webpack_require__(207);
 var LevelPrefabData = (function () {
     function LevelPrefabData(type, index, position) {
         this.type = type;
@@ -41665,7 +41499,7 @@ exports["default"] = LevelPrefab;
 
 
 /***/ }),
-/* 216 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41720,7 +41554,7 @@ exports["default"] = PlayerPrefab;
 
 
 /***/ }),
-/* 217 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41751,7 +41585,7 @@ exports["default"] = SkyPrefab;
 
 
 /***/ }),
-/* 218 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41774,10 +41608,10 @@ module.exports = {
 
 
 /***/ }),
-/* 219 */,
-/* 220 */,
-/* 221 */,
-/* 222 */
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
