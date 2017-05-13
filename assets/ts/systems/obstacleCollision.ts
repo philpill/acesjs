@@ -23,6 +23,23 @@ export default class ObstacleCollisionSystem implements ISystem {
 
     }
 
+    isBroadcollision(sprite1: Sprite, sprite2: Sprite) {
+
+        let isBroadCollision = false;
+
+        let approxY = false;
+
+        let approxX = (Math.abs(sprite1.x - sprite2.x ) < 100);
+
+        if (approxX) {
+            approxY = (Math.abs(sprite1.y - sprite2.y ) < 100);
+        }
+
+        isBroadCollision = approxX && approxY;
+
+        return isBroadCollision;
+    }
+
     isCollision(sprite1: Sprite, sprite2: Sprite) {
 
         let isCollision = false;
@@ -60,56 +77,59 @@ export default class ObstacleCollisionSystem implements ISystem {
 
                 let sprite2 = secondary.display.sprite;
 
-                if (this.isCollision(sprite1, sprite2)) {
+                if (this.isBroadcollision(sprite1, sprite2)) {
 
-                    let velocityData = primary.velocity;
-                    let collisionData = primary.collision;
+                    if (this.isCollision(sprite1, sprite2)) {
 
-                    let errorMargin = this.settings.TILE/2;
+                        let velocityData = primary.velocity;
+                        let collisionData = primary.collision;
 
-                    let isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
-                        sprite1.height + sprite1.y < sprite2.y + errorMargin;
+                        let errorMargin = this.settings.TILE/2;
 
-                    let isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
-                        sprite2.height + sprite2.y < sprite1.y + errorMargin;
+                        let isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
+                            sprite1.height + sprite1.y < sprite2.y + errorMargin;
 
-                    let isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
-                        sprite1.x + sprite1.width < sprite2.x + errorMargin;
+                        let isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
+                            sprite2.height + sprite2.y < sprite1.y + errorMargin;
 
-                    let isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
-                        sprite2.x + sprite2.width < sprite1.x + errorMargin;
+                        let isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
+                            sprite1.x + sprite1.width < sprite2.x + errorMargin;
 
-                    collisionData.isTopObstacleCollision = isTopCollision;
-                    collisionData.isBottomObstacleCollision = isBottomCollision;
-                    collisionData.isLeftObstacleCollision = isLeftCollision;
-                    collisionData.isRightObstacleCollision = isRightCollision;
+                        let isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
+                            sprite2.x + sprite2.width < sprite1.x + errorMargin;
 
-                    // SHIFT ALL THIS INTO MOVE SYSTEM
+                        collisionData.isTopObstacleCollision = isTopCollision;
+                        collisionData.isBottomObstacleCollision = isBottomCollision;
+                        collisionData.isLeftObstacleCollision = isLeftCollision;
+                        collisionData.isRightObstacleCollision = isRightCollision;
 
-                    // check collision
-                    if (isBottomCollision) {
+                        // SHIFT ALL THIS INTO MOVE SYSTEM
 
-                        // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
-                        velocityData.velocityY = Math.min(0, velocityData.velocityY);
-                        velocityData.isGrounded = true;
+                        // check collision
+                        if (isBottomCollision) {
 
-                    } else if (isTopCollision) {
+                            // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
+                            velocityData.velocityY = Math.min(0, velocityData.velocityY);
+                            velocityData.isGrounded = true;
 
-                        // velocityData.accelerationY = Math.max(0, velocityData.accelerationY);
-                        velocityData.velocityY = Math.max(0, velocityData.velocityY);
+                        } else if (isTopCollision) {
 
-                    } else if (isRightCollision) {
+                            // velocityData.accelerationY = Math.max(0, velocityData.accelerationY);
+                            velocityData.velocityY = Math.max(0, velocityData.velocityY);
 
-                        velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
-                        velocityData.velocityX = Math.min(0, velocityData.velocityX);
+                        } else if (isRightCollision) {
 
-                    } else if (isLeftCollision) {
+                            velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
+                            velocityData.velocityX = Math.min(0, velocityData.velocityX);
 
-                        velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
-                        velocityData.velocityX = Math.max(0, velocityData.velocityX);
+                        } else if (isLeftCollision) {
+
+                            velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
+                            velocityData.velocityX = Math.max(0, velocityData.velocityX);
+                        }
+
+                        primary.collision.collide(secondary);
                     }
-
-                    primary.collision.collide(secondary);
                 }
             });
         });

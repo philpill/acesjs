@@ -176,6 +176,7 @@ export default class Engine {
             let results = [];
 
             this.systems.map((system) => {
+                /* bottleneck */
                 let nodes = this.nodes.filter((node) => {
                     return node.classType === system.classType;
                 });

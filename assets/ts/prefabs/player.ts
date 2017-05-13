@@ -43,7 +43,7 @@ export default class PlayerPrefab extends Entity {
 
         let velocityComponent = new VelocityComponent(settings);
 
-        let inputComponent = new InputComponent();
+        let inputComponent = new InputComponent(settings);
 
         this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation);
     }

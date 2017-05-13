@@ -2,10 +2,7 @@ import Entity from './entity';
 
 import DisplayComponent from '../components/display';
 import PositionComponent from '../components/position';
-import VelocityComponent from '../components/velocity';
-import InputComponent from '../components/input';
 import CollisionComponent from '../components/collision';
-import AnimationComponent from '../components/animation';
 
 import IComponent from '../components/icomponent';
 import Sprite from '../sprite';

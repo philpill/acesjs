@@ -90,11 +90,13 @@ export default class RenderSystem implements ISystem {
 
         nodes.map((node: Node) => {
 
+            /* bottleneck */
             let displayData = node.display;
             let positionData = node.position;
 
             !this.sprites[node.entityId] && this.addNewSprites(node.entityId, displayData.sprite);
 
+            /* bottleneck */
             displayData.sprite.position.x = positionData.x;
             displayData.sprite.position.y = positionData.y;
 

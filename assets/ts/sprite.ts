@@ -4,9 +4,13 @@ export default class Sprite extends PIXI.Sprite {
         texture: PIXI.Rectangle[]
     };
 
+    position: any;
+
     constructor(args: PIXI.Texture) {
 
         super(args);
+
+        this.position = {};
 
         this.data = {texture: []};
     }

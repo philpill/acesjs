@@ -6824,6 +6824,7 @@ var Sprite = (function (_super) {
     __extends(Sprite, _super);
     function Sprite(args) {
         var _this = _super.call(this, args) || this;
+        _this.position = {};
         _this.data = { texture: [] };
         return _this;
     }
@@ -20277,6 +20278,7 @@ var Engine = (function () {
             this.nodes = this.filterInactiveNodes(this.nodes);
             var results_1 = [];
             this.systems.map(function (system) {
+                /* bottleneck */
                 var nodes = _this.nodes.filter(function (node) {
                     return node.classType === system.classType;
                 });
@@ -20378,35 +20380,7 @@ var ControlSystem = (function () {
         this.classType = enum_1.ClassType.CONTROL;
         this.settings = settings;
     }
-    ControlSystem.prototype.onKeyDown = function (e) {
-        var key = e.keyCode;
-        this.isJump = this.isJump || key === this.settings.KEY.SPACE;
-        this.isLeft = this.isLeft || key === this.settings.KEY.LEFT;
-        this.isUp = this.isUp || key === this.settings.KEY.UP;
-        this.isRight = this.isRight || key === this.settings.KEY.RIGHT;
-        this.isDown = this.isDown || key === this.settings.KEY.DOWN;
-    };
-    ControlSystem.prototype.onKeyUp = function (e) {
-        var key = e.keyCode;
-        this.isJump = key === this.settings.KEY.SPACE ? false : this.isJump;
-        this.isLeft = key === this.settings.KEY.LEFT ? false : this.isLeft;
-        this.isUp = key === this.settings.KEY.UP ? false : this.isUp;
-        this.isRight = key === this.settings.KEY.RIGHT ? false : this.isRight;
-        this.isDown = key === this.settings.KEY.DOWN ? false : this.isDown;
-        if (key === this.settings.KEY.P) {
-            // this.isPause = !this.isPause;
-        }
-    };
-    ControlSystem.prototype.bind = function () {
-        window.addEventListener('keydown', this.onKeyDown.bind(this), false);
-        window.addEventListener('keyup', this.onKeyUp.bind(this), false);
-    };
-    ControlSystem.prototype.unbind = function () {
-        window.removeEventListener('keydown', this.onKeyDown.bind(this), false);
-        window.removeEventListener('keyup', this.onKeyUp.bind(this), false);
-    };
     ControlSystem.prototype.init = function () {
-        this.bind();
     };
     ControlSystem.prototype.stop = function () {
     };
@@ -20414,17 +20388,18 @@ var ControlSystem = (function () {
         var _this = this;
         nodes.map(function (node) {
             var velocityData = node.velocity;
-            if (_this.isUp && velocityData.isGrounded) {
+            var inputData = node.input;
+            if (inputData.isUp && velocityData.isGrounded) {
                 velocityData.accelerationY = -velocityData.maxAccelerationY;
             }
             else {
-                velocityData.accelerationY = 1;
+                velocityData.accelerationY = _this.settings.GRAVITY;
             }
-            if (_this.isRight) {
+            if (inputData.isRight) {
                 // console.log('right');
                 velocityData.accelerationX = velocityData.maxAccelerationX;
             }
-            else if (_this.isLeft) {
+            else if (inputData.isLeft) {
                 // console.log('left');
                 velocityData.accelerationX = -velocityData.maxAccelerationX;
             }
@@ -20524,6 +20499,16 @@ var ObstacleCollisionSystem = (function () {
     };
     ObstacleCollisionSystem.prototype.stop = function () {
     };
+    ObstacleCollisionSystem.prototype.isBroadcollision = function (sprite1, sprite2) {
+        var isBroadCollision = false;
+        var approxY = false;
+        var approxX = (Math.abs(sprite1.x - sprite2.x) < 100);
+        if (approxX) {
+            approxY = (Math.abs(sprite1.y - sprite2.y) < 100);
+        }
+        isBroadCollision = approxX && approxY;
+        return isBroadCollision;
+    };
     ObstacleCollisionSystem.prototype.isCollision = function (sprite1, sprite2) {
         var isCollision = false;
         if (sprite1.x < sprite2.x + sprite2.width &&
@@ -20548,42 +20533,44 @@ var ObstacleCollisionSystem = (function () {
             secondaries.map(function (secondary) {
                 var sprite1 = primary.display.sprite;
                 var sprite2 = secondary.display.sprite;
-                if (_this.isCollision(sprite1, sprite2)) {
-                    var velocityData = primary.velocity;
-                    var collisionData = primary.collision;
-                    var errorMargin = _this.settings.TILE / 2;
-                    var isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
-                        sprite1.height + sprite1.y < sprite2.y + errorMargin;
-                    var isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
-                        sprite2.height + sprite2.y < sprite1.y + errorMargin;
-                    var isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
-                        sprite1.x + sprite1.width < sprite2.x + errorMargin;
-                    var isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
-                        sprite2.x + sprite2.width < sprite1.x + errorMargin;
-                    collisionData.isTopObstacleCollision = isTopCollision;
-                    collisionData.isBottomObstacleCollision = isBottomCollision;
-                    collisionData.isLeftObstacleCollision = isLeftCollision;
-                    collisionData.isRightObstacleCollision = isRightCollision;
-                    // SHIFT ALL THIS INTO MOVE SYSTEM
-                    // check collision
-                    if (isBottomCollision) {
-                        // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
-                        velocityData.velocityY = Math.min(0, velocityData.velocityY);
-                        velocityData.isGrounded = true;
+                if (_this.isBroadcollision(sprite1, sprite2)) {
+                    if (_this.isCollision(sprite1, sprite2)) {
+                        var velocityData = primary.velocity;
+                        var collisionData = primary.collision;
+                        var errorMargin = _this.settings.TILE / 2;
+                        var isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
+                            sprite1.height + sprite1.y < sprite2.y + errorMargin;
+                        var isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
+                            sprite2.height + sprite2.y < sprite1.y + errorMargin;
+                        var isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
+                            sprite1.x + sprite1.width < sprite2.x + errorMargin;
+                        var isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
+                            sprite2.x + sprite2.width < sprite1.x + errorMargin;
+                        collisionData.isTopObstacleCollision = isTopCollision;
+                        collisionData.isBottomObstacleCollision = isBottomCollision;
+                        collisionData.isLeftObstacleCollision = isLeftCollision;
+                        collisionData.isRightObstacleCollision = isRightCollision;
+                        // SHIFT ALL THIS INTO MOVE SYSTEM
+                        // check collision
+                        if (isBottomCollision) {
+                            // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
+                            velocityData.velocityY = Math.min(0, velocityData.velocityY);
+                            velocityData.isGrounded = true;
+                        }
+                        else if (isTopCollision) {
+                            // velocityData.accelerationY = Math.max(0, velocityData.accelerationY);
+                            velocityData.velocityY = Math.max(0, velocityData.velocityY);
+                        }
+                        else if (isRightCollision) {
+                            velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
+                            velocityData.velocityX = Math.min(0, velocityData.velocityX);
+                        }
+                        else if (isLeftCollision) {
+                            velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
+                            velocityData.velocityX = Math.max(0, velocityData.velocityX);
+                        }
+                        primary.collision.collide(secondary);
                     }
-                    else if (isTopCollision) {
-                        // velocityData.accelerationY = Math.max(0, velocityData.accelerationY);
-                        velocityData.velocityY = Math.max(0, velocityData.velocityY);
-                    }
-                    else if (isRightCollision) {
-                        velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
-                        velocityData.velocityX = Math.min(0, velocityData.velocityX);
-                    }
-                    else if (isLeftCollision) {
-                        velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
-                        velocityData.velocityX = Math.max(0, velocityData.velocityX);
-                    }
-                    primary.collision.collide(secondary);
                 }
             });
         });
@@ -20649,9 +20636,11 @@ var RenderSystem = (function () {
     RenderSystem.prototype.update = function (time, nodes) {
         var _this = this;
         nodes.map(function (node) {
+            /* bottleneck */
             var displayData = node.display;
             var positionData = node.position;
             !_this.sprites[node.entityId] && _this.addNewSprites(node.entityId, displayData.sprite);
+            /* bottleneck */
             displayData.sprite.position.x = positionData.x;
             displayData.sprite.position.y = positionData.y;
             if (displayData.isFocus) {
@@ -41217,9 +41206,31 @@ exports["default"] = AnimationComponent;
 
 exports.__esModule = true;
 var InputComponent = (function () {
-    function InputComponent() {
+    function InputComponent(settings) {
         this["class"] = 'input';
+        this.settings = settings;
+        window.addEventListener('keydown', this.onKeyDown.bind(this), false);
+        window.addEventListener('keyup', this.onKeyUp.bind(this), false);
     }
+    InputComponent.prototype.onKeyDown = function (e) {
+        var key = e.keyCode;
+        this.isJump = this.isJump || key === this.settings.KEY.SPACE;
+        this.isLeft = this.isLeft || key === this.settings.KEY.LEFT;
+        this.isUp = this.isUp || key === this.settings.KEY.UP;
+        this.isRight = this.isRight || key === this.settings.KEY.RIGHT;
+        this.isDown = this.isDown || key === this.settings.KEY.DOWN;
+    };
+    InputComponent.prototype.onKeyUp = function (e) {
+        var key = e.keyCode;
+        this.isJump = key === this.settings.KEY.SPACE ? false : this.isJump;
+        this.isLeft = key === this.settings.KEY.LEFT ? false : this.isLeft;
+        this.isUp = key === this.settings.KEY.UP ? false : this.isUp;
+        this.isRight = key === this.settings.KEY.RIGHT ? false : this.isRight;
+        this.isDown = key === this.settings.KEY.DOWN ? false : this.isDown;
+        // if (key === this.settings.KEY.P) {
+        //     this.isPause = !this.isPause;
+        // }
+    };
     return InputComponent;
 }());
 exports["default"] = InputComponent;
@@ -41563,7 +41574,7 @@ var PlayerPrefab = (function (_super) {
         var collision = new collision_1["default"]('primary');
         var positionComponent = new position_1["default"](start[0] * settings.TILE, start[1] * settings.TILE);
         var velocityComponent = new velocity_1["default"](settings);
-        var inputComponent = new input_1["default"]();
+        var inputComponent = new input_1["default"](settings);
         _this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation);
         return _this;
     }
