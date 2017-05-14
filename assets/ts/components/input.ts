@@ -1,10 +1,12 @@
 import IComponent from './icomponent';
 import Settings from '../settings';
+import InputManager from '../managers/input';
 
 export default class InputComponent implements IComponent {
 
     class: string;
     settings: Settings;
+    inputManager: InputManager;
 
     isJump: any;
     isLeft: any;
@@ -19,8 +21,10 @@ export default class InputComponent implements IComponent {
         this.class = 'input';
         this.settings = settings;
 
-        window.addEventListener('keydown', this.onKeyDown.bind(this), false);
-        window.addEventListener('keyup', this.onKeyUp.bind(this), false);
+        this.inputManager = new InputManager(settings);
+
+        this.inputManager.onKeyDown(this.onKeyDown.bind(this));
+        this.inputManager.onKeyUp(this.onKeyUp.bind(this));
     }
 
     onKeyDown(e: KeyboardEvent) {

@@ -27,13 +27,8 @@ export default class backgroundPrefab extends Entity {
 
         let display = new DisplayComponent(sprite);
 
-        this.addComponent(display);
+        let position = new PositionComponent(x, y);
 
-        let positionComponent = new PositionComponent();
-
-        positionComponent.x = x;
-        positionComponent.y = y;
-
-        this.addComponent(positionComponent);
+        this.addComponents(display, position);
     }
 }

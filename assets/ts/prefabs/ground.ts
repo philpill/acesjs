@@ -20,26 +20,11 @@ export default class GroundPrefab extends Entity {
 
         let display = this._getDisplayComponent(type, tile, tile);
 
-        this.addComponent(display);
+        let position = new PositionComponent(x, y);
 
-        let positionComponent = this._getPositionComponent(x, y);
+        let collision = new CollisionComponent('secondary');
 
-        this.addComponent(positionComponent);
-
-        let collision = this._getCollisionComponent();
-
-        this.addComponent(collision);
-    }
-
-    private _getCollisionComponent() {
-        return new CollisionComponent('secondary');
-    }
-
-    private _getPositionComponent(x: number, y: number) {
-        let positionComponent = new PositionComponent();
-        positionComponent.x = x;
-        positionComponent.y = y;
-        return positionComponent;
+        this.addComponents(display, position, collision);
     }
 
     private _getDisplayComponent(type: number, height: number, width: number):IComponent {

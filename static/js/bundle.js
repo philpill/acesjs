@@ -6778,14 +6778,11 @@ var Entity = (function () {
         this.components[component["class"]] = component;
     };
     Entity.prototype.addComponents = function () {
-        var _this = this;
         var components = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             components[_i] = arguments[_i];
         }
-        components.map(function (component) {
-            _this.components[component["class"]] = component;
-        });
+        components.map(this.addComponent.bind(this));
     };
     Entity.prototype.removeComponent = function (componentClass) {
         this.components[componentClass] = null;
@@ -19324,7 +19321,7 @@ exports["default"] = CollisionComponent;
 
 
 var punycode = __webpack_require__(196);
-var util = __webpack_require__(212);
+var util = __webpack_require__(213);
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;
@@ -20159,7 +20156,7 @@ global.PIXI = exports; // eslint-disable-line
 "use strict";
 
 exports.__esModule = true;
-var node_1 = __webpack_require__(206);
+var node_1 = __webpack_require__(207);
 var enum_1 = __webpack_require__(7);
 var Engine = (function () {
     function Engine() {
@@ -20420,7 +20417,7 @@ exports["default"] = ControlSystem;
 "use strict";
 
 exports.__esModule = true;
-var level_1 = __webpack_require__(209);
+var level_1 = __webpack_require__(210);
 var enum_1 = __webpack_require__(7);
 var LevelSystem = (function () {
     function LevelSystem(settings) {
@@ -40259,7 +40256,7 @@ core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(216)(module), __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(217)(module), __webpack_require__(11)))
 
 /***/ }),
 /* 197 */
@@ -41205,12 +41202,14 @@ exports["default"] = AnimationComponent;
 "use strict";
 
 exports.__esModule = true;
+var input_1 = __webpack_require__(206);
 var InputComponent = (function () {
     function InputComponent(settings) {
         this["class"] = 'input';
         this.settings = settings;
-        window.addEventListener('keydown', this.onKeyDown.bind(this), false);
-        window.addEventListener('keyup', this.onKeyUp.bind(this), false);
+        this.inputManager = new input_1["default"](settings);
+        this.inputManager.onKeyDown(this.onKeyDown.bind(this));
+        this.inputManager.onKeyUp(this.onKeyUp.bind(this));
     }
     InputComponent.prototype.onKeyDown = function (e) {
         var key = e.keyCode;
@@ -41307,6 +41306,40 @@ var tbgscratch = new Main();
 "use strict";
 
 exports.__esModule = true;
+var InputManager = (function () {
+    function InputManager(settings) {
+        this.settings = settings;
+        window.addEventListener('keydown', this.onKeyDownHandler.bind(this), false);
+        window.addEventListener('keyup', this.onKeyUpHandler.bind(this), false);
+    }
+    InputManager.prototype.destructor = function () {
+        window.removeEventListener('keydown', this.onKeyDownHandler);
+        window.removeEventListener('keyup', this.onKeyUpHandler);
+    };
+    InputManager.prototype.onKeyDownHandler = function (e) {
+        return this.onKeyDownCallback(e);
+    };
+    InputManager.prototype.onKeyUpHandler = function (e) {
+        return this.onKeyUpCallback(e);
+    };
+    InputManager.prototype.onKeyUp = function (callback) {
+        this.onKeyUpCallback = callback;
+    };
+    InputManager.prototype.onKeyDown = function (callback) {
+        this.onKeyDownCallback = callback;
+    };
+    return InputManager;
+}());
+exports["default"] = InputManager;
+
+
+/***/ }),
+/* 207 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
 var NodeComponents = (function () {
     function NodeComponents() {
     }
@@ -41334,7 +41367,7 @@ exports["default"] = Node;
 
 
 /***/ }),
-/* 207 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41368,11 +41401,8 @@ var backgroundPrefab = (function (_super) {
         sprite.height = tile;
         sprite.width = tile;
         var display = new display_1["default"](sprite);
-        _this.addComponent(display);
-        var positionComponent = new position_1["default"]();
-        positionComponent.x = x;
-        positionComponent.y = y;
-        _this.addComponent(positionComponent);
+        var position = new position_1["default"](x, y);
+        _this.addComponents(display, position);
         return _this;
     }
     return backgroundPrefab;
@@ -41381,7 +41411,7 @@ exports["default"] = backgroundPrefab;
 
 
 /***/ }),
-/* 208 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41410,22 +41440,11 @@ var GroundPrefab = (function (_super) {
         var settings = new settings_1["default"]();
         var tile = settings.TILE;
         var display = _this._getDisplayComponent(type, tile, tile);
-        _this.addComponent(display);
-        var positionComponent = _this._getPositionComponent(x, y);
-        _this.addComponent(positionComponent);
-        var collision = _this._getCollisionComponent();
-        _this.addComponent(collision);
+        var position = new position_1["default"](x, y);
+        var collision = new collision_1["default"]('secondary');
+        _this.addComponents(display, position, collision);
         return _this;
     }
-    GroundPrefab.prototype._getCollisionComponent = function () {
-        return new collision_1["default"]('secondary');
-    };
-    GroundPrefab.prototype._getPositionComponent = function (x, y) {
-        var positionComponent = new position_1["default"]();
-        positionComponent.x = x;
-        positionComponent.y = y;
-        return positionComponent;
-    };
     GroundPrefab.prototype._getDisplayComponent = function (type, height, width) {
         var spriteX = Math.max(type * 16 - 16, 0);
         var spriteY = 0;
@@ -41441,16 +41460,16 @@ exports["default"] = GroundPrefab;
 
 
 /***/ }),
-/* 209 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 exports.__esModule = true;
-var player_1 = __webpack_require__(210);
-var sky_1 = __webpack_require__(211);
-var ground_1 = __webpack_require__(208);
-var background_1 = __webpack_require__(207);
+var player_1 = __webpack_require__(211);
+var sky_1 = __webpack_require__(212);
+var ground_1 = __webpack_require__(209);
+var background_1 = __webpack_require__(208);
 var LevelPrefabData = (function () {
     function LevelPrefabData(type, index, position) {
         this.type = type;
@@ -41529,7 +41548,7 @@ exports["default"] = LevelPrefab;
 
 
 /***/ }),
-/* 210 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41584,38 +41603,46 @@ exports["default"] = PlayerPrefab;
 
 
 /***/ }),
-/* 211 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 exports.__esModule = true;
 var entity_1 = __webpack_require__(25);
 var display_1 = __webpack_require__(23);
 var position_1 = __webpack_require__(24);
 var sprite_1 = __webpack_require__(26);
-var SkyPrefab = (function () {
+var SkyPrefab = (function (_super) {
+    __extends(SkyPrefab, _super);
     function SkyPrefab(width, height, tile) {
-        var sky = new entity_1["default"]();
+        var _this = _super.call(this) || this;
         var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(33, 0, 14, tile));
         var sprite = new sprite_1["default"](texture);
         sprite.height = height * tile;
         sprite.width = width * tile;
         var display = new display_1["default"](sprite);
-        sky.addComponent(display);
-        var position = new position_1["default"]();
-        position.x = 0;
-        position.y = 0;
-        sky.addComponent(position);
-        return sky;
+        var position = new position_1["default"](0, 0);
+        _this.addComponents(display, position);
+        return _this;
     }
     return SkyPrefab;
-}());
+}(entity_1["default"]));
 exports["default"] = SkyPrefab;
 
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41638,10 +41665,10 @@ module.exports = {
 
 
 /***/ }),
-/* 213 */,
 /* 214 */,
 /* 215 */,
-/* 216 */
+/* 216 */,
+/* 217 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {

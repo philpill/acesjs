@@ -8,31 +8,21 @@ import PositionComponent from '../components/position';
 import DisplayComponent from '../components/display';
 import IComponent from '../components/icomponent';
 
+import { TriggerType } from '../enum';
 
 export default class TriggerPrefab extends Entity {
 
-    constructor(type: number, x: number, y: number) {
+    constructor(type: TriggerType, x: number, y: number) {
 
         super();
 
-        let triggerComponent = new TriggerComponent();
+        let trigger = new TriggerComponent(type);
 
-        triggerComponent.triggerType = type;
-
-        this.addComponent(triggerComponent);
-
-        let positionComponent = new PositionComponent();
-
-        positionComponent.x = x;
-        positionComponent.y = y;
-
-        this.addComponent(positionComponent);
-
+        let position = new PositionComponent(x, y);
 
         let settings = new Settings();
 
         let tile = settings.TILE;
-
 
         let spriteX = 0;
         let spriteY = 0;
@@ -43,6 +33,6 @@ export default class TriggerPrefab extends Entity {
 
         let display = new DisplayComponent(sprite);
 
-        this.addComponent(display);
+        this.addComponents(trigger, position, display);
     }
 }

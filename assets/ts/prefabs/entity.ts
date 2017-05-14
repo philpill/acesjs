@@ -32,13 +32,10 @@ export default class Entity {
     }
 
     addComponents(...components: IComponent[]) {
-        components.map((component: IComponent) => {
-            this.components[component.class] = component;
-        });
+        components.map(this.addComponent.bind(this));
     }
 
     removeComponent(componentClass: string) {
-
         this.components[componentClass] = null;
     }
 

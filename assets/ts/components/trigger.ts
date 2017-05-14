@@ -7,10 +7,10 @@ export default class TriggerComponent implements IComponent {
 
     triggerType: TriggerType
 
-    constructor() {
+    constructor(type = TriggerType.UNDEFINED) {
 
         this.class = 'trigger';
 
-        this.triggerType = TriggerType.UNDEFINED;
+        this.triggerType = type;
     }
 }

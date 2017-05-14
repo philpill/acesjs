@@ -4,11 +4,11 @@ import DisplayComponent from '../components/display';
 import PositionComponent from '../components/position';
 import Sprite from '../sprite';
 
-export default class SkyPrefab {
+export default class SkyPrefab extends Entity {
 
     constructor(width: number, height: number, tile: number) {
 
-        let sky = new Entity();
+        super();
 
         let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(33, 0, 14, tile));
 
@@ -19,15 +19,8 @@ export default class SkyPrefab {
 
         let display = new DisplayComponent(sprite);
 
-        sky.addComponent(display);
+        let position = new PositionComponent(0, 0);
 
-        let position = new PositionComponent();
-
-        position.x = 0;
-        position.y = 0;
-
-        sky.addComponent(position);
-
-        return sky;
+        this.addComponents(display, position);
     }
 }
