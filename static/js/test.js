@@ -63,12 +63,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 218);
+/******/ 	return __webpack_require__(__webpack_require__.s = 217);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 101:
+/***/ 100:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -76,7 +76,7 @@
 exports.__esModule = true;
 var move_1 = __webpack_require__(27);
 var settings_1 = __webpack_require__(12);
-var assert = __webpack_require__(102);
+var assert = __webpack_require__(101);
 describe('MoveSystem', function () {
     var settings;
     var system;
@@ -127,7 +127,7 @@ describe('MoveSystem', function () {
 
 /***/ }),
 
-/***/ 102:
+/***/ 101:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -199,7 +199,7 @@ function isBuffer(b) {
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var util = __webpack_require__(216);
+var util = __webpack_require__(215);
 var hasOwn = Object.prototype.hasOwnProperty;
 var pSlice = Array.prototype.slice;
 var functionsHaveNames = (function () {
@@ -675,7 +675,7 @@ exports["default"] = Settings;
 
 /***/ }),
 
-/***/ 214:
+/***/ 213:
 /***/ (function(module, exports) {
 
 if (typeof Object.create === 'function') {
@@ -705,7 +705,7 @@ if (typeof Object.create === 'function') {
 
 /***/ }),
 
-/***/ 215:
+/***/ 214:
 /***/ (function(module, exports) {
 
 module.exports = function isBuffer(arg) {
@@ -717,7 +717,7 @@ module.exports = function isBuffer(arg) {
 
 /***/ }),
 
-/***/ 216:
+/***/ 215:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -1245,7 +1245,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(215);
+exports.isBuffer = __webpack_require__(214);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -1289,7 +1289,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(214);
+exports.inherits = __webpack_require__(213);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -1311,10 +1311,10 @@ function hasOwnProperty(obj, prop) {
 
 /***/ }),
 
-/***/ 218:
+/***/ 217:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(101);
+module.exports = __webpack_require__(100);
 
 
 /***/ }),
@@ -1590,13 +1590,11 @@ var ClassType;
 (function (ClassType) {
     ClassType[ClassType["ANIMATION"] = 0] = "ANIMATION";
     ClassType[ClassType["CONTROL"] = 1] = "CONTROL";
-    ClassType[ClassType["DAMAGE_COLLISION"] = 2] = "DAMAGE_COLLISION";
-    ClassType[ClassType["LEVEL"] = 3] = "LEVEL";
-    ClassType[ClassType["MOVE"] = 4] = "MOVE";
-    ClassType[ClassType["OBSTACLE_COLLISION"] = 5] = "OBSTACLE_COLLISION";
-    ClassType[ClassType["RENDER"] = 6] = "RENDER";
-    ClassType[ClassType["TRIGGER_COLLISION"] = 7] = "TRIGGER_COLLISION";
-    ClassType[ClassType["ACTIVATE"] = 8] = "ACTIVATE";
+    ClassType[ClassType["LEVEL"] = 2] = "LEVEL";
+    ClassType[ClassType["MOVE"] = 3] = "MOVE";
+    ClassType[ClassType["COLLISION"] = 4] = "COLLISION";
+    ClassType[ClassType["RENDER"] = 5] = "RENDER";
+    ClassType[ClassType["ACTIVATE"] = 6] = "ACTIVATE";
 })(ClassType || (ClassType = {}));
 exports.ClassType = ClassType;
 

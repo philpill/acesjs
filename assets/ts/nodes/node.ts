@@ -1,5 +1,6 @@
 import Animation from '../components/animation';
 import Collision from '../components/collision';
+import Damage from '../components/damage';
 import Display from '../components/display';
 import Health from '../components/health';
 import Input from '../components/input';
@@ -13,6 +14,7 @@ export class NodeComponents {
 
     animation?: Animation;
     collision?: Collision;
+    damage?: Damage;
     display?: Display;
     health?: Health;
     input?: Input;
@@ -30,6 +32,7 @@ export default class Node {
 
     animation?: Animation;
     collision?: Collision;
+    damage?: Damage;
     display?: Display;
     health?: Health;
     input?: Input;
@@ -47,6 +50,7 @@ export default class Node {
 
         this.animation = components.animation;
         this.collision = components.collision;
+        this.damage = components.damage;
         this.display = components.display;
         this.health = components.health;
         this.input = components.input;

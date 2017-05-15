@@ -8,12 +8,10 @@ enum ClassType {
 
     ANIMATION,
     CONTROL,
-    DAMAGE_COLLISION,
     LEVEL,
     MOVE,
-    OBSTACLE_COLLISION,
+    COLLISION,
     RENDER,
-    TRIGGER_COLLISION,
     ACTIVATE
 }
 

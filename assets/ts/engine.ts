@@ -65,12 +65,7 @@ export default class Engine {
 
         if (components.collision && components.display) {
 
-            nodes.push(new Node(entityId, ClassType.OBSTACLE_COLLISION, components));
-        }
-
-        if (components.collision && components.display && components.trigger) {
-
-            nodes.push(new Node(entityId, ClassType.TRIGGER_COLLISION, components));
+            nodes.push(new Node(entityId, ClassType.COLLISION, components));
         }
 
         if (components.position && components.input) { // need a second 'trigger' component or this will apply to all rendered objects

@@ -4,9 +4,7 @@ import Settings from './settings';
 import Engine from './engine';
 
 import AnimationSystem from './systems/animation';
-import ObstacleCollisionSystem from './systems/obstacleCollision';
-import TriggerCollisionSystem from './systems/triggerCollision';
-import DamageCollisionSystem from './systems/damageCollision';
+import CollisionSystem from './systems/collision';
 import ControlSystem from './systems/control';
 import LevelSystem from './systems/level';
 import MoveSystem from './systems/move';
@@ -40,7 +38,7 @@ export default class Main {
 
         this._engine.addSystem(new ControlSystem(this._settings));
 
-        this._engine.addSystem(new ObstacleCollisionSystem(this._settings));
+        this._engine.addSystem(new CollisionSystem(this._settings));
 
         this._engine.addSystem(new LevelSystem(this._settings));
 
