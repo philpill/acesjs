@@ -11,20 +11,20 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/chai": "^3.5.1",
+    "@types/chai": "^3.5.2",
     "@types/mocha": "^2.2.41",
-    "@types/pixi.js": "^4.4.3",
+    "@types/pixi.js": "^4.4.4",
     "chai": "^3.5.0",
     "copy-webpack-plugin": "^0.2.0",
-    "glob": "^7.1.1",
+    "glob": "^7.1.2",
     "istanbul": "1.1.0-alpha.1",
-    "mocha": "^3.3.0",
-    "ts-loader": "^2.0.3",
-    "typescript": "^2.3.1",
-    "webpack": "^2.3.3",
-    "webpack-dev-server": "^1.12.1"
+    "mocha": "^3.4.2",
+    "ts-loader": "^2.1.0",
+    "typescript": "^2.3.4",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^1.16.5"
   },
   "dependencies": {
-    "pixi.js": "^4.5.1"
+    "pixi.js": "^4.5.2"
   }
 }
