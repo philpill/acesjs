@@ -37,15 +37,11 @@
  "orientation":"orthogonal",
  "properties":
     {
-     "finishX":3,
-     "finishY":25,
      "startX":3,
      "startY":3
     },
  "propertytypes":
     {
-     "finishX":"int",
-     "finishY":"int",
      "startX":"int",
      "startY":"int"
     },
@@ -81,6 +77,7 @@
          "transparentcolor":"#ff00ff"
         }],
  "tilewidth":16,
- "version":1,
+ "type":"map",
+ "version":"1.0.0",
  "width":45
 }

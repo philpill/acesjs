@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -63,20 +63,41 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 217);
+/******/ 	return __webpack_require__(__webpack_require__.s = 221);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 100:
+/***/ 10:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var Settings = (function () {
+    function Settings() {
+        this.GRAVITY = 1;
+        this.FRICTION = 0.90;
+        this.TILE = 16;
+        this.MAP = [45, 30];
+        this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
+    }
+    return Settings;
+}());
+exports["default"] = Settings;
+
+
+/***/ }),
+
+/***/ 101:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 exports.__esModule = true;
 var move_1 = __webpack_require__(27);
-var settings_1 = __webpack_require__(12);
-var assert = __webpack_require__(101);
+var settings_1 = __webpack_require__(10);
+var assert = __webpack_require__(102);
 describe('MoveSystem', function () {
     var settings;
     var system;
@@ -127,7 +148,7 @@ describe('MoveSystem', function () {
 
 /***/ }),
 
-/***/ 101:
+/***/ 102:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -199,7 +220,7 @@ function isBuffer(b) {
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var util = __webpack_require__(215);
+var util = __webpack_require__(219);
 var hasOwn = Object.prototype.hasOwnProperty;
 var pSlice = Array.prototype.slice;
 var functionsHaveNames = (function () {
@@ -622,11 +643,11 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ }),
 
-/***/ 11:
+/***/ 12:
 /***/ (function(module, exports) {
 
 var g;
@@ -654,28 +675,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 12:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var Settings = (function () {
-    function Settings() {
-        this.GRAVITY = 1;
-        this.FRICTION = 0.90;
-        this.TILE = 16;
-        this.MAP = [45, 30];
-        this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
-    }
-    return Settings;
-}());
-exports["default"] = Settings;
-
-
-/***/ }),
-
-/***/ 213:
+/***/ 217:
 /***/ (function(module, exports) {
 
 if (typeof Object.create === 'function') {
@@ -705,7 +705,7 @@ if (typeof Object.create === 'function') {
 
 /***/ }),
 
-/***/ 214:
+/***/ 218:
 /***/ (function(module, exports) {
 
 module.exports = function isBuffer(arg) {
@@ -717,7 +717,7 @@ module.exports = function isBuffer(arg) {
 
 /***/ }),
 
-/***/ 215:
+/***/ 219:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -1245,7 +1245,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(214);
+exports.isBuffer = __webpack_require__(218);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -1289,7 +1289,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(213);
+exports.inherits = __webpack_require__(217);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -1307,14 +1307,14 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11), __webpack_require__(42)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12), __webpack_require__(43)))
 
 /***/ }),
 
-/***/ 217:
+/***/ 221:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(100);
+module.exports = __webpack_require__(101);
 
 
 /***/ }),
@@ -1325,7 +1325,7 @@ module.exports = __webpack_require__(100);
 "use strict";
 
 exports.__esModule = true;
-var enum_1 = __webpack_require__(7);
+var enum_1 = __webpack_require__(6);
 var MoveSystem = (function () {
     function MoveSystem(settings) {
         this.classType = enum_1.ClassType.MOVE;
@@ -1386,7 +1386,7 @@ exports["default"] = MoveSystem;
 
 /***/ }),
 
-/***/ 42:
+/***/ 43:
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1573,7 +1573,7 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ 7:
+/***/ 6:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

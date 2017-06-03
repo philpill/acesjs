@@ -5,6 +5,7 @@ import Sprite from '../sprite';
 
 import TriggerComponent from '../components/trigger';
 import PositionComponent from '../components/position';
+import CollisionComponent from '../components/collision';
 import DisplayComponent from '../components/display';
 import IComponent from '../components/icomponent';
 
@@ -20,6 +21,15 @@ export default class TriggerPrefab extends Entity {
 
         let position = new PositionComponent(x, y);
 
+        let collision = new CollisionComponent('secondary');
+
+        collision.collide = () => {
+
+            // console.log('TRIGGER');
+
+            trigger.isTriggered = true;
+        };
+
         let settings = new Settings();
 
         let tile = settings.TILE;
@@ -33,6 +43,6 @@ export default class TriggerPrefab extends Entity {
 
         let display = new DisplayComponent(sprite);
 
-        this.addComponents(trigger, position, display);
+        this.addComponents(trigger, position, collision, display);
     }
 }

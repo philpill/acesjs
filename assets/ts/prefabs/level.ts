@@ -5,7 +5,9 @@ import PlayerPrefab from './player';
 import SkyPrefab from './sky';
 import GroundPrefab from './ground';
 import BackgroundPrefab from './background';
+import TriggerPrefab from './trigger';
 
+import { TriggerType } from '../enum';
 import Settings from '../settings';
 
 class LevelPrefabData {
@@ -110,6 +112,26 @@ export default class LevelPrefab {
         });
     }
 
+    getTriggerEntities(data: ITiledLevel): Entity[] {
+
+        let values = this.getValuesByLevelData(data, 2);
+
+        return values.map((val) => {
+
+            switch (val.type) {
+                case 1:
+                    return new GroundPrefab(val.type, val.position[0], val.position[1]);
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                    return new BackgroundPrefab(val.type, val.position[0], val.position[1]);
+                case 11:
+                    return new TriggerPrefab(TriggerType.LEVELEXIT, val.position[0], val.position[1]);
+            }
+        });
+    }
+
     createLevel() {
 
         let data = this.data;
@@ -122,9 +144,11 @@ export default class LevelPrefab {
 
         let backgroundEntities = this.getBackgroundEntities(data);
 
+        let triggerEntities = this.getTriggerEntities(data);
+
         let player = new PlayerPrefab(this.settings, [data.properties.startX, data.properties.startY]);
 
-        data.entities.push(sky, ...groundEntities, ...backgroundEntities, player);
+        data.entities.push(sky, ...groundEntities, ...backgroundEntities, ...triggerEntities, player);
 
         return data;
     }

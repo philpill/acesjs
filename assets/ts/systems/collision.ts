@@ -72,23 +72,21 @@ export default class CollisionSystem implements ISystem {
         let isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
             sprite2.x + sprite2.width < sprite1.x + errorMargin;
 
-        collisionData.isTopObstacleCollision = isTopCollision;
-        collisionData.isBottomObstacleCollision = isBottomCollision;
-        collisionData.isLeftObstacleCollision = isLeftCollision;
-        collisionData.isRightObstacleCollision = isRightCollision;
+        // collisionData.isTopObstacleCollision = isTopCollision;
+        // collisionData.isBottomObstacleCollision = isBottomCollision;
+        // collisionData.isLeftObstacleCollision = isLeftCollision;
+        // collisionData.isRightObstacleCollision = isRightCollision;
 
         // SHIFT ALL THIS INTO MOVE SYSTEM
 
         // check collision
         if (isBottomCollision) {
 
-            // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
             velocityData.velocityY = Math.min(0, velocityData.velocityY);
             velocityData.isGrounded = true;
 
         } else if (isTopCollision) {
 
-            // velocityData.accelerationY = Math.max(0, velocityData.accelerationY);
             velocityData.velocityY = Math.max(0, velocityData.velocityY);
 
         } else if (isRightCollision) {
@@ -101,10 +99,18 @@ export default class CollisionSystem implements ISystem {
             velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
             velocityData.velocityX = Math.max(0, velocityData.velocityX);
         }
+
+        return {
+            top: isTopCollision,
+            bottom: isBottomCollision,
+            left: isLeftCollision,
+            right: isRightCollision
+        };
     }
 
     handleTriggerCollision(primary: Node, secondary: Node) {
 
+        secondary.collision.collide();
     }
 
     handlePrimaryDamageCollision(primary: Node, secondary: Node) {
@@ -131,8 +137,10 @@ export default class CollisionSystem implements ISystem {
 
         // handle different collision effects
 
+        let results = null;
+
         if (velocityData && collisionData) {
-            this.handleObstacleCollision(primary, secondary);
+            results = this.handleObstacleCollision(primary, secondary);
         }
 
         if (triggerData && inputData) {
@@ -148,6 +156,8 @@ export default class CollisionSystem implements ISystem {
             // damage to player from secondary
             this.handlePrimaryDamageCollision(primary, secondary);
         }
+
+        return results;
     }
 
     update(time: number, nodes: Node[]) {
@@ -164,8 +174,12 @@ export default class CollisionSystem implements ISystem {
 
         primaries.map((primary: Node) => {
 
-            primary.velocity.isGrounded = false;
-            primary.collision.isBottomObstacleCollision = false;
+            let results = {
+                top: false,
+                bottom: false,
+                left: false,
+                right: false
+            }
 
             secondaries.map((secondary: Node) => {
 
@@ -174,9 +188,22 @@ export default class CollisionSystem implements ISystem {
 
                 if (this.isBroadcollision(sprite1, sprite2) && this.isNarrowCollision(sprite1, sprite2)) {
 
-                    this.handleCollision(primary, secondary);
+                    let collisionResults = this.handleCollision(primary, secondary);
+
+                    // set collision position true
+                    results.top = collisionResults.top || results.top;
+                    results.bottom = collisionResults.bottom || results.bottom;
+                    results.left = collisionResults.left || results.left;
+                    results.right = collisionResults.right || results.right;
                 }
             });
+
+            primary.collision.isTopObstacleCollision = results.top;
+            primary.collision.isBottomObstacleCollision = results.bottom;
+            primary.collision.isLeftObstacleCollision = results.left;
+            primary.collision.isRightObstacleCollision = results.right;
+
+            primary.velocity.isGrounded = results.bottom;
         });
     }
 }

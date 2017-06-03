@@ -21,6 +21,7 @@ export default class Main {
         PIXI.loader.add('bg', '/static/img/bg.png');
         PIXI.loader.add('trigger', '/static/img/trigger.png');
         PIXI.loader.add('level1', '/assets/json/levelone.json');
+        PIXI.loader.add('level2', '/assets/json/leveltwo.json');
 
         PIXI.loader.load(this._onLoad.bind(this));
     }

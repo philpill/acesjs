@@ -9,14 +9,14 @@ export default class Engine {
 
     entities: Entity[];
     systems: ISystem[];
-    nodes: Node[];
+    nodes: any;
     isPaused: boolean;
 
     constructor() {
 
         this.entities = [];
         this.systems = [];
-        this.nodes = [];
+        this.nodes = {};
 
         this.isPaused = false;
     }
@@ -32,48 +32,44 @@ export default class Engine {
 
         let entityComponents = entity.components;
 
-        let nodes = this.generateNodes(entity.id, entityComponents);
-
-        this.nodes.push(...nodes);
+        this.generateNodes(entity.id, entityComponents);
 
         return entity;
     }
 
     generateNodes(entityId: string, components: NodeComponents) {
 
-        let nodes = [];
-
         if (components.display && components.position) {
 
-            nodes.push(new Node(entityId, ClassType.RENDER, components));
+            this.nodes[ClassType.RENDER].push(new Node(entityId, ClassType.RENDER, components));
         }
 
         if (components.animation && components.display && components.velocity) {
 
-            nodes.push(new Node(entityId, ClassType.ANIMATION, components));
+            this.nodes[ClassType.ANIMATION].push(new Node(entityId, ClassType.ANIMATION, components));
         }
 
         if (components.velocity && components.position && components.collision) {
 
-            nodes.push(new Node(entityId, ClassType.MOVE, components));
+            this.nodes[ClassType.MOVE].push(new Node(entityId, ClassType.MOVE, components));
         }
 
         if (components.velocity && components.input) {
 
-            nodes.push(new Node(entityId, ClassType.CONTROL, components));
+            this.nodes[ClassType.CONTROL].push(new Node(entityId, ClassType.CONTROL, components));
         }
 
         if (components.collision && components.display) {
 
-            nodes.push(new Node(entityId, ClassType.COLLISION, components));
+            this.nodes[ClassType.COLLISION].push(new Node(entityId, ClassType.COLLISION, components));
         }
 
-        if (components.position && components.input) { // need a second 'trigger' component or this will apply to all rendered objects
+        if (components.trigger) {
 
-            nodes.push(new Node(entityId, ClassType.LEVEL, components));
+            // console.log(components);
+
+            this.nodes[ClassType.LEVEL].push(new Node(entityId, ClassType.LEVEL, components));
         }
-
-        return nodes;
     }
 
     addEntities(entities: Entity[]) {
@@ -106,12 +102,14 @@ export default class Engine {
 
     addSystem(system: ISystem) {
         this.systems.push(system);
+        this.nodes[system.classType] = [];
         system.init();
     }
 
     removeSystem(system: ISystem) {
         system.stop();
         system = null;
+        this.nodes[system.classType] = null;
         this.systems = this.systems.filter((system: ISystem) => {
             return !!system;
         });
@@ -166,15 +164,17 @@ export default class Engine {
 
         if (!this.isPaused) {
 
-            this.nodes = this.filterInactiveNodes(this.nodes);
+            Object.keys(this.nodes).map((classType) => {
+
+                this.nodes[classType] = this.filterInactiveNodes(this.nodes[classType]);
+            });
 
             let results = [];
 
             this.systems.map((system) => {
-                /* bottleneck */
-                let nodes = this.nodes.filter((node) => {
-                    return node.classType === system.classType;
-                });
+
+                let nodes = this.nodes[system.classType];
+
                 results.push(system.update(dt, nodes || []));
             });
 

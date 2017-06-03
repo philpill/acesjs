@@ -8,7 +8,7 @@ P2 has upside-down coordinate system which I'm not arsed to work around
 - webpack
 - es6
 -------------------------
-npm run: python -m SimpleHTTPServer 8000
+npm start: python -m SimpleHTTPServer 8000
 npm run build: webpack --watch
 npm test: mocha
 

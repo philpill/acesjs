@@ -21,6 +21,8 @@ export default class LevelSystem implements ISystem {
         this.currentLevel;
         this.levels = [{
             data: PIXI.loader.resources.level1.data
+        }, {
+            data: PIXI.loader.resources.level2.data
         }];
     }
 
@@ -51,6 +53,10 @@ export default class LevelSystem implements ISystem {
     }
 
     loadNextLevel() {
+
+        // destroy all nodes
+        // destroy all entities
+
         this.isLoaded = false;
         this.currentLevel++;
     }
@@ -71,20 +77,29 @@ export default class LevelSystem implements ISystem {
 
             // console.log(node);
 
-            let finishX = this.levels[this.currentLevel - 1].data.properties.finishX;
-            let finishY = this.levels[this.currentLevel - 1].data.properties.finishY;
+            let triggerData = node.trigger;
 
-            let x = node.position.x / this.settings.TILE;
-            let y = node.position.y / this.settings.TILE;
-
-            // console.log(x + ' ' + y);
-
-            if (finishX === x && finishY === y) {
+            if (triggerData.isTriggered) {
 
                 console.log('FINISH');
 
-                // this.loadNextLevel();
+                this.loadNextLevel();
             }
+
+            // let finishX = this.levels[this.currentLevel - 1].data.properties.finishX;
+            // let finishY = this.levels[this.currentLevel - 1].data.properties.finishY;
+
+            // let x = node.position.x / this.settings.TILE;
+            // let y = node.position.y / this.settings.TILE;
+
+            // // console.log(x + ' ' + y);
+
+            // if (finishX === x && finishY === y) {
+
+            //     console.log('FINISH');
+
+            //     // this.loadNextLevel();
+            // }
 
         });
 
