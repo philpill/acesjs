@@ -5249,7 +5249,7 @@ var Entity = (function () {
     }
     Entity.prototype._generateUUID = function () {
         var d = new Date().getTime();
-        if (window.performance && typeof window.performance.now === "function") {
+        if (window.performance && typeof window.performance.now === 'function') {
             d += performance.now(); //use high-precision timer if available
         }
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -20327,7 +20327,6 @@ var Engine = (function () {
             this.nodes[enum_1.ClassType.COLLISION].push(new node_1["default"](entityId, enum_1.ClassType.COLLISION, components));
         }
         if (components.trigger) {
-            // console.log(components);
             this.nodes[enum_1.ClassType.LEVEL].push(new node_1["default"](entityId, enum_1.ClassType.LEVEL, components));
         }
     };
@@ -20393,6 +20392,30 @@ var Engine = (function () {
             return node.isActive;
         });
     };
+    Engine.prototype.deactivateNodesByInactiveEntities = function () {
+        var entities = this.entities.filter(function (entity) {
+            return !entity.isActive;
+        });
+        var ids = entities.map(function (entity) {
+            return entity.id;
+        });
+        ids.map(this.destroyNodesByEntityId.bind(this));
+    };
+    Engine.prototype.destroyNodesByEntityId = function (entityId) {
+        var _this = this;
+        var types = Object.keys(this.nodes);
+        types.map(function (type) {
+            var nodes = _this.nodes[type].filter(function (node) {
+                return node.entityId === entityId;
+            });
+            nodes.map(function (node) {
+                if (node.display && node.display.sprite) {
+                    node.display.sprite.destroy();
+                }
+                node.isActive = false;
+            });
+        });
+    };
     Engine.prototype.update = function (before) {
         var _this = this;
         if (before === void 0) { before = 0; }
@@ -20404,6 +20427,7 @@ var Engine = (function () {
         var dt = (now - before) / 1000;
         dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
         if (!this.isPaused) {
+            this.deactivateNodesByInactiveEntities();
             Object.keys(this.nodes).map(function (classType) {
                 _this.nodes[classType] = _this.filterInactiveNodes(_this.nodes[classType]);
             });
@@ -20712,14 +20736,15 @@ var LevelSystem = (function () {
                 data: PIXI.loader.resources.level2.data
             }];
     }
-    LevelSystem.prototype.init = function () {
-    };
-    LevelSystem.prototype.stop = function () {
-    };
+    LevelSystem.prototype.init = function () { };
+    LevelSystem.prototype.stop = function () { };
     LevelSystem.prototype.loadLevel = function (levelNumber) {
+        console.log('loadlevel');
+        console.log(levelNumber);
         var levelData = this.levels[levelNumber].data;
         var level = new level_1["default"](this.settings, levelData);
-        return level.createLevel().entities;
+        this.entities = level.createLevel().entities;
+        return this.entities;
     };
     LevelSystem.prototype.getAllEntityIds = function (nodes) {
         var ids = nodes.map(function (node) {
@@ -20731,6 +20756,11 @@ var LevelSystem = (function () {
     LevelSystem.prototype.loadNextLevel = function () {
         // destroy all nodes
         // destroy all entities
+        console.log('loadNextLevel()');
+        console.log(this.entities.length);
+        this.entities.map(function (entity) {
+            entity.destroy();
+        });
         this.isLoaded = false;
         this.currentLevel++;
     };
@@ -20740,28 +20770,17 @@ var LevelSystem = (function () {
         this.currentLevel = this.currentLevel || 1;
         if (!this.isLoaded) {
             result.newEntities = this.loadLevel(this.currentLevel - 1);
-            result.deadEntities = this.getAllEntityIds(nodes);
+            // result.deadEntities = this.getAllEntityIds(nodes);
             this.isLoaded = true;
         }
         nodes.map(function (node) {
-            // console.log(node);
             var triggerData = node.trigger;
             if (triggerData.isTriggered) {
                 console.log('FINISH');
+                triggerData.isTriggered = false;
                 _this.loadNextLevel();
             }
-            // let finishX = this.levels[this.currentLevel - 1].data.properties.finishX;
-            // let finishY = this.levels[this.currentLevel - 1].data.properties.finishY;
-            // let x = node.position.x / this.settings.TILE;
-            // let y = node.position.y / this.settings.TILE;
-            // // console.log(x + ' ' + y);
-            // if (finishX === x && finishY === y) {
-            //     console.log('FINISH');
-            //     // this.loadNextLevel();
-            // }
         });
-        // console.log(this.levels[this.currentLevel]);
-        // console.log(this.levels[this.currentLevel - 1].data.properties.finishX);
         return result;
     };
     return LevelSystem;
@@ -20813,6 +20832,12 @@ var RenderSystem = (function () {
     RenderSystem.prototype.addNewSprites = function (id, sprite) {
         this.sprites[id] = sprite;
         this.container.addChild(sprite);
+    };
+    RenderSystem.prototype.removeSprite = function (id) {
+        console.log('removeSprite()');
+        console.log(this.sprites[id]);
+        this.sprites[id].destroy(true);
+        this.sprites[id] = null;
     };
     RenderSystem.prototype.clearDeadSprites = function () {
         for (var _i = 0, _a = Object.keys(this.sprites); _i < _a.length; _i++) {
@@ -42039,6 +42064,7 @@ var TriggerPrefab = (function (_super) {
         collision.collide = function () {
             // console.log('TRIGGER');
             trigger.isTriggered = true;
+            collision.collide = function () { };
         };
         var settings = new settings_1["default"]();
         var tile = settings.TILE;

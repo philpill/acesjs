@@ -8,7 +8,7 @@ export default class RenderSystem implements ISystem {
 
     classType: ClassType;
     settings: Settings;
-    sprites: any;
+    sprites: { [id: string] : PIXI.Sprite; };
     stage: PIXI.Container;
     container: PIXI.Container;
     renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
@@ -75,6 +75,15 @@ export default class RenderSystem implements ISystem {
         this.sprites[id] = sprite;
 
         this.container.addChild(sprite);
+    }
+
+    removeSprite(id: string) {
+
+        console.log('removeSprite()');
+        console.log(this.sprites[id]);
+
+        this.sprites[id].destroy(true);
+        this.sprites[id] = null;
     }
 
     clearDeadSprites() {

@@ -66,8 +66,6 @@ export default class Engine {
 
         if (components.trigger) {
 
-            // console.log(components);
-
             this.nodes[ClassType.LEVEL].push(new Node(entityId, ClassType.LEVEL, components));
         }
     }
@@ -147,6 +145,41 @@ export default class Engine {
         });
     }
 
+    deactivateNodesByInactiveEntities() {
+
+        let entities = this.entities.filter((entity) => {
+
+            return !entity.isActive;
+        });
+
+        let ids = entities.map((entity) => {
+
+            return entity.id;
+        });
+
+        ids.map(this.destroyNodesByEntityId.bind(this));
+    }
+
+    destroyNodesByEntityId(entityId: string) {
+
+        let types = Object.keys(this.nodes);
+
+        types.map((type) => {
+
+            let nodes: Node[] = this.nodes[type].filter((node: Node) => {
+
+                return node.entityId === entityId;
+            });
+
+            nodes.map((node) => {
+                if (node.display && node.display.sprite) {
+                    node.display.sprite.destroy();
+                }
+                node.isActive = false;
+            });
+        });
+    }
+
     update(before = 0) {
 
         this.isPaused = false;
@@ -163,6 +196,8 @@ export default class Engine {
         dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
 
         if (!this.isPaused) {
+
+            this.deactivateNodesByInactiveEntities();
 
             Object.keys(this.nodes).map((classType) => {
 

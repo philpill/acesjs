@@ -2,7 +2,8 @@ import ISystem from './isystem';
 import Settings from '../settings';
 import Node from '../nodes/node';
 import LevelPrefab from '../prefabs/level';
-import { ClassType } from '../enum'
+import { ClassType } from '../enum';
+import Entity from '../prefabs/entity';
 
 export default class LevelSystem implements ISystem {
 
@@ -11,6 +12,7 @@ export default class LevelSystem implements ISystem {
     isLoaded: boolean;
     currentLevel: number;
     levels: any[];
+    entities: Entity[];
 
     constructor(settings: Settings) {
 
@@ -26,19 +28,20 @@ export default class LevelSystem implements ISystem {
         }];
     }
 
-    init() {
+    init() { }
 
-
-    }
-
-    stop() {
-
-    }
+    stop() { }
 
     loadLevel(levelNumber: number) {
+
+        console.log('loadlevel');
+
+        console.log(levelNumber);
+
         let levelData = this.levels[levelNumber].data;
         let level =  new LevelPrefab(this.settings, levelData);
-        return level.createLevel().entities;
+        this.entities = level.createLevel().entities;
+        return this.entities;
     }
 
     getAllEntityIds(nodes: Node[]) {
@@ -57,6 +60,15 @@ export default class LevelSystem implements ISystem {
         // destroy all nodes
         // destroy all entities
 
+        console.log('loadNextLevel()');
+
+        console.log(this.entities.length);
+
+        this.entities.map((entity) => {
+
+            entity.destroy();
+        });
+
         this.isLoaded = false;
         this.currentLevel++;
     }
@@ -69,13 +81,11 @@ export default class LevelSystem implements ISystem {
 
         if (!this.isLoaded) {
             result.newEntities = this.loadLevel(this.currentLevel - 1);
-            result.deadEntities = this.getAllEntityIds(nodes);
+            // result.deadEntities = this.getAllEntityIds(nodes);
             this.isLoaded = true;
         }
 
         nodes.map((node: Node) => {
-
-            // console.log(node);
 
             let triggerData = node.trigger;
 
@@ -83,29 +93,11 @@ export default class LevelSystem implements ISystem {
 
                 console.log('FINISH');
 
+                triggerData.isTriggered = false;
+
                 this.loadNextLevel();
             }
-
-            // let finishX = this.levels[this.currentLevel - 1].data.properties.finishX;
-            // let finishY = this.levels[this.currentLevel - 1].data.properties.finishY;
-
-            // let x = node.position.x / this.settings.TILE;
-            // let y = node.position.y / this.settings.TILE;
-
-            // // console.log(x + ' ' + y);
-
-            // if (finishX === x && finishY === y) {
-
-            //     console.log('FINISH');
-
-            //     // this.loadNextLevel();
-            // }
-
         });
-
-            // console.log(this.levels[this.currentLevel]);
-
-            // console.log(this.levels[this.currentLevel - 1].data.properties.finishX);
 
         return result;
     }

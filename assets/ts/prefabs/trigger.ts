@@ -28,6 +28,8 @@ export default class TriggerPrefab extends Entity {
             // console.log('TRIGGER');
 
             trigger.isTriggered = true;
+
+            collision.collide = () => {};
         };
 
         let settings = new Settings();
