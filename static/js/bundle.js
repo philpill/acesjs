@@ -5203,11 +5203,15 @@ exports.default = _Loader2.default;
 
 exports.__esModule = true;
 var DisplayComponent = (function () {
-    function DisplayComponent(sprite, isFocus) {
+    function DisplayComponent(sprite, mapWidth, mapHeight, isFocus, tile) {
         if (isFocus === void 0) { isFocus = false; }
+        if (tile === void 0) { tile = 16; }
         this["class"] = 'display';
         this.sprite = sprite;
         this.isFocus = isFocus;
+        this.tile = tile;
+        this.mapHeight = mapHeight;
+        this.mapWidth = mapWidth;
     }
     return DisplayComponent;
 }());
@@ -5222,12 +5226,11 @@ exports["default"] = DisplayComponent;
 
 exports.__esModule = true;
 var PositionComponent = (function () {
-    function PositionComponent(x, y) {
-        if (x === void 0) { x = 0; }
-        if (y === void 0) { y = 0; }
+    function PositionComponent(x, y, mapWidth) {
         this["class"] = 'position';
         this.x = x;
         this.y = y;
+        this.mapWidth = mapWidth;
     }
     return PositionComponent;
 }());
@@ -6828,12 +6831,15 @@ var MoveSystem = (function () {
         acceleration = isGrounded ? acceleration : acceleration / 3;
         return (velocity + time * acceleration) * friction;
     };
-    MoveSystem.prototype.getPositionX = function (time, tile, position, velocity) {
+    MoveSystem.prototype.getPositionX = function (time, tile, position, velocity, mapWidth) {
         position = position + (velocity + time * velocity) * tile;
         // stop movement at map boundaries - shift this to collision system
         position = Math.max(0, position);
-        position = Math.min(position, this.settings.MAP[0] * tile - tile);
+        position = this.getLowestHorizontalPosition(position, mapWidth, tile);
         return position;
+    };
+    MoveSystem.prototype.getLowestHorizontalPosition = function (currentPosition, mapWidth, tileSize) {
+        return Math.min(currentPosition, mapWidth * tileSize - tileSize);
     };
     MoveSystem.prototype.getVelocityY = function (time, velocity, acceleration, isGrounded) {
         // prevent any more downwards vertical movement
@@ -6860,7 +6866,7 @@ var MoveSystem = (function () {
             var tile = _this.settings.TILE;
             var friction = _this.settings.FRICTION;
             velocityData.velocityX = _this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
-            positionData.x = _this.getPositionX(time, tile, positionData.x, velocityData.velocityX);
+            positionData.x = _this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
             velocityData.velocityY = _this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
             positionData.y = _this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
             if (positionData.y > _this.settings.MAP[0] * tile) {
@@ -20743,7 +20749,8 @@ var LevelSystem = (function () {
         console.log(levelNumber);
         var levelData = this.levels[levelNumber].data;
         var level = new level_1["default"](this.settings, levelData);
-        this.entities = level.createLevel().entities;
+        var tiledLevelData = level.createLevel();
+        this.entities = tiledLevelData.entities;
         return this.entities;
     };
     LevelSystem.prototype.getAllEntityIds = function (nodes) {
@@ -20813,20 +20820,20 @@ var RenderSystem = (function () {
     };
     RenderSystem.prototype.stop = function () {
     };
-    RenderSystem.prototype.getPivotY = function (focusY) {
-        var pivotY = focusY;
-        var mapHeight = this.settings.MAP[1] * this.settings.TILE;
+    RenderSystem.prototype.getPivotY = function (displayData) {
+        var pivotY = displayData.sprite.y;
+        var mapHeight = displayData.mapHeight * displayData.tile;
         var screenHeight = this.renderer.height;
-        pivotY = focusY < mapHeight / 2 ? screenHeight / 2 : focusY;
-        pivotY = focusY + screenHeight / 2 > mapHeight ? mapHeight - screenHeight / 2 : pivotY;
+        // pivotY = displayData.sprite.y < mapHeight/2 ? screenHeight/2 : displayData.sprite.y;
+        // pivotY = displayData.sprite.y + screenHeight/2 > mapHeight ? mapHeight - screenHeight/2 : pivotY;
         return pivotY;
     };
-    RenderSystem.prototype.getPivotX = function (focusX) {
-        var pivotX = focusX;
-        var mapWidth = this.settings.MAP[0] * this.settings.TILE;
+    RenderSystem.prototype.getPivotX = function (displayData) {
+        var pivotX = displayData.sprite.x;
+        var mapWidth = displayData.mapWidth * displayData.tile;
         var screenWidth = this.renderer.width;
-        pivotX = focusX < screenWidth / 2 ? screenWidth / 2 : focusX;
-        pivotX = focusX + screenWidth / 2 > mapWidth ? mapWidth - screenWidth / 2 : pivotX;
+        pivotX = displayData.sprite.x < screenWidth / 2 ? screenWidth / 2 : displayData.sprite.x;
+        pivotX = displayData.sprite.x + screenWidth / 2 > mapWidth ? mapWidth - screenWidth / 2 : pivotX;
         return pivotX;
     };
     RenderSystem.prototype.addNewSprites = function (id, sprite) {
@@ -20858,9 +20865,9 @@ var RenderSystem = (function () {
             displayData.sprite.position.x = positionData.x;
             displayData.sprite.position.y = positionData.y;
             if (displayData.isFocus) {
-                _this.stage.pivot.x = _this.getPivotX(displayData.sprite.x);
-                _this.stage.pivot.y = _this.getPivotY(displayData.sprite.y);
-                var mapWidth = _this.settings.MAP[0] * _this.settings.TILE;
+                _this.stage.pivot.x = _this.getPivotX(displayData);
+                _this.stage.pivot.y = _this.getPivotY(displayData);
+                var mapWidth = displayData.mapWidth * displayData.tile;
                 // test against map width * tilesize
                 if (displayData.sprite.x < 0 ||
                     displayData.sprite.x + displayData.sprite.width > mapWidth) {
@@ -41760,7 +41767,7 @@ var sprite_1 = __webpack_require__(22);
 var settings_1 = __webpack_require__(10);
 var backgroundPrefab = (function (_super) {
     __extends(backgroundPrefab, _super);
-    function backgroundPrefab(type, x, y) {
+    function backgroundPrefab(type, x, y, mapWidth, mapHeight) {
         var _this = _super.call(this) || this;
         var settings = new settings_1["default"]();
         var tile = settings.TILE;
@@ -41770,8 +41777,8 @@ var backgroundPrefab = (function (_super) {
         var sprite = new sprite_1["default"](texture);
         sprite.height = tile;
         sprite.width = tile;
-        var display = new display_1["default"](sprite);
-        var position = new position_1["default"](x, y);
+        var display = new display_1["default"](sprite, mapWidth, mapHeight);
+        var position = new position_1["default"](x, y, mapWidth);
         _this.addComponents(display, position);
         return _this;
     }
@@ -41805,24 +41812,24 @@ var sprite_1 = __webpack_require__(22);
 var settings_1 = __webpack_require__(10);
 var GroundPrefab = (function (_super) {
     __extends(GroundPrefab, _super);
-    function GroundPrefab(type, x, y) {
+    function GroundPrefab(type, x, y, mapWidth, mapHeight) {
         var _this = _super.call(this) || this;
         var settings = new settings_1["default"]();
         var tile = settings.TILE;
-        var display = _this._getDisplayComponent(type, tile, tile);
-        var position = new position_1["default"](x, y);
+        var display = _this._getDisplayComponent(type, tile, tile, mapWidth, mapHeight);
+        var position = new position_1["default"](x, y, mapWidth);
         var collision = new collision_1["default"]('secondary');
         _this.addComponents(display, position, collision);
         return _this;
     }
-    GroundPrefab.prototype._getDisplayComponent = function (type, height, width) {
+    GroundPrefab.prototype._getDisplayComponent = function (type, height, width, mapWidth, mapHeight) {
         var spriteX = Math.max(type * 16 - 16, 0);
         var spriteY = 0;
         var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, height));
         var sprite = new sprite_1["default"](texture);
         sprite.height = height;
         sprite.width = width;
-        return new display_1["default"](sprite);
+        return new display_1["default"](sprite, mapWidth, mapHeight);
     };
     return GroundPrefab;
 }(entity_1["default"]));
@@ -41875,10 +41882,12 @@ var LevelPrefab = (function () {
     };
     LevelPrefab.prototype.getGroundEntities = function (data) {
         var values = this.getValuesByLevelData(data, 0);
+        var mapHeight = data.height;
+        var mapWidth = data.width;
         return values.map(function (val) {
             switch (val.type) {
                 case 1:
-                    return new ground_1["default"](0, val.position[0], val.position[1]);
+                    return new ground_1["default"](0, val.position[0], val.position[1], mapWidth, mapHeight);
             }
         });
     };
@@ -41891,42 +41900,46 @@ var LevelPrefab = (function () {
     };
     LevelPrefab.prototype.getBackgroundEntities = function (data) {
         var values = this.getValuesByLevelData(data, 1);
+        var mapHeight = data.height;
+        var mapWidth = data.width;
         return values.map(function (val) {
             switch (val.type) {
                 case 1:
-                    return new ground_1["default"](val.type, val.position[0], val.position[1]);
+                    return new ground_1["default"](val.type, val.position[0], val.position[1], mapWidth, mapHeight);
                 case 4:
                 case 5:
                 case 6:
                 case 7:
-                    return new background_1["default"](val.type, val.position[0], val.position[1]);
+                    return new background_1["default"](val.type, val.position[0], val.position[1], mapWidth, mapHeight);
             }
         });
     };
     LevelPrefab.prototype.getTriggerEntities = function (data) {
         var values = this.getValuesByLevelData(data, 2);
+        var mapHeight = data.height;
+        var mapWidth = data.width;
         return values.map(function (val) {
             switch (val.type) {
                 case 1:
-                    return new ground_1["default"](val.type, val.position[0], val.position[1]);
+                    return new ground_1["default"](val.type, val.position[0], val.position[1], mapWidth, mapHeight);
                 case 4:
                 case 5:
                 case 6:
                 case 7:
-                    return new background_1["default"](val.type, val.position[0], val.position[1]);
+                    return new background_1["default"](val.type, val.position[0], val.position[1], mapWidth, mapHeight);
                 case 11:
-                    return new trigger_1["default"](enum_1.TriggerType.LEVELEXIT, val.position[0], val.position[1]);
+                    return new trigger_1["default"](enum_1.TriggerType.LEVELEXIT, val.position[0], val.position[1], mapWidth, mapHeight);
             }
         });
     };
     LevelPrefab.prototype.createLevel = function () {
         var data = this.data;
         data.entities = [];
-        var sky = new sky_1["default"](data.width, data.height, data.tileheight);
+        var sky = new sky_1["default"](data.width, data.height, data.tileheight, data.width, data.height);
         var groundEntities = this.getGroundEntities(data);
         var backgroundEntities = this.getBackgroundEntities(data);
         var triggerEntities = this.getTriggerEntities(data);
-        var player = new player_1["default"](this.settings, [data.properties.startX, data.properties.startY]);
+        var player = new player_1["default"](this.settings, [data.properties.startX, data.properties.startY], data.width, data.height);
         (_a = data.entities).push.apply(_a, [sky].concat(groundEntities, backgroundEntities, triggerEntities, [player]));
         return data;
         var _a;
@@ -41963,7 +41976,7 @@ var collision_1 = __webpack_require__(45);
 var animation_1 = __webpack_require__(203);
 var PlayerPrefab = (function (_super) {
     __extends(PlayerPrefab, _super);
-    function PlayerPrefab(settings, start) {
+    function PlayerPrefab(settings, start, mapWidth, mapHeight) {
         var _this = _super.call(this) || this;
         var texture = PIXI.utils.TextureCache['/static/img/player.png'];
         var sprite = new sprite_1["default"](texture);
@@ -41972,7 +41985,7 @@ var PlayerPrefab = (function (_super) {
         sprite.data.texture.push(new PIXI.Rectangle(32, 0, 16, 32));
         sprite.data.texture.push(new PIXI.Rectangle(48, 0, 16, 32));
         texture.frame = sprite.data.texture[1];
-        var display = new display_1["default"](sprite, true);
+        var display = new display_1["default"](sprite, mapWidth, mapHeight, true);
         var animation = new animation_1["default"]({
             right: [1, 2],
             left: [2, 1],
@@ -41980,7 +41993,7 @@ var PlayerPrefab = (function (_super) {
             "default": [0]
         });
         var collision = new collision_1["default"]('primary');
-        var positionComponent = new position_1["default"](start[0] * settings.TILE, start[1] * settings.TILE);
+        var positionComponent = new position_1["default"](start[0] * settings.TILE, start[1] * settings.TILE, mapWidth);
         var velocityComponent = new velocity_1["default"](settings);
         var inputComponent = new input_1["default"](settings);
         _this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation);
@@ -42014,14 +42027,14 @@ var position_1 = __webpack_require__(20);
 var sprite_1 = __webpack_require__(22);
 var SkyPrefab = (function (_super) {
     __extends(SkyPrefab, _super);
-    function SkyPrefab(width, height, tile) {
+    function SkyPrefab(width, height, tile, mapWidth, mapHeight) {
         var _this = _super.call(this) || this;
         var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(33, 0, 14, tile));
         var sprite = new sprite_1["default"](texture);
         sprite.height = height * tile;
         sprite.width = width * tile;
-        var display = new display_1["default"](sprite);
-        var position = new position_1["default"](0, 0);
+        var display = new display_1["default"](sprite, mapWidth, mapHeight);
+        var position = new position_1["default"](0, 0, mapWidth);
         _this.addComponents(display, position);
         return _this;
     }
@@ -42056,10 +42069,10 @@ var collision_1 = __webpack_require__(45);
 var display_1 = __webpack_require__(19);
 var TriggerPrefab = (function (_super) {
     __extends(TriggerPrefab, _super);
-    function TriggerPrefab(type, x, y) {
+    function TriggerPrefab(type, x, y, mapWidth, mapHeight) {
         var _this = _super.call(this) || this;
         var trigger = new trigger_1["default"](type);
-        var position = new position_1["default"](x, y);
+        var position = new position_1["default"](x, y, mapWidth);
         var collision = new collision_1["default"]('secondary');
         collision.collide = function () {
             // console.log('TRIGGER');
@@ -42074,7 +42087,7 @@ var TriggerPrefab = (function (_super) {
         var sprite = new sprite_1["default"](texture);
         sprite.height = tile;
         sprite.width = tile;
-        var display = new display_1["default"](sprite);
+        var display = new display_1["default"](sprite, mapWidth, mapHeight);
         _this.addComponents(trigger, position, collision, display);
         return _this;
     }

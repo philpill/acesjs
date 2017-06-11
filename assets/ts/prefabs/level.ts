@@ -74,10 +74,13 @@ export default class LevelPrefab {
 
         let values = this.getValuesByLevelData(data, 0);
 
+        let mapHeight = data.height;
+        let mapWidth = data.width;
+
         return values.map((val) => {
             switch (val.type) {
                 case 1:
-                    return new GroundPrefab(0, val.position[0], val.position[1]);
+                    return new GroundPrefab(0, val.position[0], val.position[1], mapWidth, mapHeight);
             }
         });
     }
@@ -98,16 +101,19 @@ export default class LevelPrefab {
 
         let values = this.getValuesByLevelData(data, 1);
 
+        let mapHeight = data.height;
+        let mapWidth = data.width;
+
         return values.map((val) => {
 
             switch (val.type) {
                 case 1:
-                    return new GroundPrefab(val.type, val.position[0], val.position[1]);
+                    return new GroundPrefab(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
                 case 4:
                 case 5:
                 case 6:
                 case 7:
-                    return new BackgroundPrefab(val.type, val.position[0], val.position[1]);
+                    return new BackgroundPrefab(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
             }
         });
     }
@@ -116,18 +122,21 @@ export default class LevelPrefab {
 
         let values = this.getValuesByLevelData(data, 2);
 
+        let mapHeight = data.height;
+        let mapWidth = data.width;
+
         return values.map((val) => {
 
             switch (val.type) {
                 case 1:
-                    return new GroundPrefab(val.type, val.position[0], val.position[1]);
+                    return new GroundPrefab(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
                 case 4:
                 case 5:
                 case 6:
                 case 7:
-                    return new BackgroundPrefab(val.type, val.position[0], val.position[1]);
+                    return new BackgroundPrefab(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
                 case 11:
-                    return new TriggerPrefab(TriggerType.LEVELEXIT, val.position[0], val.position[1]);
+                    return new TriggerPrefab(TriggerType.LEVELEXIT, val.position[0], val.position[1], mapWidth, mapHeight);
             }
         });
     }
@@ -138,7 +147,7 @@ export default class LevelPrefab {
 
         data.entities = [];
 
-        let sky = new SkyPrefab(data.width, data.height, data.tileheight);
+        let sky = new SkyPrefab(data.width, data.height, data.tileheight, data.width, data.height);
 
         let groundEntities = this.getGroundEntities(data);
 
@@ -146,7 +155,7 @@ export default class LevelPrefab {
 
         let triggerEntities = this.getTriggerEntities(data);
 
-        let player = new PlayerPrefab(this.settings, [data.properties.startX, data.properties.startY]);
+        let player = new PlayerPrefab(this.settings, [data.properties.startX, data.properties.startY], data.width, data.height);
 
         data.entities.push(sky, ...groundEntities, ...backgroundEntities, ...triggerEntities, player);
 

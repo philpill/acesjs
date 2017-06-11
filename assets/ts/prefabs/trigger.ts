@@ -13,13 +13,13 @@ import { TriggerType } from '../enum';
 
 export default class TriggerPrefab extends Entity {
 
-    constructor(type: TriggerType, x: number, y: number) {
+    constructor(type: TriggerType, x: number, y: number, mapWidth: number, mapHeight: number) {
 
         super();
 
         let trigger = new TriggerComponent(type);
 
-        let position = new PositionComponent(x, y);
+        let position = new PositionComponent(x, y, mapWidth);
 
         let collision = new CollisionComponent('secondary');
 
@@ -43,7 +43,7 @@ export default class TriggerPrefab extends Entity {
         sprite.height = tile;
         sprite.width = tile;
 
-        let display = new DisplayComponent(sprite);
+        let display = new DisplayComponent(sprite, mapWidth, mapHeight);
 
         this.addComponents(trigger, position, collision, display);
     }

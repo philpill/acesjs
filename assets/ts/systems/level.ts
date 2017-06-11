@@ -1,3 +1,5 @@
+import {ITiledLevel} from '../itiled';
+
 import ISystem from './isystem';
 import Settings from '../settings';
 import Node from '../nodes/node';
@@ -32,7 +34,7 @@ export default class LevelSystem implements ISystem {
 
     stop() { }
 
-    loadLevel(levelNumber: number) {
+    loadLevel(levelNumber: number): Entity[] {
 
         console.log('loadlevel');
 
@@ -40,7 +42,8 @@ export default class LevelSystem implements ISystem {
 
         let levelData = this.levels[levelNumber].data;
         let level =  new LevelPrefab(this.settings, levelData);
-        this.entities = level.createLevel().entities;
+        let tiledLevelData = level.createLevel();
+        this.entities = tiledLevelData.entities;
         return this.entities;
     }
 

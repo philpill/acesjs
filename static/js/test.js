@@ -114,12 +114,13 @@ describe('MoveSystem', function () {
     });
     describe('getPositionX()', function () {
         it('should not return less than zero', function () {
-            var value = system.getPositionX(1, 1, -20, 1);
+            var value = system.getPositionX(1, 1, -20, 1, 100);
             assert.equal(value >= 0, true, 'x position is less than zero');
         });
         it('cannot be greater than the height of the map', function () {
-            var value = system.getPositionX(1, 1, 800, 1);
-            var max = settings.MAP[0] * settings.TILE - settings.TILE;
+            var mapWidth = 100;
+            var value = system.getPositionX(1, 1, 800, 1, mapWidth);
+            var max = mapWidth * 16 - 16;
             assert.equal(value <= max, true, 'x position is greater than map height boundary');
         });
     });
@@ -1338,12 +1339,15 @@ var MoveSystem = (function () {
         acceleration = isGrounded ? acceleration : acceleration / 3;
         return (velocity + time * acceleration) * friction;
     };
-    MoveSystem.prototype.getPositionX = function (time, tile, position, velocity) {
+    MoveSystem.prototype.getPositionX = function (time, tile, position, velocity, mapWidth) {
         position = position + (velocity + time * velocity) * tile;
         // stop movement at map boundaries - shift this to collision system
         position = Math.max(0, position);
-        position = Math.min(position, this.settings.MAP[0] * tile - tile);
+        position = this.getLowestHorizontalPosition(position, mapWidth, tile);
         return position;
+    };
+    MoveSystem.prototype.getLowestHorizontalPosition = function (currentPosition, mapWidth, tileSize) {
+        return Math.min(currentPosition, mapWidth * tileSize - tileSize);
     };
     MoveSystem.prototype.getVelocityY = function (time, velocity, acceleration, isGrounded) {
         // prevent any more downwards vertical movement
@@ -1370,7 +1374,7 @@ var MoveSystem = (function () {
             var tile = _this.settings.TILE;
             var friction = _this.settings.FRICTION;
             velocityData.velocityX = _this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
-            positionData.x = _this.getPositionX(time, tile, positionData.x, velocityData.velocityX);
+            positionData.x = _this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
             velocityData.velocityY = _this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
             positionData.y = _this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
             if (positionData.y > _this.settings.MAP[0] * tile) {

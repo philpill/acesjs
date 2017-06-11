@@ -7,7 +7,7 @@ import Settings from '../settings';
 
 export default class backgroundPrefab extends Entity {
 
-    constructor(type: number, x: number, y: number) {
+    constructor(type: number, x: number, y: number, mapWidth: number, mapHeight: number) {
 
         super();
 
@@ -25,9 +25,9 @@ export default class backgroundPrefab extends Entity {
         sprite.height = tile;
         sprite.width = tile;
 
-        let display = new DisplayComponent(sprite);
+        let display = new DisplayComponent(sprite, mapWidth, mapHeight);
 
-        let position = new PositionComponent(x, y);
+        let position = new PositionComponent(x, y, mapWidth);
 
         this.addComponents(display, position);
     }

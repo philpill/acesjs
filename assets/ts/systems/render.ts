@@ -3,6 +3,7 @@ import Settings from '../settings';
 import Node from '../nodes/node';
 import Sprite from '../sprite';
 import { ClassType } from '../enum'
+import DisplayComponent from '../components/display';
 
 export default class RenderSystem implements ISystem {
 
@@ -42,30 +43,30 @@ export default class RenderSystem implements ISystem {
 
     }
 
-    getPivotY(focusY: number): number {
+    getPivotY(displayData: DisplayComponent): number {
 
-        let pivotY = focusY;
+        let pivotY = displayData.sprite.y;
 
-        let mapHeight = this.settings.MAP[1] * this.settings.TILE;
+        let mapHeight = displayData.mapHeight * displayData.tile;
 
         let screenHeight = this.renderer.height;
 
-        pivotY = focusY < mapHeight/2 ? screenHeight/2 : focusY;
-        pivotY = focusY + screenHeight/2 > mapHeight ? mapHeight - screenHeight/2 : pivotY;
+        // pivotY = displayData.sprite.y < mapHeight/2 ? screenHeight/2 : displayData.sprite.y;
+        // pivotY = displayData.sprite.y + screenHeight/2 > mapHeight ? mapHeight - screenHeight/2 : pivotY;
 
         return pivotY;
     }
 
-    getPivotX(focusX: number): number {
+    getPivotX(displayData: DisplayComponent): number {
 
-        let pivotX = focusX;
+        let pivotX = displayData.sprite.x;
 
-        let mapWidth = this.settings.MAP[0] * this.settings.TILE;
+        let mapWidth = displayData.mapWidth * displayData.tile;
 
         let screenWidth = this.renderer.width;
 
-        pivotX = focusX < screenWidth/2 ? screenWidth/2 : focusX;
-        pivotX = focusX + screenWidth/2 > mapWidth ? mapWidth - screenWidth/2 : pivotX;
+        pivotX = displayData.sprite.x < screenWidth/2 ? screenWidth/2 : displayData.sprite.x;
+        pivotX = displayData.sprite.x + screenWidth/2 > mapWidth ? mapWidth - screenWidth/2 : pivotX;
 
         return pivotX;
     }
@@ -111,10 +112,10 @@ export default class RenderSystem implements ISystem {
 
             if (displayData.isFocus) {
 
-                this.stage.pivot.x = this.getPivotX(displayData.sprite.x);
-                this.stage.pivot.y = this.getPivotY(displayData.sprite.y);
+                this.stage.pivot.x = this.getPivotX(displayData);
+                this.stage.pivot.y = this.getPivotY(displayData);
 
-                let mapWidth = this.settings.MAP[0] * this.settings.TILE;
+                let mapWidth = displayData.mapWidth * displayData.tile;
 
                 // test against map width * tilesize
                 if (displayData.sprite.x < 0 ||

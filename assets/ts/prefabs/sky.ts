@@ -6,7 +6,7 @@ import Sprite from '../sprite';
 
 export default class SkyPrefab extends Entity {
 
-    constructor(width: number, height: number, tile: number) {
+    constructor(width: number, height: number, tile: number, mapWidth: number, mapHeight: number) {
 
         super();
 
@@ -17,9 +17,9 @@ export default class SkyPrefab extends Entity {
         sprite.height = height * tile;
         sprite.width = width * tile;
 
-        let display = new DisplayComponent(sprite);
+        let display = new DisplayComponent(sprite, mapWidth, mapHeight);
 
-        let position = new PositionComponent(0, 0);
+        let position = new PositionComponent(0, 0, mapWidth);
 
         this.addComponents(display, position);
     }

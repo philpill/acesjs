@@ -31,16 +31,18 @@ describe('MoveSystem', () => {
 
         it('should not return less than zero', () => {
 
-            let value = system.getPositionX(1, 1, -20, 1);
+            let value = system.getPositionX(1, 1, -20, 1, 100);
 
             assert.equal(value >= 0, true, 'x position is less than zero');
         });
 
         it('cannot be greater than the height of the map', () => {
 
-            let value = system.getPositionX(1, 1, 800, 1);
+            let mapWidth =  100;
 
-            let max = settings.MAP[0] * settings.TILE - settings.TILE;
+            let value = system.getPositionX(1, 1, 800, 1, mapWidth);
+
+            let max = mapWidth * 16 - 16;
 
             assert.equal(value <= max, true, 'x position is greater than map height boundary');
         });

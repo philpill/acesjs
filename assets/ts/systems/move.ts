@@ -26,15 +26,20 @@ export default class MoveSystem implements ISystem {
         return (velocity + time * acceleration) * friction;
     }
 
-    getPositionX(time: number, tile: number, position: number, velocity: number) {
+    getPositionX(time: number, tile: number, position: number, velocity: number, mapWidth: number) {
 
         position = position + (velocity + time * velocity) * tile;
 
         // stop movement at map boundaries - shift this to collision system
         position = Math.max(0, position);
-        position = Math.min(position, this.settings.MAP[0] * tile - tile);
+        position = this.getLowestHorizontalPosition(position, mapWidth, tile);
 
         return position;
+    }
+
+    getLowestHorizontalPosition(currentPosition: number, mapWidth: number, tileSize: number) {
+
+        return Math.min(currentPosition, mapWidth * tileSize - tileSize);
     }
 
     getVelocityY(time: number, velocity: number, acceleration: number, isGrounded: boolean) {
@@ -78,7 +83,7 @@ export default class MoveSystem implements ISystem {
 
             velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
 
-            positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX);
+            positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
 
             velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
 

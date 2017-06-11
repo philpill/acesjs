@@ -6,12 +6,15 @@ export default class PositionComponent implements IComponent {
 
     x: number;
     y: number;
+    mapWidth: number;
 
-    constructor(x = 0, y = 0) {
+    constructor(x, y, mapWidth) {
 
         this.class = 'position';
 
         this.x = x;
         this.y = y;
+
+        this.mapWidth = mapWidth;
     }
 }

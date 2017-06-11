@@ -13,7 +13,7 @@ import Settings from '../settings';
 
 export default class PlayerPrefab extends Entity {
 
-    constructor(settings: Settings, start: [number, number]) {
+    constructor(settings: Settings, start: [number, number], mapWidth: number, mapHeight: number) {
 
         super();
 
@@ -28,7 +28,7 @@ export default class PlayerPrefab extends Entity {
 
         texture.frame = sprite.data.texture[1];
 
-        let display = new DisplayComponent(sprite, true);
+        let display = new DisplayComponent(sprite, mapWidth, mapHeight, true);
 
         let animation = new AnimationComponent({
             right: [1, 2],
@@ -39,7 +39,7 @@ export default class PlayerPrefab extends Entity {
 
         let collision = new CollisionComponent('primary');
 
-        let positionComponent = new PositionComponent(start[0] * settings.TILE, start[1] * settings.TILE);
+        let positionComponent = new PositionComponent(start[0] * settings.TILE, start[1] * settings.TILE, mapWidth);
 
         let velocityComponent = new VelocityComponent(settings);
 
