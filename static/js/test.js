@@ -1598,7 +1598,7 @@ var ClassType;
     ClassType[ClassType["MOVE"] = 3] = "MOVE";
     ClassType[ClassType["COLLISION"] = 4] = "COLLISION";
     ClassType[ClassType["RENDER"] = 5] = "RENDER";
-    ClassType[ClassType["ACTIVATE"] = 6] = "ACTIVATE";
+    ClassType[ClassType["INTERSTITIAL"] = 6] = "INTERSTITIAL";
 })(ClassType || (ClassType = {}));
 exports.ClassType = ClassType;
 

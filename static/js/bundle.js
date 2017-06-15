@@ -1555,7 +1555,7 @@ var ClassType;
     ClassType[ClassType["MOVE"] = 3] = "MOVE";
     ClassType[ClassType["COLLISION"] = 4] = "COLLISION";
     ClassType[ClassType["RENDER"] = 5] = "RENDER";
-    ClassType[ClassType["ACTIVATE"] = 6] = "ACTIVATE";
+    ClassType[ClassType["INTERSTITIAL"] = 6] = "INTERSTITIAL";
 })(ClassType || (ClassType = {}));
 exports.ClassType = ClassType;
 
@@ -20730,6 +20730,7 @@ exports["default"] = ControlSystem;
 exports.__esModule = true;
 var level_1 = __webpack_require__(212);
 var enum_1 = __webpack_require__(6);
+var enum_2 = __webpack_require__(6);
 var LevelSystem = (function () {
     function LevelSystem(settings) {
         this.classType = enum_1.ClassType.LEVEL;
@@ -20765,10 +20766,10 @@ var LevelSystem = (function () {
         // destroy all entities
         console.log('loadNextLevel()');
         console.log(this.entities.length);
+        this.isLoaded = false;
         this.entities.map(function (entity) {
             entity.destroy();
         });
-        this.isLoaded = false;
         this.currentLevel++;
     };
     LevelSystem.prototype.update = function (time, nodes) {
@@ -20782,7 +20783,7 @@ var LevelSystem = (function () {
         }
         nodes.map(function (node) {
             var triggerData = node.trigger;
-            if (triggerData.isTriggered) {
+            if (_this.isLoaded && triggerData.isTriggered && triggerData.triggerType === enum_2.TriggerType.LEVELEXIT) {
                 console.log('FINISH');
                 triggerData.isTriggered = false;
                 _this.loadNextLevel();
@@ -41559,6 +41560,7 @@ exports["default"] = AnimationComponent;
 exports.__esModule = true;
 var input_1 = __webpack_require__(208);
 var InputComponent = (function () {
+    // isPause: any;
     function InputComponent(settings) {
         this["class"] = 'input';
         this.settings = settings;
@@ -41848,6 +41850,7 @@ var sky_1 = __webpack_require__(214);
 var ground_1 = __webpack_require__(211);
 var background_1 = __webpack_require__(210);
 var trigger_1 = __webpack_require__(215);
+var control_1 = __webpack_require__(223);
 var enum_1 = __webpack_require__(6);
 var LevelPrefabData = (function () {
     function LevelPrefabData(type, index, position) {
@@ -41909,8 +41912,9 @@ var LevelPrefab = (function () {
                 case 4:
                 case 5:
                 case 6:
-                case 7:
                     return new background_1["default"](val.type, val.position[0], val.position[1], mapWidth, mapHeight);
+                case 7:
+                    return new control_1["default"](enum_1.TriggerType.LEVELEXIT);
             }
         });
     };
@@ -42148,6 +42152,59 @@ module.exports = function(module) {
 	}
 	return module;
 };
+
+
+/***/ }),
+/* 221 */,
+/* 222 */,
+/* 223 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var entity_1 = __webpack_require__(21);
+var settings_1 = __webpack_require__(10);
+var sprite_1 = __webpack_require__(22);
+var trigger_1 = __webpack_require__(205);
+var position_1 = __webpack_require__(20);
+var display_1 = __webpack_require__(19);
+var input_1 = __webpack_require__(204);
+var ControlPrefab = (function (_super) {
+    __extends(ControlPrefab, _super);
+    function ControlPrefab(type) {
+        var _this = _super.call(this) || this;
+        var trigger = new trigger_1["default"](type);
+        var position = new position_1["default"](0, 0, 0);
+        var settings = new settings_1["default"]();
+        var tile = settings.TILE;
+        var texture = new PIXI.Texture(PIXI.utils.TextureCache['trigger'], new PIXI.Rectangle(0, 0, 1, 1));
+        var sprite = new sprite_1["default"](texture);
+        var display = new display_1["default"](sprite, 0, 0);
+        var input = new input_1["default"](settings);
+        input.inputManager.onKeyUp(function (e) {
+            var key = e.keyCode;
+            if (key === settings.KEY.SPACE) {
+                console.log('TRIGGER');
+                trigger.isTriggered = true;
+            }
+        });
+        _this.addComponents(trigger, position, display, input);
+        return _this;
+    }
+    return ControlPrefab;
+}(entity_1["default"]));
+exports["default"] = ControlPrefab;
 
 
 /***/ })

@@ -5,6 +5,7 @@ import Settings from '../settings';
 import Node from '../nodes/node';
 import LevelPrefab from '../prefabs/level';
 import { ClassType } from '../enum';
+import { TriggerType } from '../enum';
 import Entity from '../prefabs/entity';
 
 export default class LevelSystem implements ISystem {
@@ -67,12 +68,13 @@ export default class LevelSystem implements ISystem {
 
         console.log(this.entities.length);
 
+        this.isLoaded = false;
+
         this.entities.map((entity) => {
 
             entity.destroy();
         });
 
-        this.isLoaded = false;
         this.currentLevel++;
     }
 
@@ -92,7 +94,7 @@ export default class LevelSystem implements ISystem {
 
             let triggerData = node.trigger;
 
-            if (triggerData.isTriggered) {
+            if (this.isLoaded && triggerData.isTriggered && triggerData.triggerType === TriggerType.LEVELEXIT) {
 
                 console.log('FINISH');
 

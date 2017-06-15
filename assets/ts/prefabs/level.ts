@@ -6,6 +6,7 @@ import SkyPrefab from './sky';
 import GroundPrefab from './ground';
 import BackgroundPrefab from './background';
 import TriggerPrefab from './trigger';
+import ControlPrefab from './control';
 
 import { TriggerType } from '../enum';
 import Settings from '../settings';
@@ -112,8 +113,9 @@ export default class LevelPrefab {
                 case 4:
                 case 5:
                 case 6:
-                case 7:
                     return new BackgroundPrefab(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
+                case 7:
+                    return new ControlPrefab(TriggerType.LEVELEXIT);
             }
         });
     }

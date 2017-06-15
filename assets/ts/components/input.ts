@@ -8,13 +8,13 @@ export default class InputComponent implements IComponent {
     settings: Settings;
     inputManager: InputManager;
 
-    isJump: any;
-    isLeft: any;
-    isUp: any;
-    isRight: any;
-    isDown: any;
+    isJump: boolean;
+    isLeft: boolean;
+    isUp: boolean;
+    isRight: boolean;
+    isDown: boolean;
 
-    isPause: any;
+    // isPause: any;
 
     constructor(settings: Settings) {
 
