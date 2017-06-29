@@ -15,8 +15,15 @@ export default class backgroundPrefab extends Entity {
 
         let tile = settings.TILE;
 
-        let spriteX = Math.max(type * 16 - 16, 0);
-        let spriteY = 0;
+        let spriteTileX = type % 10;
+
+        let spriteTileY = Math.ceil(type/10);
+
+        console.log('spriteTileX', spriteTileX);
+        console.log('spriteTileY', spriteTileY);
+
+        let spriteX = Math.max(spriteTileX * 16 - 16, 0);
+        let spriteY = Math.max(spriteTileY * 16 - 16, 0);
 
         let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, tile));
 

@@ -51,8 +51,15 @@ export default class RenderSystem implements ISystem {
 
         let screenHeight = this.renderer.height;
 
-        // pivotY = displayData.sprite.y < mapHeight/2 ? screenHeight/2 : displayData.sprite.y;
-        // pivotY = displayData.sprite.y + screenHeight/2 > mapHeight ? mapHeight - screenHeight/2 : pivotY;
+        let maxTopY = screenHeight/2;
+
+        let maxBottomY = mapHeight - (screenHeight/2);
+
+        // sprite is in top section of screen
+        pivotY = displayData.sprite.y < maxTopY ? maxTopY : pivotY;
+
+        // sprite is in bottom section of screen
+        pivotY = displayData.sprite.y > maxBottomY ? maxBottomY : pivotY;
 
         return pivotY;
     }
@@ -122,6 +129,15 @@ export default class RenderSystem implements ISystem {
                     displayData.sprite.x + displayData.sprite.width > mapWidth) {
                     console.log('EXIT');
                 }
+            }
+
+            if (!this.stage.pivot.x && !this.stage.pivot.y) {
+
+                this.stage.pivot.x = this.renderer.width / 2;
+                this.stage.pivot.y = this.renderer.height / 2;
+
+                console.log('this.stage.pivot.x', this.stage.pivot.x);
+                console.log('this.stage.pivot.y', this.stage.pivot.y);
             }
         });
 

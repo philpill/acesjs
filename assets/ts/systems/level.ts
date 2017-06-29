@@ -25,6 +25,8 @@ export default class LevelSystem implements ISystem {
         this.isLoaded = false;
         this.currentLevel;
         this.levels = [{
+            data: PIXI.loader.resources.title.data
+        }, {
             data: PIXI.loader.resources.level1.data
         }, {
             data: PIXI.loader.resources.level2.data

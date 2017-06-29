@@ -1,4 +1,5 @@
 import {ITiledLevel} from '../itiled';
+import {ILayer} from '../itiled';
 
 import Entity from './entity';
 import PlayerPrefab from './player';
@@ -37,7 +38,6 @@ export default class LevelPrefab {
         this.data = data;
     }
 
-
     getPrefabData(data: number[]): LevelPrefabData[] {
 
         let values = data.map((type: number, index: number) => {
@@ -49,7 +49,6 @@ export default class LevelPrefab {
 
         return filteredValues;
     }
-
 
     getPositionedPrefabData(data: LevelPrefabData[], mapWidth: number, tileWidth: number): LevelPrefabData[] {
 
@@ -63,27 +62,18 @@ export default class LevelPrefab {
         });
     }
 
-
     getValuesByLevelData(data: ITiledLevel, layerIndex: number): LevelPrefabData[] {
 
-        let values = this.getPrefabData(data.layers[layerIndex].data);
+        let prefabData = [];
 
-        return this.getPositionedPrefabData(values, data.width, data.tilewidth);
-    }
+        if (data.layers[layerIndex]) {
 
-    getGroundEntities(data: ITiledLevel): Entity[] {
+            let values = this.getPrefabData(data.layers[layerIndex].data);
 
-        let values = this.getValuesByLevelData(data, 0);
+            prefabData = this.getPositionedPrefabData(values, data.width, data.tilewidth);
+        }
 
-        let mapHeight = data.height;
-        let mapWidth = data.width;
-
-        return values.map((val) => {
-            switch (val.type) {
-                case 1:
-                    return new GroundPrefab(0, val.position[0], val.position[1], mapWidth, mapHeight);
-            }
-        });
+        return prefabData;
     }
 
     getPositionFunc(levelWidth: number, tileSize: number): Function {
@@ -98,31 +88,9 @@ export default class LevelPrefab {
         };
     }
 
-    getBackgroundEntities(data: ITiledLevel): Entity[] {
+    getEntities(data: ITiledLevel, layerIndex: number): Entity[] {
 
-        let values = this.getValuesByLevelData(data, 1);
-
-        let mapHeight = data.height;
-        let mapWidth = data.width;
-
-        return values.map((val) => {
-
-            switch (val.type) {
-                case 1:
-                    return new GroundPrefab(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
-                case 4:
-                case 5:
-                case 6:
-                    return new BackgroundPrefab(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
-                case 7:
-                    return new ControlPrefab(TriggerType.LEVELEXIT);
-            }
-        });
-    }
-
-    getTriggerEntities(data: ITiledLevel): Entity[] {
-
-        let values = this.getValuesByLevelData(data, 2);
+        let values = this.getValuesByLevelData(data, layerIndex);
 
         let mapHeight = data.height;
         let mapWidth = data.width;
@@ -137,29 +105,58 @@ export default class LevelPrefab {
                 case 6:
                 case 7:
                     return new BackgroundPrefab(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
-                case 11:
+                case 8:
                     return new TriggerPrefab(TriggerType.LEVELEXIT, val.position[0], val.position[1], mapWidth, mapHeight);
+                case 9:
+                    return new ControlPrefab(TriggerType.LEVELEXIT);
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                    return new BackgroundPrefab(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
             }
         });
     }
 
     createLevel() {
 
+        console.log('createLevel()');
+
         let data = this.data;
+
+        console.log(data);
 
         data.entities = [];
 
         let sky = new SkyPrefab(data.width, data.height, data.tileheight, data.width, data.height);
 
-        let groundEntities = this.getGroundEntities(data);
+        console.log('sky', sky);
 
-        let backgroundEntities = this.getBackgroundEntities(data);
+        data.entities.push(sky);
 
-        let triggerEntities = this.getTriggerEntities(data);
+        let entities: Entity[][] = data.layers.map((layer: ILayer) => {
 
-        let player = new PlayerPrefab(this.settings, [data.properties.startX, data.properties.startY], data.width, data.height);
+            return this.getEntities(data, data.layers.indexOf(layer));
+        });
 
-        data.entities.push(sky, ...groundEntities, ...backgroundEntities, ...triggerEntities, player);
+        console.log('entities', entities);
+
+        entities.map((layerEntities: Entity[]) => {
+
+            data.entities.push(...layerEntities);
+        });
+
+        if (data.properties && data.properties.startX && data.properties.startY) {
+
+            let player = new PlayerPrefab(this.settings, [data.properties.startX, data.properties.startY], data.width, data.height);
+
+            data.entities.push(player);
+
+            console.log('player', player);
+        }
 
         return data;
     }

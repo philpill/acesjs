@@ -4,6 +4,7 @@
         "types" : [
             "pixi.js",
             "mocha"
-        ]
+        ],
+        "sourceMap": true
     }
 }

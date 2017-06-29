@@ -63,41 +63,20 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 221);
+/******/ 	return __webpack_require__(__webpack_require__.s = 222);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 10:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var Settings = (function () {
-    function Settings() {
-        this.GRAVITY = 1;
-        this.FRICTION = 0.90;
-        this.TILE = 16;
-        this.MAP = [45, 30];
-        this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
-    }
-    return Settings;
-}());
-exports["default"] = Settings;
-
-
-/***/ }),
-
-/***/ 101:
+/***/ 103:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 exports.__esModule = true;
 var move_1 = __webpack_require__(27);
-var settings_1 = __webpack_require__(10);
-var assert = __webpack_require__(102);
+var settings_1 = __webpack_require__(8);
+var assert = __webpack_require__(104);
 describe('MoveSystem', function () {
     var settings;
     var system;
@@ -149,7 +128,7 @@ describe('MoveSystem', function () {
 
 /***/ }),
 
-/***/ 102:
+/***/ 104:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -221,7 +200,7 @@ function isBuffer(b) {
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var util = __webpack_require__(219);
+var util = __webpack_require__(220);
 var hasOwn = Object.prototype.hasOwnProperty;
 var pSlice = Array.prototype.slice;
 var functionsHaveNames = (function () {
@@ -644,11 +623,11 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
 
-/***/ 12:
+/***/ 16:
 /***/ (function(module, exports) {
 
 var g;
@@ -676,7 +655,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 217:
+/***/ 218:
 /***/ (function(module, exports) {
 
 if (typeof Object.create === 'function') {
@@ -706,7 +685,7 @@ if (typeof Object.create === 'function') {
 
 /***/ }),
 
-/***/ 218:
+/***/ 219:
 /***/ (function(module, exports) {
 
 module.exports = function isBuffer(arg) {
@@ -718,7 +697,7 @@ module.exports = function isBuffer(arg) {
 
 /***/ }),
 
-/***/ 219:
+/***/ 220:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -1246,7 +1225,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(218);
+exports.isBuffer = __webpack_require__(219);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -1290,7 +1269,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(217);
+exports.inherits = __webpack_require__(218);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -1308,14 +1287,14 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12), __webpack_require__(43)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16), __webpack_require__(43)))
 
 /***/ }),
 
-/***/ 221:
+/***/ 222:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(101);
+module.exports = __webpack_require__(103);
 
 
 /***/ }),
@@ -1601,6 +1580,27 @@ var ClassType;
     ClassType[ClassType["INTERSTITIAL"] = 6] = "INTERSTITIAL";
 })(ClassType || (ClassType = {}));
 exports.ClassType = ClassType;
+
+
+/***/ }),
+
+/***/ 8:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var Settings = (function () {
+    function Settings() {
+        this.GRAVITY = 1;
+        this.FRICTION = 0.90;
+        this.TILE = 16;
+        this.MAP = [45, 30];
+        this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
+    }
+    return Settings;
+}());
+exports["default"] = Settings;
 
 
 /***/ })

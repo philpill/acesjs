@@ -1,4 +1,4 @@
-interface ILayer {
+export interface ILayer {
     data: number[];
     height: number;
     name: string;
