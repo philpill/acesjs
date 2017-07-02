@@ -27,7 +27,7 @@ export default class ControlPrefab extends Entity {
 
         let tile = settings.TILE;
 
-        let texture = new PIXI.Texture(PIXI.utils.TextureCache['trigger'], new PIXI.Rectangle(0, 0, 1, 1));
+        let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 1, 1));
         let sprite = new Sprite(texture);
 
         let display = new DisplayComponent(sprite, 0, 0);

@@ -68,8 +68,6 @@ export default class LevelSystem implements ISystem {
 
         console.log('loadNextLevel()');
 
-        console.log(this.entities.length);
-
         this.isLoaded = false;
 
         this.entities.map((entity) => {

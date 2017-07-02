@@ -36,9 +36,9 @@ export default class TriggerPrefab extends Entity {
 
         let tile = settings.TILE;
 
-        let spriteX = 0;
+        let spriteX = 8 * tile - tile;
         let spriteY = 0;
-        let texture = new PIXI.Texture(PIXI.utils.TextureCache['trigger'], new PIXI.Rectangle(spriteX, spriteY, tile, tile));
+        let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, tile, tile));
         let sprite = new Sprite(texture);
         sprite.height = tile;
         sprite.width = tile;

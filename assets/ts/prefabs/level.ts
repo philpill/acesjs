@@ -123,17 +123,11 @@ export default class LevelPrefab {
 
     createLevel() {
 
-        console.log('createLevel()');
-
         let data = this.data;
-
-        console.log(data);
 
         data.entities = [];
 
         let sky = new SkyPrefab(data.width, data.height, data.tileheight, data.width, data.height);
-
-        console.log('sky', sky);
 
         data.entities.push(sky);
 
@@ -141,8 +135,6 @@ export default class LevelPrefab {
 
             return this.getEntities(data, data.layers.indexOf(layer));
         });
-
-        console.log('entities', entities);
 
         entities.map((layerEntities: Entity[]) => {
 
@@ -154,8 +146,6 @@ export default class LevelPrefab {
             let player = new PlayerPrefab(this.settings, [data.properties.startX, data.properties.startY], data.width, data.height);
 
             data.entities.push(player);
-
-            console.log('player', player);
         }
 
         return data;

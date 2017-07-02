@@ -19,9 +19,6 @@ export default class backgroundPrefab extends Entity {
 
         let spriteTileY = Math.ceil(type/10);
 
-        console.log('spriteTileX', spriteTileX);
-        console.log('spriteTileY', spriteTileY);
-
         let spriteX = Math.max(spriteTileX * 16 - 16, 0);
         let spriteY = Math.max(spriteTileY * 16 - 16, 0);
 

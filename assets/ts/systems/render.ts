@@ -135,9 +135,6 @@ export default class RenderSystem implements ISystem {
 
                 this.stage.pivot.x = this.renderer.width / 2;
                 this.stage.pivot.y = this.renderer.height / 2;
-
-                console.log('this.stage.pivot.x', this.stage.pivot.x);
-                console.log('this.stage.pivot.y', this.stage.pivot.y);
             }
         });
 

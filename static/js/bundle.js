@@ -20828,7 +20828,6 @@ var LevelSystem = (function () {
         // destroy all nodes
         // destroy all entities
         console.log('loadNextLevel()');
-        console.log(this.entities.length);
         this.isLoaded = false;
         this.entities.map(function (entity) {
             entity.destroy();
@@ -20945,8 +20944,6 @@ var RenderSystem = (function () {
             if (!_this.stage.pivot.x && !_this.stage.pivot.y) {
                 _this.stage.pivot.x = _this.renderer.width / 2;
                 _this.stage.pivot.y = _this.renderer.height / 2;
-                console.log('this.stage.pivot.x', _this.stage.pivot.x);
-                console.log('this.stage.pivot.y', _this.stage.pivot.y);
             }
         });
         this.clearDeadSprites();
@@ -41667,7 +41664,6 @@ var Main = (function () {
     function Main() {
         PIXI.loader.add('player', '/static/img/player.png');
         PIXI.loader.add('bg', '/static/img/bg.png');
-        PIXI.loader.add('trigger', '/static/img/trigger.png');
         PIXI.loader.add('level1', '/assets/json/levelone.json');
         PIXI.loader.add('level2', '/assets/json/leveltwo.json');
         PIXI.loader.add('title', '/assets/json/title.json');
@@ -41788,8 +41784,6 @@ var backgroundPrefab = (function (_super) {
         var tile = settings.TILE;
         var spriteTileX = type % 10;
         var spriteTileY = Math.ceil(type / 10);
-        console.log('spriteTileX', spriteTileX);
-        console.log('spriteTileY', spriteTileY);
         var spriteX = Math.max(spriteTileX * 16 - 16, 0);
         var spriteY = Math.max(spriteTileY * 16 - 16, 0);
         var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, tile));
@@ -41838,7 +41832,7 @@ var ControlPrefab = (function (_super) {
         var position = new position_1["default"](0, 0, 0);
         var settings = new settings_1["default"]();
         var tile = settings.TILE;
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['trigger'], new PIXI.Rectangle(0, 0, 1, 1));
+        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 1, 1));
         var sprite = new sprite_1["default"](texture);
         var display = new display_1["default"](sprite, 0, 0);
         var input = new input_1["default"](settings);
@@ -41992,17 +41986,13 @@ var LevelPrefab = (function () {
     };
     LevelPrefab.prototype.createLevel = function () {
         var _this = this;
-        console.log('createLevel()');
         var data = this.data;
-        console.log(data);
         data.entities = [];
         var sky = new sky_1["default"](data.width, data.height, data.tileheight, data.width, data.height);
-        console.log('sky', sky);
         data.entities.push(sky);
         var entities = data.layers.map(function (layer) {
             return _this.getEntities(data, data.layers.indexOf(layer));
         });
-        console.log('entities', entities);
         entities.map(function (layerEntities) {
             (_a = data.entities).push.apply(_a, layerEntities);
             var _a;
@@ -42010,7 +42000,6 @@ var LevelPrefab = (function () {
         if (data.properties && data.properties.startX && data.properties.startY) {
             var player = new player_1["default"](this.settings, [data.properties.startX, data.properties.startY], data.width, data.height);
             data.entities.push(player);
-            console.log('player', player);
         }
         return data;
     };
@@ -42151,9 +42140,9 @@ var TriggerPrefab = (function (_super) {
         };
         var settings = new settings_1["default"]();
         var tile = settings.TILE;
-        var spriteX = 0;
+        var spriteX = 8 * tile - tile;
         var spriteY = 0;
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['trigger'], new PIXI.Rectangle(spriteX, spriteY, tile, tile));
+        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, tile, tile));
         var sprite = new sprite_1["default"](texture);
         sprite.height = tile;
         sprite.width = tile;
