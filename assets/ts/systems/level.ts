@@ -23,7 +23,7 @@ export default class LevelSystem implements ISystem {
         this.settings = settings;
 
         this.isLoaded = false;
-        this.currentLevel;
+        this.currentLevel = 0;
         this.levels = [{
             data: PIXI.loader.resources.title.data
         }, {
@@ -75,7 +75,8 @@ export default class LevelSystem implements ISystem {
             entity.destroy();
         });
 
-        this.currentLevel++;
+
+        this.currentLevel = this.levels.length > this.currentLevel ? this.currentLevel + 1 : 0;
     }
 
     update(time: number, nodes: Node[]) {
@@ -94,13 +95,27 @@ export default class LevelSystem implements ISystem {
 
             let triggerData = node.trigger;
 
-            if (this.isLoaded && triggerData.isTriggered && triggerData.triggerType === TriggerType.LEVELEXIT) {
+            if (this.isLoaded && triggerData.isTriggered) {
 
-                console.log('FINISH');
+                if (triggerData.triggerType === TriggerType.LEVELEXIT) {
 
-                triggerData.isTriggered = false;
+                    console.log('FINISH');
 
-                this.loadNextLevel();
+                    triggerData.isTriggered = false;
+
+                    this.loadNextLevel();
+                }
+
+                if (triggerData.triggerType === TriggerType.PLAYERDEATH) {
+
+                    console.log('DEATH');
+
+                    triggerData.isTriggered = false;
+
+                    this.currentLevel = 0;
+
+                    this.loadNextLevel();
+                }
             }
         });
 

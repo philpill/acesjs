@@ -66,6 +66,8 @@ export default class Engine {
 
         if (components.trigger) {
 
+            console.log(components);
+
             this.nodes[ClassType.LEVEL].push(new Node(entityId, ClassType.LEVEL, components));
         }
     }

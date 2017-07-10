@@ -1545,6 +1545,7 @@ var TriggerType;
     TriggerType[TriggerType["UNDEFINED"] = 0] = "UNDEFINED";
     TriggerType[TriggerType["LEVELEXIT"] = 1] = "LEVELEXIT";
     TriggerType[TriggerType["SWITCH"] = 2] = "SWITCH";
+    TriggerType[TriggerType["PLAYERDEATH"] = 3] = "PLAYERDEATH";
 })(TriggerType || (TriggerType = {}));
 exports.TriggerType = TriggerType;
 var ClassType;
@@ -3692,6 +3693,7 @@ var PositionComponent = (function () {
         this.x = x;
         this.y = y;
         this.mapWidth = mapWidth;
+        this.outOfBounds = false;
     }
     return PositionComponent;
 }());
@@ -6819,6 +6821,7 @@ exports.default = RenderTarget;
 
 exports.__esModule = true;
 var enum_1 = __webpack_require__(6);
+var enum_2 = __webpack_require__(6);
 var MoveSystem = (function () {
     function MoveSystem(settings) {
         this.classType = enum_1.ClassType.MOVE;
@@ -6862,6 +6865,7 @@ var MoveSystem = (function () {
             var velocityData = node.velocity;
             var positionData = node.position;
             var collisionData = node.collision;
+            var triggerData = node.trigger;
             var isGrounded = collisionData.isBottomObstacleCollision;
             var tile = _this.settings.TILE;
             var friction = _this.settings.FRICTION;
@@ -6871,7 +6875,12 @@ var MoveSystem = (function () {
             positionData.y = _this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
             if (positionData.y > _this.settings.MAP[0] * tile) {
                 console.log('OFF MAP');
-                node.isActive = false;
+                // node.isActive = false;
+                positionData.outOfBounds = true;
+                if (triggerData && triggerData.triggerType === enum_2.TriggerType.PLAYERDEATH) {
+                    console.log('OFF MAP TRIGGER');
+                    triggerData.isTriggered = true;
+                }
             }
         });
     };
@@ -20394,6 +20403,7 @@ var Engine = (function () {
             this.nodes[enum_1.ClassType.COLLISION].push(new node_1["default"](entityId, enum_1.ClassType.COLLISION, components));
         }
         if (components.trigger) {
+            console.log(components);
             this.nodes[enum_1.ClassType.LEVEL].push(new node_1["default"](entityId, enum_1.ClassType.LEVEL, components));
         }
     };
@@ -20797,7 +20807,7 @@ var LevelSystem = (function () {
         this.classType = enum_1.ClassType.LEVEL;
         this.settings = settings;
         this.isLoaded = false;
-        this.currentLevel;
+        this.currentLevel = 0;
         this.levels = [{
                 data: PIXI.loader.resources.title.data
             }, {
@@ -20832,7 +20842,7 @@ var LevelSystem = (function () {
         this.entities.map(function (entity) {
             entity.destroy();
         });
-        this.currentLevel++;
+        this.currentLevel = this.levels.length > this.currentLevel ? this.currentLevel + 1 : 0;
     };
     LevelSystem.prototype.update = function (time, nodes) {
         var _this = this;
@@ -20845,10 +20855,18 @@ var LevelSystem = (function () {
         }
         nodes.map(function (node) {
             var triggerData = node.trigger;
-            if (_this.isLoaded && triggerData.isTriggered && triggerData.triggerType === enum_2.TriggerType.LEVELEXIT) {
-                console.log('FINISH');
-                triggerData.isTriggered = false;
-                _this.loadNextLevel();
+            if (_this.isLoaded && triggerData.isTriggered) {
+                if (triggerData.triggerType === enum_2.TriggerType.LEVELEXIT) {
+                    console.log('FINISH');
+                    triggerData.isTriggered = false;
+                    _this.loadNextLevel();
+                }
+                if (triggerData.triggerType === enum_2.TriggerType.PLAYERDEATH) {
+                    console.log('DEATH');
+                    triggerData.isTriggered = false;
+                    _this.currentLevel = 0;
+                    _this.loadNextLevel();
+                }
             }
         });
         return result;
@@ -20940,6 +20958,10 @@ var RenderSystem = (function () {
                     displayData.sprite.x + displayData.sprite.width > mapWidth) {
                     console.log('EXIT');
                 }
+            }
+            else {
+                _this.stage.pivot.x = 0;
+                _this.stage.pivot.y = 0;
             }
             if (!_this.stage.pivot.x && !_this.stage.pivot.y) {
                 _this.stage.pivot.x = _this.renderer.width / 2;
@@ -42033,6 +42055,8 @@ var velocity_1 = __webpack_require__(206);
 var input_1 = __webpack_require__(93);
 var collision_1 = __webpack_require__(45);
 var animation_1 = __webpack_require__(205);
+var trigger_1 = __webpack_require__(94);
+var enum_1 = __webpack_require__(6);
 var PlayerPrefab = (function (_super) {
     __extends(PlayerPrefab, _super);
     function PlayerPrefab(settings, start, mapWidth, mapHeight) {
@@ -42055,9 +42079,20 @@ var PlayerPrefab = (function (_super) {
         var positionComponent = new position_1["default"](start[0] * settings.TILE, start[1] * settings.TILE, mapWidth);
         var velocityComponent = new velocity_1["default"](settings);
         var inputComponent = new input_1["default"](settings);
-        _this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation);
+        var trigger = new trigger_1["default"](enum_1.TriggerType.PLAYERDEATH);
+        _this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation, trigger);
         return _this;
     }
+    PlayerPrefab.prototype.destroy = function () {
+        console.log('PLAYER DESTROY');
+        console.log(this.components);
+        var trigger = this.components['trigger'];
+        if (trigger) {
+            console.log('DESTROY TRIGGER');
+            trigger.isTriggered = true;
+        }
+        _super.prototype.destroy.call(this);
+    };
     return PlayerPrefab;
 }(entity_1["default"]));
 exports["default"] = PlayerPrefab;

@@ -1,7 +1,8 @@
 import ISystem from './isystem';
 import Node from '../nodes/node';
 import Settings from '../settings';
-import { ClassType } from '../enum'
+import { ClassType } from '../enum';
+import { TriggerType } from '../enum';
 
 export default class MoveSystem implements ISystem {
 
@@ -75,6 +76,8 @@ export default class MoveSystem implements ISystem {
 
             let collisionData = node.collision;
 
+            let triggerData = node.trigger;
+
             let isGrounded = collisionData.isBottomObstacleCollision;
 
             let tile = this.settings.TILE;
@@ -91,7 +94,16 @@ export default class MoveSystem implements ISystem {
 
             if (positionData.y > this.settings.MAP[0] * tile) {
                 console.log('OFF MAP');
-                node.isActive = false;
+                // node.isActive = false;
+
+                positionData.outOfBounds = true;
+
+                if (triggerData && triggerData.triggerType === TriggerType.PLAYERDEATH) {
+
+                    console.log('OFF MAP TRIGGER');
+
+                    triggerData.isTriggered = true;
+                }
             }
         });
     }

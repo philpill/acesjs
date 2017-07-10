@@ -129,6 +129,10 @@ export default class RenderSystem implements ISystem {
                     displayData.sprite.x + displayData.sprite.width > mapWidth) {
                     console.log('EXIT');
                 }
+            } else {
+
+                this.stage.pivot.x = 0;
+                this.stage.pivot.y = 0;
             }
 
             if (!this.stage.pivot.x && !this.stage.pivot.y) {

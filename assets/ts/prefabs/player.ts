@@ -9,6 +9,8 @@ import CollisionComponent from '../components/collision';
 import AnimationComponent from '../components/animation';
 import TriggerComponent from '../components/trigger';
 
+import { TriggerType } from '../enum';
+
 import Settings from '../settings';
 
 export default class PlayerPrefab extends Entity {
@@ -45,6 +47,24 @@ export default class PlayerPrefab extends Entity {
 
         let inputComponent = new InputComponent(settings);
 
-        this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation);
+        let trigger = new TriggerComponent(TriggerType.PLAYERDEATH);
+
+        this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation, trigger);
+    }
+
+    destroy() {
+
+        console.log('PLAYER DESTROY');
+
+        console.log(this.components);
+
+        let trigger = this.components['trigger'] as TriggerComponent;
+
+        if (trigger) {
+            console.log('DESTROY TRIGGER');
+            trigger.isTriggered = true;
+        }
+
+        super.destroy();
     }
 }

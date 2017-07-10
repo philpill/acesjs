@@ -1306,6 +1306,7 @@ module.exports = __webpack_require__(103);
 
 exports.__esModule = true;
 var enum_1 = __webpack_require__(6);
+var enum_2 = __webpack_require__(6);
 var MoveSystem = (function () {
     function MoveSystem(settings) {
         this.classType = enum_1.ClassType.MOVE;
@@ -1349,6 +1350,7 @@ var MoveSystem = (function () {
             var velocityData = node.velocity;
             var positionData = node.position;
             var collisionData = node.collision;
+            var triggerData = node.trigger;
             var isGrounded = collisionData.isBottomObstacleCollision;
             var tile = _this.settings.TILE;
             var friction = _this.settings.FRICTION;
@@ -1358,7 +1360,12 @@ var MoveSystem = (function () {
             positionData.y = _this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
             if (positionData.y > _this.settings.MAP[0] * tile) {
                 console.log('OFF MAP');
-                node.isActive = false;
+                // node.isActive = false;
+                positionData.outOfBounds = true;
+                if (triggerData && triggerData.triggerType === enum_2.TriggerType.PLAYERDEATH) {
+                    console.log('OFF MAP TRIGGER');
+                    triggerData.isTriggered = true;
+                }
             }
         });
     };
@@ -1567,6 +1574,7 @@ var TriggerType;
     TriggerType[TriggerType["UNDEFINED"] = 0] = "UNDEFINED";
     TriggerType[TriggerType["LEVELEXIT"] = 1] = "LEVELEXIT";
     TriggerType[TriggerType["SWITCH"] = 2] = "SWITCH";
+    TriggerType[TriggerType["PLAYERDEATH"] = 3] = "PLAYERDEATH";
 })(TriggerType || (TriggerType = {}));
 exports.TriggerType = TriggerType;
 var ClassType;

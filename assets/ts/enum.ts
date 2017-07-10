@@ -1,7 +1,8 @@
 enum TriggerType {
     UNDEFINED,
     LEVELEXIT,
-    SWITCH
+    SWITCH,
+    PLAYERDEATH
 }
 
 enum ClassType {
