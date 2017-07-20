@@ -4,6 +4,8 @@ import Entity from './prefabs/entity';
 import ISystem from './systems/isystem';
 import { ClassType } from './enum'
 import IComponent from './components/icomponent'
+import EntityManager from './managers/entity';
+import NodeManager from './managers/node';
 
 export default class Engine {
 
