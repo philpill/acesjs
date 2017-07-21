@@ -29,7 +29,7 @@ export default class Main {
     private _onLoad() {
 
         this._settings = new Settings();
-        this._engine = new Engine();
+        this._engine = new Engine(this._settings);
 
         this._engine.addSystem(new AnimationSystem(this._settings));
 

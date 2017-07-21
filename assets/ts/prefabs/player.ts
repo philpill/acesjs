@@ -54,17 +54,15 @@ export default class PlayerPrefab extends Entity {
 
     destroy() {
 
-        console.log('PLAYER DESTROY');
-
-        console.log(this.components);
-
         let trigger = this.components['trigger'] as TriggerComponent;
 
         if (trigger) {
-            console.log('DESTROY TRIGGER');
-            trigger.isTriggered = true;
-        }
 
-        super.destroy();
+            console.log('PLAYER DESTROY');
+
+            trigger.isTriggered = true;
+
+            super.destroy();
+        }
     }
 }

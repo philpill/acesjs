@@ -75,6 +75,7 @@ export default class LevelSystem implements ISystem {
             entity.destroy();
         });
 
+        this.entities = [];
 
         this.currentLevel = this.levels.length > this.currentLevel ? this.currentLevel + 1 : 0;
     }

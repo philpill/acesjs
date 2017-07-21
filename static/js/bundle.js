@@ -20368,13 +20368,13 @@ global.PIXI = exports; // eslint-disable-line
 "use strict";
 
 exports.__esModule = true;
-var node_1 = __webpack_require__(209);
 var enum_1 = __webpack_require__(6);
+var node_1 = __webpack_require__(223);
 var Engine = (function () {
-    function Engine() {
+    function Engine(settings) {
         this.entities = [];
         this.systems = [];
-        this.nodes = {};
+        this.nodeManager = new node_1["default"](settings);
         this.isPaused = false;
     }
     Engine.prototype.init = function () {
@@ -20388,23 +20388,22 @@ var Engine = (function () {
     };
     Engine.prototype.generateNodes = function (entityId, components) {
         if (components.display && components.position) {
-            this.nodes[enum_1.ClassType.RENDER].push(new node_1["default"](entityId, enum_1.ClassType.RENDER, components));
+            this.nodeManager.addNewNode(entityId, enum_1.ClassType.RENDER, components);
         }
         if (components.animation && components.display && components.velocity) {
-            this.nodes[enum_1.ClassType.ANIMATION].push(new node_1["default"](entityId, enum_1.ClassType.ANIMATION, components));
+            this.nodeManager.addNewNode(entityId, enum_1.ClassType.ANIMATION, components);
         }
         if (components.velocity && components.position && components.collision) {
-            this.nodes[enum_1.ClassType.MOVE].push(new node_1["default"](entityId, enum_1.ClassType.MOVE, components));
+            this.nodeManager.addNewNode(entityId, enum_1.ClassType.MOVE, components);
         }
         if (components.velocity && components.input) {
-            this.nodes[enum_1.ClassType.CONTROL].push(new node_1["default"](entityId, enum_1.ClassType.CONTROL, components));
+            this.nodeManager.addNewNode(entityId, enum_1.ClassType.CONTROL, components);
         }
         if (components.collision && components.display) {
-            this.nodes[enum_1.ClassType.COLLISION].push(new node_1["default"](entityId, enum_1.ClassType.COLLISION, components));
+            this.nodeManager.addNewNode(entityId, enum_1.ClassType.COLLISION, components);
         }
         if (components.trigger) {
-            console.log(components);
-            this.nodes[enum_1.ClassType.LEVEL].push(new node_1["default"](entityId, enum_1.ClassType.LEVEL, components));
+            this.nodeManager.addNewNode(entityId, enum_1.ClassType.LEVEL, components);
         }
     };
     Engine.prototype.addEntities = function (entities) {
@@ -20432,13 +20431,13 @@ var Engine = (function () {
     };
     Engine.prototype.addSystem = function (system) {
         this.systems.push(system);
-        this.nodes[system.classType] = [];
+        this.nodeManager.addClassType(system.classType);
         system.init();
     };
     Engine.prototype.removeSystem = function (system) {
         system.stop();
         system = null;
-        this.nodes[system.classType] = null;
+        this.nodeManager.removeNodesByClassType(system.classType);
         this.systems = this.systems.filter(function (system) {
             return !!system;
         });
@@ -20476,22 +20475,7 @@ var Engine = (function () {
         var ids = entities.map(function (entity) {
             return entity.id;
         });
-        ids.map(this.destroyNodesByEntityId.bind(this));
-    };
-    Engine.prototype.destroyNodesByEntityId = function (entityId) {
-        var _this = this;
-        var types = Object.keys(this.nodes);
-        types.map(function (type) {
-            var nodes = _this.nodes[type].filter(function (node) {
-                return node.entityId === entityId;
-            });
-            nodes.map(function (node) {
-                if (node.display && node.display.sprite) {
-                    node.display.sprite.destroy();
-                }
-                node.isActive = false;
-            });
-        });
+        ids.map(this.nodeManager.deactivateNodesByEntityId, this.nodeManager);
     };
     Engine.prototype.update = function (before) {
         var _this = this;
@@ -20505,12 +20489,10 @@ var Engine = (function () {
         dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
         if (!this.isPaused) {
             this.deactivateNodesByInactiveEntities();
-            Object.keys(this.nodes).map(function (classType) {
-                _this.nodes[classType] = _this.filterInactiveNodes(_this.nodes[classType]);
-            });
+            this.nodeManager.filterInactiveNodes();
             var results_1 = [];
             this.systems.map(function (system) {
-                var nodes = _this.nodes[system.classType];
+                var nodes = _this.nodeManager.getActiveNodesByClassType(system.classType);
                 results_1.push(system.update(dt, nodes || []));
             });
             results_1 = results_1.filter(function (result) { return result; });
@@ -20842,6 +20824,7 @@ var LevelSystem = (function () {
         this.entities.map(function (entity) {
             entity.destroy();
         });
+        this.entities = [];
         this.currentLevel = this.levels.length > this.currentLevel ? this.currentLevel + 1 : 0;
     };
     LevelSystem.prototype.update = function (time, nodes) {
@@ -41693,7 +41676,7 @@ var Main = (function () {
     }
     Main.prototype._onLoad = function () {
         this._settings = new settings_1["default"]();
-        this._engine = new engine_1["default"]();
+        this._engine = new engine_1["default"](this._settings);
         this._engine.addSystem(new animation_1["default"](this._settings));
         this._engine.addSystem(new move_1["default"](this._settings));
         this._engine.addSystem(new render_1["default"](this._settings));
@@ -42084,14 +42067,12 @@ var PlayerPrefab = (function (_super) {
         return _this;
     }
     PlayerPrefab.prototype.destroy = function () {
-        console.log('PLAYER DESTROY');
-        console.log(this.components);
         var trigger = this.components['trigger'];
         if (trigger) {
-            console.log('DESTROY TRIGGER');
+            console.log('PLAYER DESTROY');
             trigger.isTriggered = true;
+            _super.prototype.destroy.call(this);
         }
-        _super.prototype.destroy.call(this);
     };
     return PlayerPrefab;
 }(entity_1["default"]));
@@ -42242,6 +42223,79 @@ module.exports = function(module) {
 	}
 	return module;
 };
+
+
+/***/ }),
+/* 222 */,
+/* 223 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var node_1 = __webpack_require__(209);
+var NodeManager = (function () {
+    function NodeManager(settings) {
+        this.settings = settings;
+        this._nodes = new Map();
+    }
+    NodeManager.prototype.addClassType = function (classType) {
+        this._nodes[classType] = [];
+    };
+    NodeManager.prototype.addNode = function (node) {
+        this._nodes[node.classType].push(node);
+    };
+    NodeManager.prototype.addNewNode = function (entityId, classType, components) {
+        var node = new node_1["default"](entityId, classType, components);
+        this.addNode(node);
+    };
+    NodeManager.prototype.removeNodesByClassType = function (classType) {
+        this._nodes[classType] = [];
+    };
+    NodeManager.prototype.getAllNodes = function () {
+        var vals = Object.values(this._nodes);
+        return [].concat.apply([], vals);
+    };
+    NodeManager.prototype.getInactiveNodes = function () {
+        var nodes = this.getAllNodes();
+        return nodes.filter(function (node) {
+            return !node.isActive;
+        });
+    };
+    NodeManager.prototype.getActiveNodesByClassType = function (classType) {
+        return this._nodes[classType].filter(function (node) {
+            return node.isActive;
+        });
+    };
+    NodeManager.prototype.filterInactiveNodes = function () {
+        var _this = this;
+        Object.keys(this._nodes).map(function (classType) {
+            _this._nodes[classType] = _this._nodes[classType].filter(function (node) {
+                return node.isActive;
+            });
+        });
+    };
+    NodeManager.prototype.deactivateNodesByEntityId = function (entityId) {
+        var _this = this;
+        var nodes = this.getAllNodes();
+        return nodes.filter(function (node) {
+            return node.entityId === entityId;
+        }).map(function (node) {
+            _this.destroySprite(node);
+            node.isActive = false;
+            return node;
+        });
+    };
+    NodeManager.prototype.destroySprite = function (node) {
+        if (node.display && node.display.sprite) {
+            node.display.sprite.destroy();
+        }
+    };
+    NodeManager.prototype.destructor = function () {
+    };
+    return NodeManager;
+}());
+exports["default"] = NodeManager;
 
 
 /***/ })

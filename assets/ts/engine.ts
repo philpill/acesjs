@@ -2,24 +2,23 @@ import Node from './nodes/node';
 import { NodeComponents } from './nodes/node';
 import Entity from './prefabs/entity';
 import ISystem from './systems/isystem';
-import { ClassType } from './enum'
-import IComponent from './components/icomponent'
+import { ClassType } from './enum';
+import IComponent from './components/icomponent';
 import EntityManager from './managers/entity';
 import NodeManager from './managers/node';
-
+import Settings from './settings';
 export default class Engine {
 
     entities: Entity[];
     systems: ISystem[];
-    nodes: any;
     isPaused: boolean;
+    nodeManager: NodeManager;
 
-    constructor() {
+    constructor(settings: Settings) {
 
         this.entities = [];
         this.systems = [];
-        this.nodes = {};
-
+        this.nodeManager = new NodeManager(settings);
         this.isPaused = false;
     }
 
@@ -42,35 +41,27 @@ export default class Engine {
     generateNodes(entityId: string, components: NodeComponents) {
 
         if (components.display && components.position) {
-
-            this.nodes[ClassType.RENDER].push(new Node(entityId, ClassType.RENDER, components));
+            this.nodeManager.addNewNode(entityId, ClassType.RENDER, components);
         }
 
         if (components.animation && components.display && components.velocity) {
-
-            this.nodes[ClassType.ANIMATION].push(new Node(entityId, ClassType.ANIMATION, components));
+            this.nodeManager.addNewNode(entityId, ClassType.ANIMATION, components);
         }
 
         if (components.velocity && components.position && components.collision) {
-
-            this.nodes[ClassType.MOVE].push(new Node(entityId, ClassType.MOVE, components));
+            this.nodeManager.addNewNode(entityId, ClassType.MOVE, components);
         }
 
         if (components.velocity && components.input) {
-
-            this.nodes[ClassType.CONTROL].push(new Node(entityId, ClassType.CONTROL, components));
+            this.nodeManager.addNewNode(entityId, ClassType.CONTROL, components);
         }
 
         if (components.collision && components.display) {
-
-            this.nodes[ClassType.COLLISION].push(new Node(entityId, ClassType.COLLISION, components));
+            this.nodeManager.addNewNode(entityId, ClassType.COLLISION, components);
         }
 
         if (components.trigger) {
-
-            console.log(components);
-
-            this.nodes[ClassType.LEVEL].push(new Node(entityId, ClassType.LEVEL, components));
+            this.nodeManager.addNewNode(entityId, ClassType.LEVEL, components);
         }
     }
 
@@ -104,14 +95,14 @@ export default class Engine {
 
     addSystem(system: ISystem) {
         this.systems.push(system);
-        this.nodes[system.classType] = [];
+        this.nodeManager.addClassType(system.classType);
         system.init();
     }
 
     removeSystem(system: ISystem) {
         system.stop();
         system = null;
-        this.nodes[system.classType] = null;
+        this.nodeManager.removeNodesByClassType(system.classType);
         this.systems = this.systems.filter((system: ISystem) => {
             return !!system;
         });
@@ -161,27 +152,7 @@ export default class Engine {
             return entity.id;
         });
 
-        ids.map(this.destroyNodesByEntityId.bind(this));
-    }
-
-    destroyNodesByEntityId(entityId: string) {
-
-        let types = Object.keys(this.nodes);
-
-        types.map((type) => {
-
-            let nodes: Node[] = this.nodes[type].filter((node: Node) => {
-
-                return node.entityId === entityId;
-            });
-
-            nodes.map((node) => {
-                if (node.display && node.display.sprite) {
-                    node.display.sprite.destroy();
-                }
-                node.isActive = false;
-            });
-        });
+        ids.map(this.nodeManager.deactivateNodesByEntityId, this.nodeManager);
     }
 
     update(before = 0) {
@@ -203,16 +174,13 @@ export default class Engine {
 
             this.deactivateNodesByInactiveEntities();
 
-            Object.keys(this.nodes).map((classType) => {
-
-                this.nodes[classType] = this.filterInactiveNodes(this.nodes[classType]);
-            });
+            this.nodeManager.filterInactiveNodes();
 
             let results = [];
 
             this.systems.map((system) => {
 
-                let nodes = this.nodes[system.classType];
+                let nodes = this.nodeManager.getActiveNodesByClassType(system.classType);
 
                 results.push(system.update(dt, nodes || []));
             });
