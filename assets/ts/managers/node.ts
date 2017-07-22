@@ -68,9 +68,40 @@ export default class NodeManager {
         });
     }
 
+    deactivateNodesByEntityIds(ids: string[]) {
+        ids.map(this.deactivateNodesByEntityId, this);
+    }
+
     destroySprite(node: Node) {
         if (node.display && node.display.sprite) {
             node.display.sprite.destroy();
+        }
+    }
+
+    generateNodes(entityId: string, components: NodeComponents) {
+
+        if (components.display && components.position) {
+            this.addNewNode(entityId, ClassType.RENDER, components);
+        }
+
+        if (components.animation && components.display && components.velocity) {
+            this.addNewNode(entityId, ClassType.ANIMATION, components);
+        }
+
+        if (components.velocity && components.position && components.collision) {
+            this.addNewNode(entityId, ClassType.MOVE, components);
+        }
+
+        if (components.velocity && components.input) {
+            this.addNewNode(entityId, ClassType.CONTROL, components);
+        }
+
+        if (components.collision && components.display) {
+            this.addNewNode(entityId, ClassType.COLLISION, components);
+        }
+
+        if (components.trigger) {
+            this.addNewNode(entityId, ClassType.LEVEL, components);
         }
     }
 

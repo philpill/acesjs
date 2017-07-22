@@ -5,6 +5,7 @@
             "pixi.js",
             "mocha"
         ],
+        "target": "ES2017",
         "sourceMap": true
     }
 }

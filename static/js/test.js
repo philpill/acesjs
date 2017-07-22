@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 222);
+/******/ 	return __webpack_require__(__webpack_require__.s = 224);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -73,53 +73,53 @@
 
 "use strict";
 
-exports.__esModule = true;
-var move_1 = __webpack_require__(27);
-var settings_1 = __webpack_require__(8);
-var assert = __webpack_require__(104);
-describe('MoveSystem', function () {
-    var settings;
-    var system;
-    beforeEach(function () {
-        settings = new settings_1["default"]();
-        system = new move_1["default"](settings);
+Object.defineProperty(exports, "__esModule", { value: true });
+const move_1 = __webpack_require__(27);
+const settings_1 = __webpack_require__(8);
+const assert = __webpack_require__(104);
+describe('MoveSystem', () => {
+    let settings;
+    let system;
+    beforeEach(() => {
+        settings = new settings_1.default();
+        system = new move_1.default(settings);
     });
-    describe('getVelocityX()', function () {
-        it('should return greater value when isGrounded', function () {
-            var groundedValue = system.getVelocityX(1, 1, 1, 1, true);
-            var nonGroundedValue = system.getVelocityX(1, 1, 1, 1, false);
+    describe('getVelocityX()', () => {
+        it('should return greater value when isGrounded', () => {
+            let groundedValue = system.getVelocityX(1, 1, 1, 1, true);
+            let nonGroundedValue = system.getVelocityX(1, 1, 1, 1, false);
             assert.equal(groundedValue > nonGroundedValue, true, 'grounded horizontal velocity is not greater airborne velocity');
         });
     });
-    describe('getPositionX()', function () {
-        it('should not return less than zero', function () {
-            var value = system.getPositionX(1, 1, -20, 1, 100);
+    describe('getPositionX()', () => {
+        it('should not return less than zero', () => {
+            let value = system.getPositionX(1, 1, -20, 1, 100);
             assert.equal(value >= 0, true, 'x position is less than zero');
         });
-        it('cannot be greater than the height of the map', function () {
-            var mapWidth = 100;
-            var value = system.getPositionX(1, 1, 800, 1, mapWidth);
-            var max = mapWidth * 16 - 16;
+        it('cannot be greater than the height of the map', () => {
+            let mapWidth = 100;
+            let value = system.getPositionX(1, 1, 800, 1, mapWidth);
+            let max = mapWidth * 16 - 16;
             assert.equal(value <= max, true, 'x position is greater than map height boundary');
         });
     });
-    describe('getVelocityY()', function () {
-        it('should not be greater than 0.5', function () {
-            var value = system.getVelocityY(2, 100, 2, false);
+    describe('getVelocityY()', () => {
+        it('should not be greater than 0.5', () => {
+            let value = system.getVelocityY(2, 100, 2, false);
             assert.equal(value <= 0.5, true, 'y position is less than 0.5');
         });
-        it('should not return negative if grounded', function () {
-            var value = system.getVelocityY(2, -100, 2, true);
+        it('should not return negative if grounded', () => {
+            let value = system.getVelocityY(2, -100, 2, true);
             assert.equal(value, 0, 'y velocity is negative');
         });
     });
-    describe('getPositionY()', function () {
-        it('should not return fractions if grounded ', function () {
-            var value = system.getPositionY(16, 1.5, 1.5, 1, true);
+    describe('getPositionY()', () => {
+        it('should not return fractions if grounded ', () => {
+            let value = system.getPositionY(16, 1.5, 1.5, 1, true);
             assert.equal(Math.round(value), value, 'y position is not a whole number');
         });
-        it('should not return less than zero', function () {
-            var value = system.getPositionY(1, 1, -20, 1, true);
+        it('should not return less than zero', () => {
+            let value = system.getPositionY(1, 1, -20, 1, true);
             assert.equal(value >= 0, true, 'y position is less than zero');
         });
     });
@@ -200,7 +200,7 @@ function isBuffer(b) {
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var util = __webpack_require__(220);
+var util = __webpack_require__(222);
 var hasOwn = Object.prototype.hasOwnProperty;
 var pSlice = Array.prototype.slice;
 var functionsHaveNames = (function () {
@@ -655,7 +655,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 218:
+/***/ 220:
 /***/ (function(module, exports) {
 
 if (typeof Object.create === 'function') {
@@ -685,7 +685,7 @@ if (typeof Object.create === 'function') {
 
 /***/ }),
 
-/***/ 219:
+/***/ 221:
 /***/ (function(module, exports) {
 
 module.exports = function isBuffer(arg) {
@@ -697,7 +697,7 @@ module.exports = function isBuffer(arg) {
 
 /***/ }),
 
-/***/ 220:
+/***/ 222:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -1225,7 +1225,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(219);
+exports.isBuffer = __webpack_require__(221);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -1269,7 +1269,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(218);
+exports.inherits = __webpack_require__(220);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -1291,7 +1291,7 @@ function hasOwnProperty(obj, prop) {
 
 /***/ }),
 
-/***/ 222:
+/***/ 224:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(103);
@@ -1304,61 +1304,60 @@ module.exports = __webpack_require__(103);
 
 "use strict";
 
-exports.__esModule = true;
-var enum_1 = __webpack_require__(6);
-var enum_2 = __webpack_require__(6);
-var MoveSystem = (function () {
-    function MoveSystem(settings) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const enum_1 = __webpack_require__(5);
+const enum_2 = __webpack_require__(5);
+class MoveSystem {
+    constructor(settings) {
         this.classType = enum_1.ClassType.MOVE;
         this.settings = settings;
     }
-    MoveSystem.prototype.init = function () { };
-    MoveSystem.prototype.stop = function () { };
-    MoveSystem.prototype.getVelocityX = function (time, friction, velocity, acceleration, isGrounded) {
+    init() { }
+    stop() { }
+    getVelocityX(time, friction, velocity, acceleration, isGrounded) {
         // limit horizontal movement in the air
         acceleration = isGrounded ? acceleration : acceleration / 3;
         return (velocity + time * acceleration) * friction;
-    };
-    MoveSystem.prototype.getPositionX = function (time, tile, position, velocity, mapWidth) {
+    }
+    getPositionX(time, tile, position, velocity, mapWidth) {
         position = position + (velocity + time * velocity) * tile;
         // stop movement at map boundaries - shift this to collision system
         position = Math.max(0, position);
         position = this.getLowestHorizontalPosition(position, mapWidth, tile);
         return position;
-    };
-    MoveSystem.prototype.getLowestHorizontalPosition = function (currentPosition, mapWidth, tileSize) {
+    }
+    getLowestHorizontalPosition(currentPosition, mapWidth, tileSize) {
         return Math.min(currentPosition, mapWidth * tileSize - tileSize);
-    };
-    MoveSystem.prototype.getVelocityY = function (time, velocity, acceleration, isGrounded) {
+    }
+    getVelocityY(time, velocity, acceleration, isGrounded) {
         // prevent any more downwards vertical movement
         velocity = isGrounded ? Math.max(0, velocity) : velocity + time * acceleration;
         // cap the velocity - anything more than 0.7 and the entity might fall
         // though the tile before collision is detected
         return Math.min(velocity, 0.5);
-    };
-    MoveSystem.prototype.getPositionY = function (time, tile, position, velocity, isGrounded) {
+    }
+    getPositionY(time, tile, position, velocity, isGrounded) {
         position = position + velocity * tile;
         if (isGrounded) {
             // round up to tile edge
             position = Math.floor(position / tile) * tile;
         }
         return Math.max(0, position);
-    };
-    MoveSystem.prototype.update = function (time, nodes) {
-        var _this = this;
-        nodes.map(function (node) {
-            var velocityData = node.velocity;
-            var positionData = node.position;
-            var collisionData = node.collision;
-            var triggerData = node.trigger;
-            var isGrounded = collisionData.isBottomObstacleCollision;
-            var tile = _this.settings.TILE;
-            var friction = _this.settings.FRICTION;
-            velocityData.velocityX = _this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
-            positionData.x = _this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
-            velocityData.velocityY = _this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
-            positionData.y = _this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
-            if (positionData.y > _this.settings.MAP[0] * tile) {
+    }
+    update(time, nodes) {
+        nodes.map((node) => {
+            let velocityData = node.velocity;
+            let positionData = node.position;
+            let collisionData = node.collision;
+            let triggerData = node.trigger;
+            let isGrounded = collisionData.isBottomObstacleCollision;
+            let tile = this.settings.TILE;
+            let friction = this.settings.FRICTION;
+            velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
+            positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
+            velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
+            positionData.y = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
+            if (positionData.y > this.settings.MAP[0] * tile) {
                 console.log('OFF MAP');
                 // node.isActive = false;
                 positionData.outOfBounds = true;
@@ -1368,10 +1367,9 @@ var MoveSystem = (function () {
                 }
             }
         });
-    };
-    return MoveSystem;
-}());
-exports["default"] = MoveSystem;
+    }
+}
+exports.default = MoveSystem;
 
 
 /***/ }),
@@ -1563,12 +1561,12 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ 6:
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var TriggerType;
 (function (TriggerType) {
     TriggerType[TriggerType["UNDEFINED"] = 0] = "UNDEFINED";
@@ -1597,18 +1595,17 @@ exports.ClassType = ClassType;
 
 "use strict";
 
-exports.__esModule = true;
-var Settings = (function () {
-    function Settings() {
+Object.defineProperty(exports, "__esModule", { value: true });
+class Settings {
+    constructor() {
         this.GRAVITY = 1;
         this.FRICTION = 0.90;
         this.TILE = 16;
         this.MAP = [45, 30];
         this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
     }
-    return Settings;
-}());
-exports["default"] = Settings;
+}
+exports.default = Settings;
 
 
 /***/ })

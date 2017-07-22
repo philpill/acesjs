@@ -13,12 +13,14 @@ export default class Engine {
     systems: ISystem[];
     isPaused: boolean;
     nodeManager: NodeManager;
+    entityManager: EntityManager;
 
     constructor(settings: Settings) {
 
         this.entities = [];
         this.systems = [];
         this.nodeManager = new NodeManager(settings);
+        this.entityManager = new EntityManager(settings);
         this.isPaused = false;
     }
 
@@ -33,36 +35,9 @@ export default class Engine {
 
         let entityComponents = entity.components;
 
-        this.generateNodes(entity.id, entityComponents);
+        this.nodeManager.generateNodes(entity.id, entityComponents);
 
         return entity;
-    }
-
-    generateNodes(entityId: string, components: NodeComponents) {
-
-        if (components.display && components.position) {
-            this.nodeManager.addNewNode(entityId, ClassType.RENDER, components);
-        }
-
-        if (components.animation && components.display && components.velocity) {
-            this.nodeManager.addNewNode(entityId, ClassType.ANIMATION, components);
-        }
-
-        if (components.velocity && components.position && components.collision) {
-            this.nodeManager.addNewNode(entityId, ClassType.MOVE, components);
-        }
-
-        if (components.velocity && components.input) {
-            this.nodeManager.addNewNode(entityId, ClassType.CONTROL, components);
-        }
-
-        if (components.collision && components.display) {
-            this.nodeManager.addNewNode(entityId, ClassType.COLLISION, components);
-        }
-
-        if (components.trigger) {
-            this.nodeManager.addNewNode(entityId, ClassType.LEVEL, components);
-        }
     }
 
     addEntities(entities: Entity[]) {
@@ -114,45 +89,44 @@ export default class Engine {
         });
     }
 
-    getEntitiesByInactiveNodes(nodes: Node[]) {
+    getEntityIdsByNodes(nodes: Node[]): string[] {
 
-        return nodes.filter((node) => {
-            return !node.isActive;
-        }).map((node) => {
+        let ids = nodes.map((node) => {
             return node.entityId;
-        }).filter((value, index, array) => {
-            return array.indexOf(value) === index;
-        }).map((id) => {
-            return this.getEntitiesById(id);
-        }).reduce((acc, entities) => {
-            return acc.concat(entities);
-        }, []);
+        });
+
+        // unique values only
+        return [...new Set(ids)];
     }
 
     filterInactiveNodes(nodes: Node[]) {
 
-        let inactiveEntities = this.getEntitiesByInactiveNodes(nodes);
+        let inactiveNodes = this.nodeManager.getInactiveNodes();
 
-        this.destroyEntities(inactiveEntities);
+        let entityIds = this.getEntityIdsByNodes(inactiveNodes);
+
+        let entities = entityIds.map((id) => {
+
+            return this.getEntitiesById(id)[0];
+        });
+
+        this.destroyEntities(entities);
 
         return nodes.filter((node) => {
             return node.isActive;
         });
     }
 
-    deactivateNodesByInactiveEntities() {
-
+    getInactiveEntityIds(): string[] {
         let entities = this.entities.filter((entity) => {
 
             return !entity.isActive;
         });
 
-        let ids = entities.map((entity) => {
+        return entities.map((entity) => {
 
             return entity.id;
         });
-
-        ids.map(this.nodeManager.deactivateNodesByEntityId, this.nodeManager);
     }
 
     update(before = 0) {
@@ -172,7 +146,9 @@ export default class Engine {
 
         if (!this.isPaused) {
 
-            this.deactivateNodesByInactiveEntities();
+            let inactiveEntityIds = this.getInactiveEntityIds();
+
+            this.nodeManager.deactivateNodesByEntityIds(inactiveEntityIds);
 
             this.nodeManager.filterInactiveNodes();
 

@@ -100,7 +100,7 @@ Object.keys(_math).forEach(function (key) {
   });
 });
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 Object.defineProperty(exports, 'glCore', {
   enumerable: true,
@@ -118,7 +118,7 @@ Object.defineProperty(exports, 'Bounds', {
   }
 });
 
-var _DisplayObject = __webpack_require__(61);
+var _DisplayObject = __webpack_require__(62);
 
 Object.defineProperty(exports, 'DisplayObject', {
   enumerable: true,
@@ -136,7 +136,7 @@ Object.defineProperty(exports, 'Container', {
   }
 });
 
-var _Transform = __webpack_require__(62);
+var _Transform = __webpack_require__(63);
 
 Object.defineProperty(exports, 'Transform', {
   enumerable: true,
@@ -145,7 +145,7 @@ Object.defineProperty(exports, 'Transform', {
   }
 });
 
-var _TransformStatic = __webpack_require__(63);
+var _TransformStatic = __webpack_require__(64);
 
 Object.defineProperty(exports, 'TransformStatic', {
   enumerable: true,
@@ -208,7 +208,7 @@ Object.defineProperty(exports, 'Text', {
   }
 });
 
-var _TextStyle = __webpack_require__(74);
+var _TextStyle = __webpack_require__(75);
 
 Object.defineProperty(exports, 'TextStyle', {
   enumerable: true,
@@ -217,7 +217,7 @@ Object.defineProperty(exports, 'TextStyle', {
   }
 });
 
-var _TextMetrics = __webpack_require__(73);
+var _TextMetrics = __webpack_require__(74);
 
 Object.defineProperty(exports, 'TextMetrics', {
   enumerable: true,
@@ -235,7 +235,7 @@ Object.defineProperty(exports, 'Graphics', {
   }
 });
 
-var _GraphicsData = __webpack_require__(64);
+var _GraphicsData = __webpack_require__(65);
 
 Object.defineProperty(exports, 'GraphicsData', {
   enumerable: true,
@@ -298,7 +298,7 @@ Object.defineProperty(exports, 'RenderTexture', {
   }
 });
 
-var _BaseRenderTexture = __webpack_require__(75);
+var _BaseRenderTexture = __webpack_require__(76);
 
 Object.defineProperty(exports, 'BaseRenderTexture', {
   enumerable: true,
@@ -307,7 +307,7 @@ Object.defineProperty(exports, 'BaseRenderTexture', {
   }
 });
 
-var _VideoBaseTexture = __webpack_require__(77);
+var _VideoBaseTexture = __webpack_require__(78);
 
 Object.defineProperty(exports, 'VideoBaseTexture', {
   enumerable: true,
@@ -316,7 +316,7 @@ Object.defineProperty(exports, 'VideoBaseTexture', {
   }
 });
 
-var _TextureUvs = __webpack_require__(76);
+var _TextureUvs = __webpack_require__(77);
 
 Object.defineProperty(exports, 'TextureUvs', {
   enumerable: true,
@@ -325,7 +325,7 @@ Object.defineProperty(exports, 'TextureUvs', {
   }
 });
 
-var _CanvasRenderTarget = __webpack_require__(68);
+var _CanvasRenderTarget = __webpack_require__(69);
 
 Object.defineProperty(exports, 'CanvasRenderTarget', {
   enumerable: true,
@@ -370,7 +370,7 @@ Object.defineProperty(exports, 'RenderTarget', {
   }
 });
 
-var _Quad = __webpack_require__(72);
+var _Quad = __webpack_require__(73);
 
 Object.defineProperty(exports, 'Quad', {
   enumerable: true,
@@ -379,7 +379,7 @@ Object.defineProperty(exports, 'Quad', {
   }
 });
 
-var _SpriteMaskFilter = __webpack_require__(71);
+var _SpriteMaskFilter = __webpack_require__(72);
 
 Object.defineProperty(exports, 'SpriteMaskFilter', {
   enumerable: true,
@@ -388,7 +388,7 @@ Object.defineProperty(exports, 'SpriteMaskFilter', {
   }
 });
 
-var _Filter = __webpack_require__(70);
+var _Filter = __webpack_require__(71);
 
 Object.defineProperty(exports, 'Filter', {
   enumerable: true,
@@ -397,7 +397,7 @@ Object.defineProperty(exports, 'Filter', {
   }
 });
 
-var _Application = __webpack_require__(59);
+var _Application = __webpack_require__(60);
 
 Object.defineProperty(exports, 'Application', {
   enumerable: true,
@@ -406,7 +406,7 @@ Object.defineProperty(exports, 'Application', {
   }
 });
 
-var _autoDetectRenderer = __webpack_require__(60);
+var _autoDetectRenderer = __webpack_require__(61);
 
 Object.defineProperty(exports, 'autoDetectRenderer', {
   enumerable: true,
@@ -1427,7 +1427,7 @@ Object.defineProperty(exports, 'Point', {
   }
 });
 
-var _ObservablePoint = __webpack_require__(66);
+var _ObservablePoint = __webpack_require__(67);
 
 Object.defineProperty(exports, 'ObservablePoint', {
   enumerable: true,
@@ -1445,7 +1445,7 @@ Object.defineProperty(exports, 'Matrix', {
   }
 });
 
-var _GroupD = __webpack_require__(65);
+var _GroupD = __webpack_require__(66);
 
 Object.defineProperty(exports, 'GroupD8', {
   enumerable: true,
@@ -1506,40 +1506,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var gl = {
-    createContext:          __webpack_require__(110),
-    setVertexAttribArrays:  __webpack_require__(50),
-    GLBuffer:               __webpack_require__(106),
-    GLFramebuffer:          __webpack_require__(107),
-    GLShader:               __webpack_require__(108),
-    GLTexture:              __webpack_require__(49),
-    VertexArrayObject:      __webpack_require__(109),
-    shader:                 __webpack_require__(111)
-};
-
-// Export for Node-compatible environments
-if (typeof module !== 'undefined' && module.exports)
-{
-    // Export the module
-    module.exports = gl;
-}
-
-// Add to the browser window pixi.gl
-if (typeof window !== 'undefined')
-{
-    // add the window object
-    window.PIXI = window.PIXI || {};
-    window.PIXI.glCore = gl;
-}
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var TriggerType;
 (function (TriggerType) {
     TriggerType[TriggerType["UNDEFINED"] = 0] = "UNDEFINED";
@@ -1559,6 +1528,37 @@ var ClassType;
     ClassType[ClassType["INTERSTITIAL"] = 6] = "INTERSTITIAL";
 })(ClassType || (ClassType = {}));
 exports.ClassType = ClassType;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var gl = {
+    createContext:          __webpack_require__(110),
+    setVertexAttribArrays:  __webpack_require__(51),
+    GLBuffer:               __webpack_require__(106),
+    GLFramebuffer:          __webpack_require__(107),
+    GLShader:               __webpack_require__(108),
+    GLTexture:              __webpack_require__(50),
+    VertexArrayObject:      __webpack_require__(109),
+    shader:                 __webpack_require__(111)
+};
+
+// Export for Node-compatible environments
+if (typeof module !== 'undefined' && module.exports)
+{
+    // Export the module
+    module.exports = gl;
+}
+
+// Add to the browser window pixi.gl
+if (typeof window !== 'undefined')
+{
+    // add the window object
+    window.PIXI = window.PIXI || {};
+    window.PIXI.glCore = gl;
+}
 
 
 /***/ }),
@@ -1798,18 +1798,17 @@ var substr = 'ab'.substr(-1) === 'b'
 
 "use strict";
 
-exports.__esModule = true;
-var Settings = (function () {
-    function Settings() {
+Object.defineProperty(exports, "__esModule", { value: true });
+class Settings {
+    constructor() {
         this.GRAVITY = 1;
         this.FRICTION = 0.90;
         this.TILE = 16;
         this.MAP = [45, 30];
         this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
     }
-    return Settings;
-}());
-exports["default"] = Settings;
+}
+exports.default = Settings;
 
 
 /***/ }),
@@ -1827,11 +1826,11 @@ var _BaseTexture = __webpack_require__(11);
 
 var _BaseTexture2 = _interopRequireDefault(_BaseTexture);
 
-var _VideoBaseTexture = __webpack_require__(77);
+var _VideoBaseTexture = __webpack_require__(78);
 
 var _VideoBaseTexture2 = _interopRequireDefault(_VideoBaseTexture);
 
-var _TextureUvs = __webpack_require__(76);
+var _TextureUvs = __webpack_require__(77);
 
 var _TextureUvs2 = _interopRequireDefault(_TextureUvs);
 
@@ -3663,21 +3662,18 @@ exports.default = BaseTexture;
 
 "use strict";
 
-exports.__esModule = true;
-var DisplayComponent = (function () {
-    function DisplayComponent(sprite, mapWidth, mapHeight, isFocus, tile) {
-        if (isFocus === void 0) { isFocus = false; }
-        if (tile === void 0) { tile = 16; }
-        this["class"] = 'display';
+Object.defineProperty(exports, "__esModule", { value: true });
+class DisplayComponent {
+    constructor(sprite, mapWidth, mapHeight, isFocus = false, tile = 16) {
+        this.class = 'display';
         this.sprite = sprite;
         this.isFocus = isFocus;
         this.tile = tile;
         this.mapHeight = mapHeight;
         this.mapWidth = mapWidth;
     }
-    return DisplayComponent;
-}());
-exports["default"] = DisplayComponent;
+}
+exports.default = DisplayComponent;
 
 
 /***/ }),
@@ -3686,18 +3682,17 @@ exports["default"] = DisplayComponent;
 
 "use strict";
 
-exports.__esModule = true;
-var PositionComponent = (function () {
-    function PositionComponent(x, y, mapWidth) {
-        this["class"] = 'position';
+Object.defineProperty(exports, "__esModule", { value: true });
+class PositionComponent {
+    constructor(x, y, mapWidth) {
+        this.class = 'position';
         this.x = x;
         this.y = y;
         this.mapWidth = mapWidth;
         this.outOfBounds = false;
     }
-    return PositionComponent;
-}());
-exports["default"] = PositionComponent;
+}
+exports.default = PositionComponent;
 
 
 /***/ }),
@@ -3706,49 +3701,43 @@ exports["default"] = PositionComponent;
 
 "use strict";
 
-exports.__esModule = true;
-var Entity = (function () {
-    function Entity() {
+Object.defineProperty(exports, "__esModule", { value: true });
+class Entity {
+    constructor() {
         this.id = this._generateUUID();
         this.isActive = true;
         this.components = {};
     }
-    Entity.prototype._generateUUID = function () {
-        var d = new Date().getTime();
+    _generateUUID() {
+        let d = new Date().getTime();
         if (window.performance && typeof window.performance.now === 'function') {
             d += performance.now(); //use high-precision timer if available
         }
-        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = (d + Math.random() * 16) % 16 | 0;
+        let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            let r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
             return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
         return uuid;
-    };
-    Entity.prototype.addComponent = function (component) {
-        this.components[component["class"]] = component;
-    };
-    Entity.prototype.addComponents = function () {
-        var components = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            components[_i] = arguments[_i];
-        }
+    }
+    addComponent(component) {
+        this.components[component.class] = component;
+    }
+    addComponents(...components) {
         components.map(this.addComponent.bind(this));
-    };
-    Entity.prototype.removeComponent = function (componentClass) {
+    }
+    removeComponent(componentClass) {
         this.components[componentClass] = null;
-    };
-    Entity.prototype.destroy = function () {
-        var _this = this;
+    }
+    destroy() {
         console.log('destroy');
         this.isActive = false;
-        Object.keys(this.components).map(function (component) {
-            _this.components[component] = null;
+        Object.keys(this.components).map((component) => {
+            this.components[component] = null;
         });
-    };
-    return Entity;
-}());
-exports["default"] = Entity;
+    }
+}
+exports.default = Entity;
 
 
 /***/ }),
@@ -3757,28 +3746,15 @@ exports["default"] = Entity;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var Sprite = (function (_super) {
-    __extends(Sprite, _super);
-    function Sprite(args) {
-        var _this = _super.call(this, args) || this;
-        _this.position = {};
-        _this.data = { texture: [] };
-        return _this;
+Object.defineProperty(exports, "__esModule", { value: true });
+class Sprite extends PIXI.Sprite {
+    constructor(args) {
+        super(args);
+        this.position = {};
+        this.data = { texture: [] };
     }
-    return Sprite;
-}(PIXI.Sprite));
-exports["default"] = Sprite;
+}
+exports.default = Sprite;
 
 
 /***/ }),
@@ -3817,7 +3793,7 @@ module.exports = g;
 
 exports.__esModule = true;
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 var _settings = __webpack_require__(3);
 
@@ -3890,7 +3866,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _utils = __webpack_require__(2);
 
-var _DisplayObject2 = __webpack_require__(61);
+var _DisplayObject2 = __webpack_require__(62);
 
 var _DisplayObject3 = _interopRequireDefault(_DisplayObject2);
 
@@ -4509,7 +4485,7 @@ Container.prototype.containerUpdateTransform = Container.prototype.updateTransfo
 
 exports.__esModule = true;
 
-var _SystemRenderer2 = __webpack_require__(67);
+var _SystemRenderer2 = __webpack_require__(68);
 
 var _SystemRenderer3 = _interopRequireDefault(_SystemRenderer2);
 
@@ -4517,7 +4493,7 @@ var _CanvasMaskManager = __webpack_require__(128);
 
 var _CanvasMaskManager2 = _interopRequireDefault(_CanvasMaskManager);
 
-var _CanvasRenderTarget = __webpack_require__(68);
+var _CanvasRenderTarget = __webpack_require__(69);
 
 var _CanvasRenderTarget2 = _interopRequireDefault(_CanvasRenderTarget);
 
@@ -5299,11 +5275,11 @@ var _Resource = __webpack_require__(44);
 
 var _Resource2 = _interopRequireDefault(_Resource);
 
-var _async = __webpack_require__(91);
+var _async = __webpack_require__(92);
 
 var async = _interopRequireWildcard(_async);
 
-var _b = __webpack_require__(92);
+var _b = __webpack_require__(93);
 
 var b64 = _interopRequireWildcard(_b);
 
@@ -5604,7 +5580,7 @@ function buildNativeLine(graphicsData, webGLData) {
 
 exports.__esModule = true;
 
-var _SystemRenderer2 = __webpack_require__(67);
+var _SystemRenderer2 = __webpack_require__(68);
 
 var _SystemRenderer3 = _interopRequireDefault(_SystemRenderer2);
 
@@ -5654,7 +5630,7 @@ var _validateContext2 = _interopRequireDefault(_validateContext);
 
 var _utils = __webpack_require__(2);
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 var _pixiGlCore2 = _interopRequireDefault(_pixiGlCore);
 
@@ -6498,7 +6474,7 @@ var _settings = __webpack_require__(3);
 
 var _settings2 = _interopRequireDefault(_settings);
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6819,61 +6795,60 @@ exports.default = RenderTarget;
 
 "use strict";
 
-exports.__esModule = true;
-var enum_1 = __webpack_require__(6);
-var enum_2 = __webpack_require__(6);
-var MoveSystem = (function () {
-    function MoveSystem(settings) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const enum_1 = __webpack_require__(5);
+const enum_2 = __webpack_require__(5);
+class MoveSystem {
+    constructor(settings) {
         this.classType = enum_1.ClassType.MOVE;
         this.settings = settings;
     }
-    MoveSystem.prototype.init = function () { };
-    MoveSystem.prototype.stop = function () { };
-    MoveSystem.prototype.getVelocityX = function (time, friction, velocity, acceleration, isGrounded) {
+    init() { }
+    stop() { }
+    getVelocityX(time, friction, velocity, acceleration, isGrounded) {
         // limit horizontal movement in the air
         acceleration = isGrounded ? acceleration : acceleration / 3;
         return (velocity + time * acceleration) * friction;
-    };
-    MoveSystem.prototype.getPositionX = function (time, tile, position, velocity, mapWidth) {
+    }
+    getPositionX(time, tile, position, velocity, mapWidth) {
         position = position + (velocity + time * velocity) * tile;
         // stop movement at map boundaries - shift this to collision system
         position = Math.max(0, position);
         position = this.getLowestHorizontalPosition(position, mapWidth, tile);
         return position;
-    };
-    MoveSystem.prototype.getLowestHorizontalPosition = function (currentPosition, mapWidth, tileSize) {
+    }
+    getLowestHorizontalPosition(currentPosition, mapWidth, tileSize) {
         return Math.min(currentPosition, mapWidth * tileSize - tileSize);
-    };
-    MoveSystem.prototype.getVelocityY = function (time, velocity, acceleration, isGrounded) {
+    }
+    getVelocityY(time, velocity, acceleration, isGrounded) {
         // prevent any more downwards vertical movement
         velocity = isGrounded ? Math.max(0, velocity) : velocity + time * acceleration;
         // cap the velocity - anything more than 0.7 and the entity might fall
         // though the tile before collision is detected
         return Math.min(velocity, 0.5);
-    };
-    MoveSystem.prototype.getPositionY = function (time, tile, position, velocity, isGrounded) {
+    }
+    getPositionY(time, tile, position, velocity, isGrounded) {
         position = position + velocity * tile;
         if (isGrounded) {
             // round up to tile edge
             position = Math.floor(position / tile) * tile;
         }
         return Math.max(0, position);
-    };
-    MoveSystem.prototype.update = function (time, nodes) {
-        var _this = this;
-        nodes.map(function (node) {
-            var velocityData = node.velocity;
-            var positionData = node.position;
-            var collisionData = node.collision;
-            var triggerData = node.trigger;
-            var isGrounded = collisionData.isBottomObstacleCollision;
-            var tile = _this.settings.TILE;
-            var friction = _this.settings.FRICTION;
-            velocityData.velocityX = _this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
-            positionData.x = _this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
-            velocityData.velocityY = _this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
-            positionData.y = _this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
-            if (positionData.y > _this.settings.MAP[0] * tile) {
+    }
+    update(time, nodes) {
+        nodes.map((node) => {
+            let velocityData = node.velocity;
+            let positionData = node.position;
+            let collisionData = node.collision;
+            let triggerData = node.trigger;
+            let isGrounded = collisionData.isBottomObstacleCollision;
+            let tile = this.settings.TILE;
+            let friction = this.settings.FRICTION;
+            velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
+            positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
+            velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
+            positionData.y = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
+            if (positionData.y > this.settings.MAP[0] * tile) {
                 console.log('OFF MAP');
                 // node.isActive = false;
                 positionData.outOfBounds = true;
@@ -6883,10 +6858,9 @@ var MoveSystem = (function () {
                 }
             }
         });
-    };
-    return MoveSystem;
-}());
-exports["default"] = MoveSystem;
+    }
+}
+exports.default = MoveSystem;
 
 
 /***/ }),
@@ -9276,7 +9250,7 @@ exports.__esModule = true;
 
 var _utils = __webpack_require__(2);
 
-var _canUseNewCanvasBlendModes = __webpack_require__(69);
+var _canUseNewCanvasBlendModes = __webpack_require__(70);
 
 var _canUseNewCanvasBlendModes2 = _interopRequireDefault(_canUseNewCanvasBlendModes);
 
@@ -9524,7 +9498,7 @@ exports.default = CanvasTinter;
 
 exports.__esModule = true;
 
-var _BaseRenderTexture = __webpack_require__(75);
+var _BaseRenderTexture = __webpack_require__(76);
 
 var _BaseRenderTexture2 = _interopRequireDefault(_BaseRenderTexture);
 
@@ -9972,7 +9946,7 @@ var _core = __webpack_require__(0);
 
 var core = _interopRequireWildcard(_core);
 
-var _CountLimiter = __webpack_require__(90);
+var _CountLimiter = __webpack_require__(91);
 
 var _CountLimiter2 = _interopRequireDefault(_CountLimiter);
 
@@ -10649,11 +10623,11 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _parseUri = __webpack_require__(48);
+var _parseUri = __webpack_require__(49);
 
 var _parseUri2 = _interopRequireDefault(_parseUri);
 
-var _miniSignals = __webpack_require__(47);
+var _miniSignals = __webpack_require__(48);
 
 var _miniSignals2 = _interopRequireDefault(_miniSignals);
 
@@ -11799,10 +11773,10 @@ function reqType(xhr) {
 
 "use strict";
 
-exports.__esModule = true;
-var CollisionComponent = (function () {
-    function CollisionComponent(type) {
-        this["class"] = 'collision';
+Object.defineProperty(exports, "__esModule", { value: true });
+class CollisionComponent {
+    constructor(type) {
+        this.class = 'collision';
         this.type = type;
         this.isDamageCollision = false;
         this.isTopObstacleCollision = false;
@@ -11810,17 +11784,34 @@ var CollisionComponent = (function () {
         this.isRightObstacleCollision = false;
         this.isLeftObstacleCollision = false;
         this.isTriggerCollision = false;
-        this.collide = function () {
+        this.collide = () => {
             // console.log('COLLIDE');
         };
     }
-    return CollisionComponent;
-}());
-exports["default"] = CollisionComponent;
+}
+exports.default = CollisionComponent;
 
 
 /***/ }),
 /* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const enum_1 = __webpack_require__(5);
+class TriggerComponent {
+    constructor(type = enum_1.TriggerType.UNDEFINED) {
+        this.class = 'trigger';
+        this.triggerType = type;
+        this.isTriggered = false;
+    }
+}
+exports.default = TriggerComponent;
+
+
+/***/ }),
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12471,7 +12462,7 @@ earcut.flatten = function (data) {
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12643,7 +12634,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12680,7 +12671,7 @@ module.exports = function parseURI (str, opts) {
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports) {
 
 
@@ -13019,7 +13010,7 @@ module.exports = Texture;
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports) {
 
 // var GL_MAP = {};
@@ -13080,7 +13071,7 @@ module.exports = setVertexAttribArrays;
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports) {
 
 
@@ -13166,7 +13157,7 @@ module.exports = compileProgram;
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports) {
 
 /**
@@ -13250,12 +13241,12 @@ module.exports = defaultValue;
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 var mapType = __webpack_require__(30);
-var mapSize = __webpack_require__(56);
+var mapSize = __webpack_require__(57);
 
 /**
  * Extracts the attributes
@@ -13297,11 +13288,11 @@ module.exports = extractAttributes;
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var mapType = __webpack_require__(30);
-var defaultValue = __webpack_require__(52);
+var defaultValue = __webpack_require__(53);
 
 /**
  * Extracts the uniforms
@@ -13338,7 +13329,7 @@ module.exports = extractUniforms;
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports) {
 
 /**
@@ -13485,7 +13476,7 @@ module.exports = generateUniformAccessObject;
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports) {
 
 /**
@@ -13527,7 +13518,7 @@ module.exports = mapSize;
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports) {
 
 /**
@@ -13551,7 +13542,7 @@ module.exports = setPrecision;
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13614,7 +13605,7 @@ exports.default = {
 //# sourceMappingURL=accessibleTarget.js.map
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13624,7 +13615,7 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _autoDetectRenderer = __webpack_require__(60);
+var _autoDetectRenderer = __webpack_require__(61);
 
 var _Container = __webpack_require__(18);
 
@@ -13826,7 +13817,7 @@ exports.default = Application;
 //# sourceMappingURL=Application.js.map
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13888,7 +13879,7 @@ function autoDetectRenderer(options, arg1, arg2, arg3) {
 //# sourceMappingURL=autoDetectRenderer.js.map
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13908,11 +13899,11 @@ var _settings = __webpack_require__(3);
 
 var _settings2 = _interopRequireDefault(_settings);
 
-var _TransformStatic = __webpack_require__(63);
+var _TransformStatic = __webpack_require__(64);
 
 var _TransformStatic2 = _interopRequireDefault(_TransformStatic);
 
-var _Transform = __webpack_require__(62);
+var _Transform = __webpack_require__(63);
 
 var _Transform2 = _interopRequireDefault(_Transform);
 
@@ -14585,7 +14576,7 @@ DisplayObject.prototype.displayObjectUpdateTransform = DisplayObject.prototype.u
 //# sourceMappingURL=DisplayObject.js.map
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14771,7 +14762,7 @@ exports.default = Transform;
 //# sourceMappingURL=Transform.js.map
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14986,7 +14977,7 @@ exports.default = TransformStatic;
 //# sourceMappingURL=TransformStatic.js.map
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15113,7 +15104,7 @@ exports.default = GraphicsData;
 //# sourceMappingURL=GraphicsData.js.map
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15310,7 +15301,7 @@ exports.default = GroupD8;
 //# sourceMappingURL=GroupD8.js.map
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15432,7 +15423,7 @@ exports.default = ObservablePoint;
 //# sourceMappingURL=ObservablePoint.js.map
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15799,7 +15790,7 @@ exports.default = SystemRenderer;
 //# sourceMappingURL=SystemRenderer.js.map
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15928,7 +15919,7 @@ exports.default = CanvasRenderTarget;
 //# sourceMappingURL=CanvasRenderTarget.js.map
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15994,7 +15985,7 @@ function canUseNewCanvasBlendModes() {
 //# sourceMappingURL=canUseNewCanvasBlendModes.js.map
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16175,7 +16166,7 @@ exports.default = Filter;
 //# sourceMappingURL=Filter.js.map
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16183,7 +16174,7 @@ exports.default = Filter;
 
 exports.__esModule = true;
 
-var _Filter2 = __webpack_require__(70);
+var _Filter2 = __webpack_require__(71);
 
 var _Filter3 = _interopRequireDefault(_Filter2);
 
@@ -16252,7 +16243,7 @@ exports.default = SpriteMaskFilter;
 //# sourceMappingURL=SpriteMaskFilter.js.map
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16260,7 +16251,7 @@ exports.default = SpriteMaskFilter;
 
 exports.__esModule = true;
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 var _pixiGlCore2 = _interopRequireDefault(_pixiGlCore);
 
@@ -16438,7 +16429,7 @@ exports.default = Quad;
 //# sourceMappingURL=Quad.js.map
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16745,7 +16736,7 @@ TextMetrics._fonts = {};
 //# sourceMappingURL=TextMetrics.js.map
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17284,7 +17275,7 @@ function areArraysEqual(array1, array2) {
 //# sourceMappingURL=TextStyle.js.map
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17448,7 +17439,7 @@ exports.default = BaseRenderTexture;
 //# sourceMappingURL=BaseRenderTexture.js.map
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17456,7 +17447,7 @@ exports.default = BaseRenderTexture;
 
 exports.__esModule = true;
 
-var _GroupD = __webpack_require__(65);
+var _GroupD = __webpack_require__(66);
 
 var _GroupD2 = _interopRequireDefault(_GroupD);
 
@@ -17558,7 +17549,7 @@ exports.default = TextureUvs;
 //# sourceMappingURL=TextureUvs.js.map
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17888,7 +17879,7 @@ function createSource(path, type) {
 //# sourceMappingURL=VideoBaseTexture.js.map
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17954,7 +17945,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17968,15 +17959,15 @@ var _core = __webpack_require__(0);
 
 var core = _interopRequireWildcard(_core);
 
-var _generateBlurVertSource = __webpack_require__(82);
+var _generateBlurVertSource = __webpack_require__(83);
 
 var _generateBlurVertSource2 = _interopRequireDefault(_generateBlurVertSource);
 
-var _generateBlurFragSource = __webpack_require__(81);
+var _generateBlurFragSource = __webpack_require__(82);
 
 var _generateBlurFragSource2 = _interopRequireDefault(_generateBlurFragSource);
 
-var _getMaxBlurKernelSize = __webpack_require__(83);
+var _getMaxBlurKernelSize = __webpack_require__(84);
 
 var _getMaxBlurKernelSize2 = _interopRequireDefault(_getMaxBlurKernelSize);
 
@@ -18125,7 +18116,7 @@ exports.default = BlurXFilter;
 //# sourceMappingURL=BlurXFilter.js.map
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18139,15 +18130,15 @@ var _core = __webpack_require__(0);
 
 var core = _interopRequireWildcard(_core);
 
-var _generateBlurVertSource = __webpack_require__(82);
+var _generateBlurVertSource = __webpack_require__(83);
 
 var _generateBlurVertSource2 = _interopRequireDefault(_generateBlurVertSource);
 
-var _generateBlurFragSource = __webpack_require__(81);
+var _generateBlurFragSource = __webpack_require__(82);
 
 var _generateBlurFragSource2 = _interopRequireDefault(_generateBlurFragSource);
 
-var _getMaxBlurKernelSize = __webpack_require__(83);
+var _getMaxBlurKernelSize = __webpack_require__(84);
 
 var _getMaxBlurKernelSize2 = _interopRequireDefault(_getMaxBlurKernelSize);
 
@@ -18295,7 +18286,7 @@ exports.default = BlurYFilter;
 //# sourceMappingURL=BlurYFilter.js.map
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18347,7 +18338,7 @@ function generateFragBlurSource(kernelSize) {
 //# sourceMappingURL=generateBlurFragSource.js.map
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18396,7 +18387,7 @@ function generateVertBlurSource(kernelSize, x) {
 //# sourceMappingURL=generateBlurVertSource.js.map
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18417,7 +18408,7 @@ function getMaxKernelSize(gl) {
 //# sourceMappingURL=getMaxBlurKernelSize.js.map
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18646,7 +18637,7 @@ exports.default = InteractionData;
 //# sourceMappingURL=InteractionData.js.map
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18768,7 +18759,7 @@ exports.default = {
 //# sourceMappingURL=interactiveTarget.js.map
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18847,7 +18838,7 @@ var _core = __webpack_require__(0);
 
 var _resourceLoader = __webpack_require__(22);
 
-var _extras = __webpack_require__(78);
+var _extras = __webpack_require__(79);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -18865,7 +18856,7 @@ function parse(resource, texture) {
 //# sourceMappingURL=bitmapFontParser.js.map
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18929,7 +18920,7 @@ function getResourcePath(resource, baseUrl) {
 //# sourceMappingURL=spritesheetParser.js.map
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18957,7 +18948,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //# sourceMappingURL=textureParser.js.map
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19101,7 +19092,7 @@ exports.default = Plane;
 //# sourceMappingURL=Plane.js.map
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19164,7 +19155,7 @@ exports.default = CountLimiter;
 //# sourceMappingURL=CountLimiter.js.map
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19371,7 +19362,7 @@ function queue(worker, concurrency) {
 //# sourceMappingURL=async.js.map
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19444,32 +19435,32 @@ function encodeBinary(input) {
 //# sourceMappingURL=b64.js.map
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-exports.__esModule = true;
-var input_1 = __webpack_require__(208);
-var InputComponent = (function () {
+Object.defineProperty(exports, "__esModule", { value: true });
+const input_1 = __webpack_require__(209);
+class InputComponent {
     // isPause: any;
-    function InputComponent(settings) {
-        this["class"] = 'input';
+    constructor(settings) {
+        this.class = 'input';
         this.settings = settings;
-        this.inputManager = new input_1["default"](settings);
+        this.inputManager = new input_1.default(settings);
         this.inputManager.onKeyDown(this.onKeyDown.bind(this));
         this.inputManager.onKeyUp(this.onKeyUp.bind(this));
     }
-    InputComponent.prototype.onKeyDown = function (e) {
-        var key = e.keyCode;
+    onKeyDown(e) {
+        let key = e.keyCode;
         this.isJump = this.isJump || key === this.settings.KEY.SPACE;
         this.isLeft = this.isLeft || key === this.settings.KEY.LEFT;
         this.isUp = this.isUp || key === this.settings.KEY.UP;
         this.isRight = this.isRight || key === this.settings.KEY.RIGHT;
         this.isDown = this.isDown || key === this.settings.KEY.DOWN;
-    };
-    InputComponent.prototype.onKeyUp = function (e) {
-        var key = e.keyCode;
+    }
+    onKeyUp(e) {
+        let key = e.keyCode;
         this.isJump = key === this.settings.KEY.SPACE ? false : this.isJump;
         this.isLeft = key === this.settings.KEY.LEFT ? false : this.isLeft;
         this.isUp = key === this.settings.KEY.UP ? false : this.isUp;
@@ -19478,30 +19469,9 @@ var InputComponent = (function () {
         // if (key === this.settings.KEY.P) {
         //     this.isPause = !this.isPause;
         // }
-    };
-    return InputComponent;
-}());
-exports["default"] = InputComponent;
-
-
-/***/ }),
-/* 94 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var enum_1 = __webpack_require__(6);
-var TriggerComponent = (function () {
-    function TriggerComponent(type) {
-        if (type === void 0) { type = enum_1.TriggerType.UNDEFINED; }
-        this["class"] = 'trigger';
-        this.triggerType = type;
-        this.isTriggered = false;
     }
-    return TriggerComponent;
-}());
-exports["default"] = TriggerComponent;
+}
+exports.default = InputComponent;
 
 
 /***/ }),
@@ -19533,7 +19503,7 @@ exports["default"] = TriggerComponent;
 
 
 var punycode = __webpack_require__(198);
-var util = __webpack_require__(217);
+var util = __webpack_require__(219);
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;
@@ -20289,7 +20259,7 @@ var _extract = __webpack_require__(158);
 
 var extract = _interopRequireWildcard(_extract);
 
-var _extras = __webpack_require__(78);
+var _extras = __webpack_require__(79);
 
 var extras = _interopRequireWildcard(_extras);
 
@@ -20367,149 +20337,124 @@ global.PIXI = exports; // eslint-disable-line
 
 "use strict";
 
-exports.__esModule = true;
-var enum_1 = __webpack_require__(6);
-var node_1 = __webpack_require__(223);
-var Engine = (function () {
-    function Engine(settings) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const entity_1 = __webpack_require__(208);
+const node_1 = __webpack_require__(210);
+class Engine {
+    constructor(settings) {
         this.entities = [];
         this.systems = [];
-        this.nodeManager = new node_1["default"](settings);
+        this.nodeManager = new node_1.default(settings);
+        this.entityManager = new entity_1.default(settings);
         this.isPaused = false;
     }
-    Engine.prototype.init = function () {
+    init() {
         this.update();
-    };
-    Engine.prototype.addEntity = function (entity) {
+    }
+    addEntity(entity) {
         this.entities.push(entity);
-        var entityComponents = entity.components;
-        this.generateNodes(entity.id, entityComponents);
+        let entityComponents = entity.components;
+        this.nodeManager.generateNodes(entity.id, entityComponents);
         return entity;
-    };
-    Engine.prototype.generateNodes = function (entityId, components) {
-        if (components.display && components.position) {
-            this.nodeManager.addNewNode(entityId, enum_1.ClassType.RENDER, components);
-        }
-        if (components.animation && components.display && components.velocity) {
-            this.nodeManager.addNewNode(entityId, enum_1.ClassType.ANIMATION, components);
-        }
-        if (components.velocity && components.position && components.collision) {
-            this.nodeManager.addNewNode(entityId, enum_1.ClassType.MOVE, components);
-        }
-        if (components.velocity && components.input) {
-            this.nodeManager.addNewNode(entityId, enum_1.ClassType.CONTROL, components);
-        }
-        if (components.collision && components.display) {
-            this.nodeManager.addNewNode(entityId, enum_1.ClassType.COLLISION, components);
-        }
-        if (components.trigger) {
-            this.nodeManager.addNewNode(entityId, enum_1.ClassType.LEVEL, components);
-        }
-    };
-    Engine.prototype.addEntities = function (entities) {
+    }
+    addEntities(entities) {
         if (entities && entities.length) {
             entities.map(this.addEntity.bind(this));
         }
-    };
-    Engine.prototype.removeEntity = function (entity) {
-        var entityId = entity.id;
-        this.entities = this.entities.filter(function (entity) {
+    }
+    removeEntity(entity) {
+        let entityId = entity.id;
+        this.entities = this.entities.filter((entity) => {
             return entity.id !== entityId;
         });
-    };
-    Engine.prototype.removeEntityById = function (entityId) {
-        var entities = this.getEntitiesById(entityId);
+    }
+    removeEntityById(entityId) {
+        let entities = this.getEntitiesById(entityId);
         return entities.map(this.removeEntity.bind(this));
-    };
-    Engine.prototype.removeEntitiesById = function (ids) {
+    }
+    removeEntitiesById(ids) {
         return ids.map(this.removeEntityById.bind(this));
-    };
-    Engine.prototype.destroyEntities = function (entities) {
-        return entities.map(function (entity) {
+    }
+    destroyEntities(entities) {
+        return entities.map((entity) => {
             return entity.destroy();
         });
-    };
-    Engine.prototype.addSystem = function (system) {
+    }
+    addSystem(system) {
         this.systems.push(system);
         this.nodeManager.addClassType(system.classType);
         system.init();
-    };
-    Engine.prototype.removeSystem = function (system) {
+    }
+    removeSystem(system) {
         system.stop();
         system = null;
         this.nodeManager.removeNodesByClassType(system.classType);
-        this.systems = this.systems.filter(function (system) {
+        this.systems = this.systems.filter((system) => {
             return !!system;
         });
-    };
-    Engine.prototype.getEntitiesById = function (entityId) {
-        return this.entities.filter(function (entity) {
+    }
+    getEntitiesById(entityId) {
+        return this.entities.filter((entity) => {
             return entity.id === entityId;
         });
-    };
-    Engine.prototype.getEntitiesByInactiveNodes = function (nodes) {
-        var _this = this;
-        return nodes.filter(function (node) {
-            return !node.isActive;
-        }).map(function (node) {
+    }
+    getEntityIdsByNodes(nodes) {
+        let ids = nodes.map((node) => {
             return node.entityId;
-        }).filter(function (value, index, array) {
-            return array.indexOf(value) === index;
-        }).map(function (id) {
-            return _this.getEntitiesById(id);
-        }).reduce(function (acc, entities) {
-            return acc.concat(entities);
-        }, []);
-    };
-    Engine.prototype.filterInactiveNodes = function (nodes) {
-        var inactiveEntities = this.getEntitiesByInactiveNodes(nodes);
-        this.destroyEntities(inactiveEntities);
-        return nodes.filter(function (node) {
+        });
+        // unique values only
+        return [...new Set(ids)];
+    }
+    filterInactiveNodes(nodes) {
+        let inactiveNodes = this.nodeManager.getInactiveNodes();
+        let entityIds = this.getEntityIdsByNodes(inactiveNodes);
+        let entities = entityIds.map((id) => {
+            return this.getEntitiesById(id)[0];
+        });
+        this.destroyEntities(entities);
+        return nodes.filter((node) => {
             return node.isActive;
         });
-    };
-    Engine.prototype.deactivateNodesByInactiveEntities = function () {
-        var entities = this.entities.filter(function (entity) {
+    }
+    getInactiveEntityIds() {
+        let entities = this.entities.filter((entity) => {
             return !entity.isActive;
         });
-        var ids = entities.map(function (entity) {
+        return entities.map((entity) => {
             return entity.id;
         });
-        ids.map(this.nodeManager.deactivateNodesByEntityId, this.nodeManager);
-    };
-    Engine.prototype.update = function (before) {
-        var _this = this;
-        if (before === void 0) { before = 0; }
+    }
+    update(before = 0) {
         this.isPaused = false;
         if (document.visibilityState !== 'visible') {
             this.isPaused = true;
         }
-        var now = performance.now();
-        var dt = (now - before) / 1000;
+        let now = performance.now();
+        let dt = (now - before) / 1000;
         dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
         if (!this.isPaused) {
-            this.deactivateNodesByInactiveEntities();
+            let inactiveEntityIds = this.getInactiveEntityIds();
+            this.nodeManager.deactivateNodesByEntityIds(inactiveEntityIds);
             this.nodeManager.filterInactiveNodes();
-            var results_1 = [];
-            this.systems.map(function (system) {
-                var nodes = _this.nodeManager.getActiveNodesByClassType(system.classType);
-                results_1.push(system.update(dt, nodes || []));
+            let results = [];
+            this.systems.map((system) => {
+                let nodes = this.nodeManager.getActiveNodesByClassType(system.classType);
+                results.push(system.update(dt, nodes || []));
             });
-            results_1 = results_1.filter(function (result) { return result; });
-            var newEntities = results_1.map(function (result) {
+            results = results.filter((result) => { return result; });
+            let newEntities = results.map((result) => {
                 return result.newEntities;
             })[0];
-            var deadEntities = results_1.map(function (result) {
+            let deadEntities = results.map((result) => {
                 return result.deadEntities;
             });
             this.addEntities(newEntities);
         }
         before = now;
         requestAnimationFrame(this.update.bind(this, before));
-    };
-    return Engine;
-}());
-exports["default"] = Engine;
+    }
+}
+exports.default = Engine;
 
 
 /***/ }),
@@ -20518,25 +20463,25 @@ exports["default"] = Engine;
 
 "use strict";
 
-exports.__esModule = true;
-var enum_1 = __webpack_require__(6);
-var AnimationSystem = (function () {
-    function AnimationSystem(settings) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const enum_1 = __webpack_require__(5);
+class AnimationSystem {
+    constructor(settings) {
         this.classType = enum_1.ClassType.ANIMATION;
         this.settings = settings;
         this.timer = 0;
     }
-    AnimationSystem.prototype.init = function () {
-    };
-    AnimationSystem.prototype.stop = function () {
-    };
-    AnimationSystem.prototype.setAnimation = function (node, prop) {
+    init() {
+    }
+    stop() {
+    }
+    setAnimation(node, prop) {
         node.animation.currentAnimationProp = prop;
-    };
-    AnimationSystem.prototype.updateFrame = function (node) {
-        var animationData = node.animation;
-        var displayData = node.display;
-        var frames = animationData[animationData.currentAnimationProp];
+    }
+    updateFrame(node) {
+        let animationData = node.animation;
+        let displayData = node.display;
+        let frames = animationData[animationData.currentAnimationProp];
         if (animationData.currentFrame + 1 >= frames.length) {
             animationData.currentFrame = 0;
         }
@@ -20544,38 +20489,36 @@ var AnimationSystem = (function () {
             animationData.currentFrame++;
         }
         displayData.sprite.texture.frame = displayData.sprite.data.texture[frames[animationData.currentFrame]];
-    };
-    AnimationSystem.prototype.update = function (dt, nodes) {
-        var _this = this;
-        nodes.map(function (node) {
-            var velocityData = node.velocity;
-            var animationData = node.animation;
+    }
+    update(dt, nodes) {
+        nodes.map((node) => {
+            let velocityData = node.velocity;
+            let animationData = node.animation;
             if (velocityData.velocityY > 0.01 || velocityData.velocityY < -0.01) {
                 // play jump animation
-                _this.setAnimation(node, 'jump');
+                this.setAnimation(node, 'jump');
             }
             else if (velocityData.velocityX > 0.1) {
                 //play right animation
-                _this.setAnimation(node, 'right');
+                this.setAnimation(node, 'right');
             }
             else if (velocityData.velocityX < -0.1) {
                 //play left animation
-                _this.setAnimation(node, 'left');
+                this.setAnimation(node, 'left');
             }
             else {
-                _this.setAnimation(node, 'default');
+                this.setAnimation(node, 'default');
             }
-            _this.timer = _this.timer + dt;
-            if (_this.timer > 0.2) {
-                _this.updateFrame(node);
-                _this.timer = dt;
+            this.timer = this.timer + dt;
+            if (this.timer > 0.2) {
+                this.updateFrame(node);
+                this.timer = dt;
             }
             return node;
         });
-    };
-    return AnimationSystem;
-}());
-exports["default"] = AnimationSystem;
+    }
+}
+exports.default = AnimationSystem;
 
 
 /***/ }),
@@ -20584,27 +20527,27 @@ exports["default"] = AnimationSystem;
 
 "use strict";
 
-exports.__esModule = true;
-var enum_1 = __webpack_require__(6);
-var CollisionSystem = (function () {
-    function CollisionSystem(settings) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const enum_1 = __webpack_require__(5);
+class CollisionSystem {
+    constructor(settings) {
         this.classType = enum_1.ClassType.COLLISION;
         this.settings = settings;
     }
-    CollisionSystem.prototype.init = function () {
-    };
-    CollisionSystem.prototype.stop = function () {
-    };
-    CollisionSystem.prototype.isBroadcollision = function (sprite1, sprite2) {
-        var approxY = false;
-        var approxX = (Math.abs(sprite1.x - sprite2.x) < 100);
+    init() {
+    }
+    stop() {
+    }
+    isBroadcollision(sprite1, sprite2) {
+        let approxY = false;
+        let approxX = (Math.abs(sprite1.x - sprite2.x) < 100);
         if (approxX) {
             approxY = (Math.abs(sprite1.y - sprite2.y) < 100);
         }
         return approxX && approxY;
-    };
-    CollisionSystem.prototype.isNarrowCollision = function (sprite1, sprite2) {
-        var isCollision = false;
+    }
+    isNarrowCollision(sprite1, sprite2) {
+        let isCollision = false;
         if (sprite1.x < sprite2.x + sprite2.width &&
             sprite1.x + sprite1.width > sprite2.x &&
             sprite1.y < sprite2.y + sprite2.height &&
@@ -20612,20 +20555,20 @@ var CollisionSystem = (function () {
             isCollision = true;
         }
         return isCollision;
-    };
-    CollisionSystem.prototype.handleObstacleCollision = function (primary, secondary) {
-        var sprite1 = primary.display.sprite;
-        var sprite2 = secondary.display.sprite;
-        var velocityData = primary.velocity;
-        var collisionData = primary.collision;
-        var errorMargin = this.settings.TILE / 2;
-        var isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
+    }
+    handleObstacleCollision(primary, secondary) {
+        let sprite1 = primary.display.sprite;
+        let sprite2 = secondary.display.sprite;
+        let velocityData = primary.velocity;
+        let collisionData = primary.collision;
+        let errorMargin = this.settings.TILE / 2;
+        let isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
             sprite1.height + sprite1.y < sprite2.y + errorMargin;
-        var isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
+        let isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
             sprite2.height + sprite2.y < sprite1.y + errorMargin;
-        var isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
+        let isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
             sprite1.x + sprite1.width < sprite2.x + errorMargin;
-        var isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
+        let isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
             sprite2.x + sprite2.width < sprite1.x + errorMargin;
         // collisionData.isTopObstacleCollision = isTopCollision;
         // collisionData.isBottomObstacleCollision = isBottomCollision;
@@ -20654,25 +20597,25 @@ var CollisionSystem = (function () {
             left: isLeftCollision,
             right: isRightCollision
         };
-    };
-    CollisionSystem.prototype.handleTriggerCollision = function (primary, secondary) {
+    }
+    handleTriggerCollision(primary, secondary) {
         secondary.collision.collide();
-    };
-    CollisionSystem.prototype.handlePrimaryDamageCollision = function (primary, secondary) {
-    };
-    CollisionSystem.prototype.handleSecondaryDamageCollision = function (primary, secondary) {
-    };
-    CollisionSystem.prototype.handleCollision = function (primary, secondary) {
-        var sprite1 = primary.display.sprite;
-        var sprite2 = secondary.display.sprite;
-        var velocityData = primary.velocity;
-        var collisionData = primary.collision;
-        var triggerData = secondary.trigger;
-        var inputData = primary.input;
-        var primaryDamageData = primary.damage;
-        var secondaryDamageData = secondary.damage;
+    }
+    handlePrimaryDamageCollision(primary, secondary) {
+    }
+    handleSecondaryDamageCollision(primary, secondary) {
+    }
+    handleCollision(primary, secondary) {
+        let sprite1 = primary.display.sprite;
+        let sprite2 = secondary.display.sprite;
+        let velocityData = primary.velocity;
+        let collisionData = primary.collision;
+        let triggerData = secondary.trigger;
+        let inputData = primary.input;
+        let primaryDamageData = primary.damage;
+        let secondaryDamageData = secondary.damage;
         // handle different collision effects
-        var results = null;
+        let results = null;
         if (velocityData && collisionData) {
             results = this.handleObstacleCollision(primary, secondary);
         }
@@ -20688,27 +20631,26 @@ var CollisionSystem = (function () {
             this.handlePrimaryDamageCollision(primary, secondary);
         }
         return results;
-    };
-    CollisionSystem.prototype.update = function (time, nodes) {
-        var _this = this;
-        var primaries = nodes.filter(function (node) {
+    }
+    update(time, nodes) {
+        let primaries = nodes.filter((node) => {
             return node.collision.type === 'primary';
         });
-        var secondaries = nodes.filter(function (node) {
+        let secondaries = nodes.filter((node) => {
             return node.collision.type !== 'primary';
         });
-        primaries.map(function (primary) {
-            var results = {
+        primaries.map((primary) => {
+            let results = {
                 top: false,
                 bottom: false,
                 left: false,
                 right: false
             };
-            secondaries.map(function (secondary) {
-                var sprite1 = primary.display.sprite;
-                var sprite2 = secondary.display.sprite;
-                if (_this.isBroadcollision(sprite1, sprite2) && _this.isNarrowCollision(sprite1, sprite2)) {
-                    var collisionResults = _this.handleCollision(primary, secondary);
+            secondaries.map((secondary) => {
+                let sprite1 = primary.display.sprite;
+                let sprite2 = secondary.display.sprite;
+                if (this.isBroadcollision(sprite1, sprite2) && this.isNarrowCollision(sprite1, sprite2)) {
+                    let collisionResults = this.handleCollision(primary, secondary);
                     // set collision position true
                     results.top = collisionResults.top || results.top;
                     results.bottom = collisionResults.bottom || results.bottom;
@@ -20722,10 +20664,9 @@ var CollisionSystem = (function () {
             primary.collision.isRightObstacleCollision = results.right;
             primary.velocity.isGrounded = results.bottom;
         });
-    };
-    return CollisionSystem;
-}());
-exports["default"] = CollisionSystem;
+    }
+}
+exports.default = CollisionSystem;
 
 
 /***/ }),
@@ -20734,27 +20675,26 @@ exports["default"] = CollisionSystem;
 
 "use strict";
 
-exports.__esModule = true;
-var enum_1 = __webpack_require__(6);
-var ControlSystem = (function () {
-    function ControlSystem(settings) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const enum_1 = __webpack_require__(5);
+class ControlSystem {
+    constructor(settings) {
         this.classType = enum_1.ClassType.CONTROL;
         this.settings = settings;
     }
-    ControlSystem.prototype.init = function () {
-    };
-    ControlSystem.prototype.stop = function () {
-    };
-    ControlSystem.prototype.update = function (time, nodes) {
-        var _this = this;
-        nodes.map(function (node) {
-            var velocityData = node.velocity;
-            var inputData = node.input;
+    init() {
+    }
+    stop() {
+    }
+    update(time, nodes) {
+        nodes.map((node) => {
+            let velocityData = node.velocity;
+            let inputData = node.input;
             if (inputData.isUp && velocityData.isGrounded) {
                 velocityData.accelerationY = -velocityData.maxAccelerationY;
             }
             else {
-                velocityData.accelerationY = _this.settings.GRAVITY;
+                velocityData.accelerationY = this.settings.GRAVITY;
             }
             if (inputData.isRight) {
                 // console.log('right');
@@ -20768,10 +20708,9 @@ var ControlSystem = (function () {
                 velocityData.accelerationX = 0;
             }
         });
-    };
-    return ControlSystem;
-}());
-exports["default"] = ControlSystem;
+    }
+}
+exports.default = ControlSystem;
 
 
 /***/ }),
@@ -20780,12 +20719,12 @@ exports["default"] = ControlSystem;
 
 "use strict";
 
-exports.__esModule = true;
-var level_1 = __webpack_require__(213);
-var enum_1 = __webpack_require__(6);
-var enum_2 = __webpack_require__(6);
-var LevelSystem = (function () {
-    function LevelSystem(settings) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const level_1 = __webpack_require__(215);
+const enum_1 = __webpack_require__(5);
+const enum_2 = __webpack_require__(5);
+class LevelSystem {
+    constructor(settings) {
         this.classType = enum_1.ClassType.LEVEL;
         this.settings = settings;
         this.isLoaded = false;
@@ -20798,65 +20737,63 @@ var LevelSystem = (function () {
                 data: PIXI.loader.resources.level2.data
             }];
     }
-    LevelSystem.prototype.init = function () { };
-    LevelSystem.prototype.stop = function () { };
-    LevelSystem.prototype.loadLevel = function (levelNumber) {
+    init() { }
+    stop() { }
+    loadLevel(levelNumber) {
         console.log('loadlevel');
         console.log(levelNumber);
-        var levelData = this.levels[levelNumber].data;
-        var level = new level_1["default"](this.settings, levelData);
-        var tiledLevelData = level.createLevel();
+        let levelData = this.levels[levelNumber].data;
+        let level = new level_1.default(this.settings, levelData);
+        let tiledLevelData = level.createLevel();
         this.entities = tiledLevelData.entities;
         return this.entities;
-    };
-    LevelSystem.prototype.getAllEntityIds = function (nodes) {
-        var ids = nodes.map(function (node) {
+    }
+    getAllEntityIds(nodes) {
+        let ids = nodes.map((node) => {
             return node.entityId;
         });
         ids = Array.from(new Set(ids));
         return ids;
-    };
-    LevelSystem.prototype.loadNextLevel = function () {
+    }
+    loadNextLevel() {
         // destroy all nodes
         // destroy all entities
         console.log('loadNextLevel()');
         this.isLoaded = false;
-        this.entities.map(function (entity) {
+        this.entities.map((entity) => {
             entity.destroy();
         });
         this.entities = [];
         this.currentLevel = this.levels.length > this.currentLevel ? this.currentLevel + 1 : 0;
-    };
-    LevelSystem.prototype.update = function (time, nodes) {
-        var _this = this;
-        var result = {};
+    }
+    update(time, nodes) {
+        let result = {};
         this.currentLevel = this.currentLevel || 1;
         if (!this.isLoaded) {
             result.newEntities = this.loadLevel(this.currentLevel - 1);
             // result.deadEntities = this.getAllEntityIds(nodes);
             this.isLoaded = true;
         }
-        nodes.map(function (node) {
-            var triggerData = node.trigger;
-            if (_this.isLoaded && triggerData.isTriggered) {
+        nodes.map((node) => {
+            let triggerData = node.trigger;
+            if (this.isLoaded && triggerData.isTriggered) {
                 if (triggerData.triggerType === enum_2.TriggerType.LEVELEXIT) {
                     console.log('FINISH');
                     triggerData.isTriggered = false;
-                    _this.loadNextLevel();
+                    this.loadNextLevel();
                 }
                 if (triggerData.triggerType === enum_2.TriggerType.PLAYERDEATH) {
                     console.log('DEATH');
                     triggerData.isTriggered = false;
-                    _this.currentLevel = 0;
-                    _this.loadNextLevel();
+                    this.currentLevel = 0;
+                    this.loadNextLevel();
                 }
             }
         });
         return result;
-    };
-    return LevelSystem;
-}());
-exports["default"] = LevelSystem;
+    }
+}
+exports.default = LevelSystem;
 
 
 /***/ }),
@@ -20865,15 +20802,15 @@ exports["default"] = LevelSystem;
 
 "use strict";
 
-exports.__esModule = true;
-var enum_1 = __webpack_require__(6);
-var RenderSystem = (function () {
-    function RenderSystem(settings) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const enum_1 = __webpack_require__(5);
+class RenderSystem {
+    constructor(settings) {
         this.classType = enum_1.ClassType.RENDER;
         this.sprites = {};
         this.settings = settings;
     }
-    RenderSystem.prototype.init = function () {
+    init() {
         this.stage = new PIXI.Application().stage;
         this.container = new PIXI.Container();
         this.stage.addChild(this.container);
@@ -20881,61 +20818,59 @@ var RenderSystem = (function () {
         this.stage.position.x = this.renderer.width / 2; // 320
         this.stage.position.y = this.renderer.height / 2; // 240
         document.body.appendChild(this.renderer.view);
-    };
-    RenderSystem.prototype.stop = function () {
-    };
-    RenderSystem.prototype.getPivotY = function (displayData) {
-        var pivotY = displayData.sprite.y;
-        var mapHeight = displayData.mapHeight * displayData.tile;
-        var screenHeight = this.renderer.height;
-        var maxTopY = screenHeight / 2;
-        var maxBottomY = mapHeight - (screenHeight / 2);
+    }
+    stop() {
+    }
+    getPivotY(displayData) {
+        let pivotY = displayData.sprite.y;
+        let mapHeight = displayData.mapHeight * displayData.tile;
+        let screenHeight = this.renderer.height;
+        let maxTopY = screenHeight / 2;
+        let maxBottomY = mapHeight - (screenHeight / 2);
         // sprite is in top section of screen
         pivotY = displayData.sprite.y < maxTopY ? maxTopY : pivotY;
         // sprite is in bottom section of screen
         pivotY = displayData.sprite.y > maxBottomY ? maxBottomY : pivotY;
         return pivotY;
-    };
-    RenderSystem.prototype.getPivotX = function (displayData) {
-        var pivotX = displayData.sprite.x;
-        var mapWidth = displayData.mapWidth * displayData.tile;
-        var screenWidth = this.renderer.width;
+    }
+    getPivotX(displayData) {
+        let pivotX = displayData.sprite.x;
+        let mapWidth = displayData.mapWidth * displayData.tile;
+        let screenWidth = this.renderer.width;
         pivotX = displayData.sprite.x < screenWidth / 2 ? screenWidth / 2 : displayData.sprite.x;
         pivotX = displayData.sprite.x + screenWidth / 2 > mapWidth ? mapWidth - screenWidth / 2 : pivotX;
         return pivotX;
-    };
-    RenderSystem.prototype.addNewSprites = function (id, sprite) {
+    }
+    addNewSprites(id, sprite) {
         this.sprites[id] = sprite;
         this.container.addChild(sprite);
-    };
-    RenderSystem.prototype.removeSprite = function (id) {
+    }
+    removeSprite(id) {
         console.log('removeSprite()');
         console.log(this.sprites[id]);
         this.sprites[id].destroy(true);
         this.sprites[id] = null;
-    };
-    RenderSystem.prototype.clearDeadSprites = function () {
-        for (var _i = 0, _a = Object.keys(this.sprites); _i < _a.length; _i++) {
-            var id = _a[_i];
+    }
+    clearDeadSprites() {
+        for (let id of Object.keys(this.sprites)) {
             if (!this.sprites[id]) {
                 delete this.sprites[id];
             }
         }
-    };
-    RenderSystem.prototype.update = function (time, nodes) {
-        var _this = this;
-        nodes.map(function (node) {
+    }
+    update(time, nodes) {
+        nodes.map((node) => {
             /* bottleneck */
-            var displayData = node.display;
-            var positionData = node.position;
-            !_this.sprites[node.entityId] && _this.addNewSprites(node.entityId, displayData.sprite);
+            let displayData = node.display;
+            let positionData = node.position;
+            !this.sprites[node.entityId] && this.addNewSprites(node.entityId, displayData.sprite);
             /* bottleneck */
             displayData.sprite.position.x = positionData.x;
             displayData.sprite.position.y = positionData.y;
             if (displayData.isFocus) {
-                _this.stage.pivot.x = _this.getPivotX(displayData);
-                _this.stage.pivot.y = _this.getPivotY(displayData);
-                var mapWidth = displayData.mapWidth * displayData.tile;
+                this.stage.pivot.x = this.getPivotX(displayData);
+                this.stage.pivot.y = this.getPivotY(displayData);
+                let mapWidth = displayData.mapWidth * displayData.tile;
                 // test against map width * tilesize
                 if (displayData.sprite.x < 0 ||
                     displayData.sprite.x + displayData.sprite.width > mapWidth) {
@@ -20943,20 +20878,19 @@ var RenderSystem = (function () {
                 }
             }
             else {
-                _this.stage.pivot.x = 0;
-                _this.stage.pivot.y = 0;
+                this.stage.pivot.x = 0;
+                this.stage.pivot.y = 0;
             }
-            if (!_this.stage.pivot.x && !_this.stage.pivot.y) {
-                _this.stage.pivot.x = _this.renderer.width / 2;
-                _this.stage.pivot.y = _this.renderer.height / 2;
+            if (!this.stage.pivot.x && !this.stage.pivot.y) {
+                this.stage.pivot.x = this.renderer.width / 2;
+                this.stage.pivot.y = this.renderer.height / 2;
             }
         });
         this.clearDeadSprites();
         this.renderer.render(this.stage);
-    };
-    return RenderSystem;
-}());
-exports["default"] = RenderSystem;
+    }
+}
+exports.default = RenderSystem;
 
 
 /***/ }),
@@ -21188,7 +21122,7 @@ module.exports = Buffer;
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var Texture = __webpack_require__(49);
+var Texture = __webpack_require__(50);
 
 /**
  * Helper class to create a webGL Framebuffer
@@ -21419,11 +21353,11 @@ module.exports = Framebuffer;
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var compileProgram = __webpack_require__(51),
-	extractAttributes = __webpack_require__(53),
-	extractUniforms = __webpack_require__(54),
-	setPrecision = __webpack_require__(57),
-	generateUniformAccessObject = __webpack_require__(55);
+var compileProgram = __webpack_require__(52),
+	extractAttributes = __webpack_require__(54),
+	extractUniforms = __webpack_require__(55),
+	setPrecision = __webpack_require__(58),
+	generateUniformAccessObject = __webpack_require__(56);
 
 /**
  * Helper class to create a webGL Shader
@@ -21517,7 +21451,7 @@ module.exports = Shader;
 
 
 // state object//
-var setVertexAttribArrays = __webpack_require__( 50 );
+var setVertexAttribArrays = __webpack_require__( 51 );
 
 /**
  * Helper class to work with WebGL VertexArrayObjects (vaos)
@@ -21816,13 +21750,13 @@ module.exports = createContext;
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-    compileProgram: __webpack_require__(51),
-    defaultValue: __webpack_require__(52),
-    extractAttributes: __webpack_require__(53),
-    extractUniforms: __webpack_require__(54),
-    generateUniformAccessObject: __webpack_require__(55),
-    setPrecision: __webpack_require__(57),
-    mapSize: __webpack_require__(56),
+    compileProgram: __webpack_require__(52),
+    defaultValue: __webpack_require__(53),
+    extractAttributes: __webpack_require__(54),
+    extractUniforms: __webpack_require__(55),
+    generateUniformAccessObject: __webpack_require__(56),
+    setPrecision: __webpack_require__(58),
+    mapSize: __webpack_require__(57),
     mapType: __webpack_require__(30)
 };
 
@@ -21843,7 +21777,7 @@ var _ismobilejs = __webpack_require__(29);
 
 var _ismobilejs2 = _interopRequireDefault(_ismobilejs);
 
-var _accessibleTarget = __webpack_require__(58);
+var _accessibleTarget = __webpack_require__(59);
 
 var _accessibleTarget2 = _interopRequireDefault(_accessibleTarget);
 
@@ -22334,7 +22268,7 @@ core.CanvasRenderer.registerPlugin('accessibility', AccessibilityManager);
 
 exports.__esModule = true;
 
-var _accessibleTarget = __webpack_require__(58);
+var _accessibleTarget = __webpack_require__(59);
 
 Object.defineProperty(exports, 'accessibleTarget', {
   enumerable: true,
@@ -22376,7 +22310,7 @@ var _Texture = __webpack_require__(9);
 
 var _Texture2 = _interopRequireDefault(_Texture);
 
-var _GraphicsData = __webpack_require__(64);
+var _GraphicsData = __webpack_require__(65);
 
 var _GraphicsData2 = _interopRequireDefault(_GraphicsData);
 
@@ -24140,7 +24074,7 @@ _WebGLRenderer2.default.registerPlugin('graphics', GraphicsRenderer);
 
 exports.__esModule = true;
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 var _pixiGlCore2 = _interopRequireDefault(_pixiGlCore);
 
@@ -24443,7 +24377,7 @@ var _buildLine2 = _interopRequireDefault(_buildLine);
 
 var _utils = __webpack_require__(2);
 
-var _earcut = __webpack_require__(46);
+var _earcut = __webpack_require__(47);
 
 var _earcut2 = _interopRequireDefault(_earcut);
 
@@ -24609,7 +24543,7 @@ function buildRectangle(graphicsData, webGLData, webGLDataNativeLines) {
 exports.__esModule = true;
 exports.default = buildRoundedRectangle;
 
-var _earcut = __webpack_require__(46);
+var _earcut = __webpack_require__(47);
 
 var _earcut2 = _interopRequireDefault(_earcut);
 
@@ -25465,7 +25399,7 @@ exports.default = mapCanvasBlendModesToPixi;
 
 var _const = __webpack_require__(1);
 
-var _canUseNewCanvasBlendModes = __webpack_require__(69);
+var _canUseNewCanvasBlendModes = __webpack_require__(70);
 
 var _canUseNewCanvasBlendModes2 = _interopRequireDefault(_canUseNewCanvasBlendModes);
 
@@ -25660,7 +25594,7 @@ exports.default = TextureGarbageCollector;
 
 exports.__esModule = true;
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 var _const = __webpack_require__(1);
 
@@ -26192,7 +26126,7 @@ exports.default = WebGLState;
 exports.__esModule = true;
 exports.default = extractUniformsFromSrc;
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 var _pixiGlCore2 = _interopRequireDefault(_pixiGlCore);
 
@@ -26353,7 +26287,7 @@ var _RenderTarget = __webpack_require__(26);
 
 var _RenderTarget2 = _interopRequireDefault(_RenderTarget);
 
-var _Quad = __webpack_require__(72);
+var _Quad = __webpack_require__(73);
 
 var _Quad2 = _interopRequireDefault(_Quad);
 
@@ -26924,7 +26858,7 @@ var _WebGLManager2 = __webpack_require__(20);
 
 var _WebGLManager3 = _interopRequireDefault(_WebGLManager2);
 
-var _SpriteMaskFilter = __webpack_require__(71);
+var _SpriteMaskFilter = __webpack_require__(72);
 
 var _SpriteMaskFilter2 = _interopRequireDefault(_SpriteMaskFilter);
 
@@ -27275,7 +27209,7 @@ exports.default = StencilManager;
 exports.__esModule = true;
 exports.default = checkMaxIfStatmentsInShader;
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 var _pixiGlCore2 = _interopRequireDefault(_pixiGlCore);
 
@@ -27705,7 +27639,7 @@ var _settings = __webpack_require__(3);
 
 var _settings2 = _interopRequireDefault(_settings);
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 var _pixiGlCore2 = _interopRequireDefault(_pixiGlCore);
 
@@ -28306,11 +28240,11 @@ var _settings = __webpack_require__(3);
 
 var _settings2 = _interopRequireDefault(_settings);
 
-var _TextStyle = __webpack_require__(74);
+var _TextStyle = __webpack_require__(75);
 
 var _TextStyle2 = _interopRequireDefault(_TextStyle);
 
-var _TextMetrics = __webpack_require__(73);
+var _TextMetrics = __webpack_require__(74);
 
 var _TextMetrics2 = _interopRequireDefault(_TextMetrics);
 
@@ -32130,7 +32064,7 @@ var _core = __webpack_require__(0);
 
 var core = _interopRequireWildcard(_core);
 
-var _ObservablePoint = __webpack_require__(66);
+var _ObservablePoint = __webpack_require__(67);
 
 var _ObservablePoint2 = _interopRequireDefault(_ObservablePoint);
 
@@ -33797,11 +33731,11 @@ var _core = __webpack_require__(0);
 
 var core = _interopRequireWildcard(_core);
 
-var _BlurXFilter = __webpack_require__(79);
+var _BlurXFilter = __webpack_require__(80);
 
 var _BlurXFilter2 = _interopRequireDefault(_BlurXFilter);
 
-var _BlurYFilter = __webpack_require__(80);
+var _BlurYFilter = __webpack_require__(81);
 
 var _BlurYFilter2 = _interopRequireDefault(_BlurYFilter);
 
@@ -34719,7 +34653,7 @@ Object.defineProperty(exports, 'BlurFilter', {
   }
 });
 
-var _BlurXFilter = __webpack_require__(79);
+var _BlurXFilter = __webpack_require__(80);
 
 Object.defineProperty(exports, 'BlurXFilter', {
   enumerable: true,
@@ -34728,7 +34662,7 @@ Object.defineProperty(exports, 'BlurXFilter', {
   }
 });
 
-var _BlurYFilter = __webpack_require__(80);
+var _BlurYFilter = __webpack_require__(81);
 
 Object.defineProperty(exports, 'BlurYFilter', {
   enumerable: true,
@@ -35020,7 +34954,7 @@ var _core = __webpack_require__(0);
 
 var core = _interopRequireWildcard(_core);
 
-var _InteractionData = __webpack_require__(84);
+var _InteractionData = __webpack_require__(85);
 
 var _InteractionData2 = _interopRequireDefault(_InteractionData);
 
@@ -35036,7 +34970,7 @@ var _eventemitter = __webpack_require__(10);
 
 var _eventemitter2 = _interopRequireDefault(_eventemitter);
 
-var _interactiveTarget = __webpack_require__(85);
+var _interactiveTarget = __webpack_require__(86);
 
 var _interactiveTarget2 = _interopRequireDefault(_interactiveTarget);
 
@@ -36960,7 +36894,7 @@ InteractionTrackingData.FLAGS = Object.freeze({
 
 exports.__esModule = true;
 
-var _InteractionData = __webpack_require__(84);
+var _InteractionData = __webpack_require__(85);
 
 Object.defineProperty(exports, 'InteractionData', {
   enumerable: true,
@@ -36978,7 +36912,7 @@ Object.defineProperty(exports, 'InteractionManager', {
   }
 });
 
-var _interactiveTarget = __webpack_require__(85);
+var _interactiveTarget = __webpack_require__(86);
 
 Object.defineProperty(exports, 'interactiveTarget', {
   enumerable: true,
@@ -37000,7 +36934,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.__esModule = true;
 exports.shared = exports.Resource = exports.textureParser = exports.getResourcePath = exports.spritesheetParser = exports.parseBitmapFontData = exports.bitmapFontParser = exports.Loader = undefined;
 
-var _bitmapFontParser = __webpack_require__(86);
+var _bitmapFontParser = __webpack_require__(87);
 
 Object.defineProperty(exports, 'bitmapFontParser', {
     enumerable: true,
@@ -37015,7 +36949,7 @@ Object.defineProperty(exports, 'parseBitmapFontData', {
     }
 });
 
-var _spritesheetParser = __webpack_require__(87);
+var _spritesheetParser = __webpack_require__(88);
 
 Object.defineProperty(exports, 'spritesheetParser', {
     enumerable: true,
@@ -37030,7 +36964,7 @@ Object.defineProperty(exports, 'getResourcePath', {
     }
 });
 
-var _textureParser = __webpack_require__(88);
+var _textureParser = __webpack_require__(89);
 
 Object.defineProperty(exports, 'textureParser', {
     enumerable: true,
@@ -37048,7 +36982,7 @@ Object.defineProperty(exports, 'Resource', {
     }
 });
 
-var _Application = __webpack_require__(59);
+var _Application = __webpack_require__(60);
 
 var _Application2 = _interopRequireDefault(_Application);
 
@@ -37142,15 +37076,15 @@ var _eventemitter = __webpack_require__(10);
 
 var _eventemitter2 = _interopRequireDefault(_eventemitter);
 
-var _textureParser = __webpack_require__(88);
+var _textureParser = __webpack_require__(89);
 
 var _textureParser2 = _interopRequireDefault(_textureParser);
 
-var _spritesheetParser = __webpack_require__(87);
+var _spritesheetParser = __webpack_require__(88);
 
 var _spritesheetParser2 = _interopRequireDefault(_spritesheetParser);
 
-var _bitmapFontParser = __webpack_require__(86);
+var _bitmapFontParser = __webpack_require__(87);
 
 var _bitmapFontParser2 = _interopRequireDefault(_bitmapFontParser);
 
@@ -37310,7 +37244,7 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Plane2 = __webpack_require__(89);
+var _Plane2 = __webpack_require__(90);
 
 var _Plane3 = _interopRequireDefault(_Plane2);
 
@@ -38254,7 +38188,7 @@ Object.defineProperty(exports, 'CanvasMeshRenderer', {
   }
 });
 
-var _Plane = __webpack_require__(89);
+var _Plane = __webpack_require__(90);
 
 Object.defineProperty(exports, 'Plane', {
   enumerable: true,
@@ -38297,7 +38231,7 @@ var _core = __webpack_require__(0);
 
 var core = _interopRequireWildcard(_core);
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 var _pixiGlCore2 = _interopRequireDefault(_pixiGlCore);
 
@@ -38855,7 +38789,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.__esModule = true;
 
-var _pixiGlCore = __webpack_require__(5);
+var _pixiGlCore = __webpack_require__(6);
 
 var _pixiGlCore2 = _interopRequireDefault(_pixiGlCore);
 
@@ -39904,7 +39838,7 @@ Object.defineProperty(exports, 'BasePrepare', {
   }
 });
 
-var _CountLimiter = __webpack_require__(90);
+var _CountLimiter = __webpack_require__(91);
 
 Object.defineProperty(exports, 'CountLimiter', {
   enumerable: true,
@@ -40652,7 +40586,7 @@ core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(221)(module), __webpack_require__(16)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(223)(module), __webpack_require__(16)))
 
 /***/ }),
 /* 199 */
@@ -40894,15 +40828,15 @@ exports.__esModule = true;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _miniSignals = __webpack_require__(47);
+var _miniSignals = __webpack_require__(48);
 
 var _miniSignals2 = _interopRequireDefault(_miniSignals);
 
-var _parseUri = __webpack_require__(48);
+var _parseUri = __webpack_require__(49);
 
 var _parseUri2 = _interopRequireDefault(_parseUri);
 
-var _async = __webpack_require__(91);
+var _async = __webpack_require__(92);
 
 var async = _interopRequireWildcard(_async);
 
@@ -41523,7 +41457,7 @@ var _Resource = __webpack_require__(44);
 
 var _Resource2 = _interopRequireDefault(_Resource);
 
-var _b = __webpack_require__(92);
+var _b = __webpack_require__(93);
 
 var _b2 = _interopRequireDefault(_b);
 
@@ -41605,25 +41539,21 @@ function blobMiddlewareFactory() {
 
 "use strict";
 
-exports.__esModule = true;
-var AnimationSet = (function () {
-    function AnimationSet() {
-    }
-    return AnimationSet;
-}());
-var AnimationComponent = (function () {
-    function AnimationComponent(animations) {
-        this["class"] = 'animation';
-        this["default"] = animations["default"];
+Object.defineProperty(exports, "__esModule", { value: true });
+class AnimationSet {
+}
+class AnimationComponent {
+    constructor(animations) {
+        this.class = 'animation';
+        this.default = animations.default;
         this.right = animations.right;
         this.left = animations.left;
         this.jump = animations.jump;
         this.currentAnimationProp = 'default';
         this.currentFrame = 0;
     }
-    return AnimationComponent;
-}());
-exports["default"] = AnimationComponent;
+}
+exports.default = AnimationComponent;
 
 
 /***/ }),
@@ -41632,10 +41562,10 @@ exports["default"] = AnimationComponent;
 
 "use strict";
 
-exports.__esModule = true;
-var VelocityComponent = (function () {
-    function VelocityComponent(settings) {
-        this["class"] = 'velocity';
+Object.defineProperty(exports, "__esModule", { value: true });
+class VelocityComponent {
+    constructor(settings) {
+        this.class = 'velocity';
         this.accelerationX = 0;
         this.accelerationY = settings.GRAVITY;
         this.maxAccelerationX = 3;
@@ -41644,9 +41574,8 @@ var VelocityComponent = (function () {
         this.velocityY = 0;
         this.isGrounded = false;
     }
-    return VelocityComponent;
-}());
-exports["default"] = VelocityComponent;
+}
+exports.default = VelocityComponent;
 
 
 /***/ }),
@@ -41655,18 +41584,18 @@ exports["default"] = VelocityComponent;
 
 "use strict";
 
-exports.__esModule = true;
-var PIXI = __webpack_require__(96);
-var settings_1 = __webpack_require__(8);
-var engine_1 = __webpack_require__(97);
-var animation_1 = __webpack_require__(98);
-var collision_1 = __webpack_require__(99);
-var control_1 = __webpack_require__(100);
-var level_1 = __webpack_require__(101);
-var move_1 = __webpack_require__(27);
-var render_1 = __webpack_require__(102);
-var Main = (function () {
-    function Main() {
+Object.defineProperty(exports, "__esModule", { value: true });
+const PIXI = __webpack_require__(96);
+const settings_1 = __webpack_require__(8);
+const engine_1 = __webpack_require__(97);
+const animation_1 = __webpack_require__(98);
+const collision_1 = __webpack_require__(99);
+const control_1 = __webpack_require__(100);
+const level_1 = __webpack_require__(101);
+const move_1 = __webpack_require__(27);
+const render_1 = __webpack_require__(102);
+class Main {
+    constructor() {
         PIXI.loader.add('player', '/static/img/player.png');
         PIXI.loader.add('bg', '/static/img/bg.png');
         PIXI.loader.add('level1', '/assets/json/levelone.json');
@@ -41674,21 +41603,20 @@ var Main = (function () {
         PIXI.loader.add('title', '/assets/json/title.json');
         PIXI.loader.load(this._onLoad.bind(this));
     }
-    Main.prototype._onLoad = function () {
-        this._settings = new settings_1["default"]();
-        this._engine = new engine_1["default"](this._settings);
-        this._engine.addSystem(new animation_1["default"](this._settings));
-        this._engine.addSystem(new move_1["default"](this._settings));
-        this._engine.addSystem(new render_1["default"](this._settings));
-        this._engine.addSystem(new control_1["default"](this._settings));
-        this._engine.addSystem(new collision_1["default"](this._settings));
-        this._engine.addSystem(new level_1["default"](this._settings));
+    _onLoad() {
+        this._settings = new settings_1.default();
+        this._engine = new engine_1.default(this._settings);
+        this._engine.addSystem(new animation_1.default(this._settings));
+        this._engine.addSystem(new move_1.default(this._settings));
+        this._engine.addSystem(new render_1.default(this._settings));
+        this._engine.addSystem(new control_1.default(this._settings));
+        this._engine.addSystem(new collision_1.default(this._settings));
+        this._engine.addSystem(new level_1.default(this._settings));
         this._engine.init();
-    };
-    return Main;
-}());
-exports["default"] = Main;
-var tbgscratch = new Main();
+    }
+}
+exports.default = Main;
+let tbgscratch = new Main();
 
 
 /***/ }),
@@ -41697,32 +41625,42 @@ var tbgscratch = new Main();
 
 "use strict";
 
-exports.__esModule = true;
-var InputManager = (function () {
-    function InputManager(settings) {
+Object.defineProperty(exports, "__esModule", { value: true });
+class EntityManager {
+    constructor(settings) {
         this.settings = settings;
-        window.addEventListener('keydown', this.onKeyDownHandler.bind(this), false);
-        window.addEventListener('keyup', this.onKeyUpHandler.bind(this), false);
+        this._entities = [];
     }
-    InputManager.prototype.destructor = function () {
-        window.removeEventListener('keydown', this.onKeyDownHandler);
-        window.removeEventListener('keyup', this.onKeyUpHandler);
-    };
-    InputManager.prototype.onKeyDownHandler = function (e) {
-        return this.onKeyDownCallback(e);
-    };
-    InputManager.prototype.onKeyUpHandler = function (e) {
-        return this.onKeyUpCallback(e);
-    };
-    InputManager.prototype.onKeyUp = function (callback) {
-        this.onKeyUpCallback = callback;
-    };
-    InputManager.prototype.onKeyDown = function (callback) {
-        this.onKeyDownCallback = callback;
-    };
-    return InputManager;
-}());
-exports["default"] = InputManager;
+    addEntity(entity) {
+        this._entities.push(entity);
+    }
+    addEntities(entities) {
+        entities.map(this.addEntity, this);
+    }
+    removeEntitiesById(entityId) {
+        this._entities = this._entities.filter((entity) => {
+            return entity.id !== entityId;
+        });
+    }
+    destroyEntities(entities) {
+        return entities.map((entity) => {
+            return entity.destroy();
+        });
+    }
+    getInactiveEntities() {
+        return this._entities.filter((entity) => {
+            return !entity.isActive;
+        });
+    }
+    getEntitiesById(entityId) {
+        return this._entities.filter((entity) => {
+            return entity.id === entityId;
+        });
+    }
+    destructor() {
+    }
+}
+exports.default = EntityManager;
 
 
 /***/ }),
@@ -41731,15 +41669,138 @@ exports["default"] = InputManager;
 
 "use strict";
 
-exports.__esModule = true;
-var NodeComponents = (function () {
-    function NodeComponents() {
+Object.defineProperty(exports, "__esModule", { value: true });
+class InputManager {
+    constructor(settings) {
+        this.settings = settings;
+        window.addEventListener('keydown', this.onKeyDownHandler.bind(this), false);
+        window.addEventListener('keyup', this.onKeyUpHandler.bind(this), false);
     }
-    return NodeComponents;
-}());
+    destructor() {
+        window.removeEventListener('keydown', this.onKeyDownHandler);
+        window.removeEventListener('keyup', this.onKeyUpHandler);
+    }
+    onKeyDownHandler(e) {
+        return this.onKeyDownCallback(e);
+    }
+    onKeyUpHandler(e) {
+        return this.onKeyUpCallback(e);
+    }
+    onKeyUp(callback) {
+        this.onKeyUpCallback = callback;
+    }
+    onKeyDown(callback) {
+        this.onKeyDownCallback = callback;
+    }
+}
+exports.default = InputManager;
+
+
+/***/ }),
+/* 210 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const node_1 = __webpack_require__(211);
+const enum_1 = __webpack_require__(5);
+class NodeManager {
+    constructor(settings) {
+        this.settings = settings;
+        this._nodes = new Map();
+    }
+    addClassType(classType) {
+        this._nodes[classType] = [];
+    }
+    addNode(node) {
+        this._nodes[node.classType].push(node);
+    }
+    addNewNode(entityId, classType, components) {
+        let node = new node_1.default(entityId, classType, components);
+        this.addNode(node);
+    }
+    removeNodesByClassType(classType) {
+        this._nodes[classType] = [];
+    }
+    getAllNodes() {
+        let vals = Object.values(this._nodes);
+        return [].concat.apply([], vals);
+    }
+    getInactiveNodes() {
+        let nodes = this.getAllNodes();
+        return nodes.filter((node) => {
+            return !node.isActive;
+        });
+    }
+    getActiveNodesByClassType(classType) {
+        return this._nodes[classType].filter((node) => {
+            return node.isActive;
+        });
+    }
+    filterInactiveNodes() {
+        Object.keys(this._nodes).map((classType) => {
+            this._nodes[classType] = this._nodes[classType].filter((node) => {
+                return node.isActive;
+            });
+        });
+    }
+    deactivateNodesByEntityId(entityId) {
+        let nodes = this.getAllNodes();
+        return nodes.filter((node) => {
+            return node.entityId === entityId;
+        }).map((node) => {
+            this.destroySprite(node);
+            node.isActive = false;
+            return node;
+        });
+    }
+    deactivateNodesByEntityIds(ids) {
+        ids.map(this.deactivateNodesByEntityId, this);
+    }
+    destroySprite(node) {
+        if (node.display && node.display.sprite) {
+            node.display.sprite.destroy();
+        }
+    }
+    generateNodes(entityId, components) {
+        if (components.display && components.position) {
+            this.addNewNode(entityId, enum_1.ClassType.RENDER, components);
+        }
+        if (components.animation && components.display && components.velocity) {
+            this.addNewNode(entityId, enum_1.ClassType.ANIMATION, components);
+        }
+        if (components.velocity && components.position && components.collision) {
+            this.addNewNode(entityId, enum_1.ClassType.MOVE, components);
+        }
+        if (components.velocity && components.input) {
+            this.addNewNode(entityId, enum_1.ClassType.CONTROL, components);
+        }
+        if (components.collision && components.display) {
+            this.addNewNode(entityId, enum_1.ClassType.COLLISION, components);
+        }
+        if (components.trigger) {
+            this.addNewNode(entityId, enum_1.ClassType.LEVEL, components);
+        }
+    }
+    destructor() {
+    }
+}
+exports.default = NodeManager;
+
+
+/***/ }),
+/* 211 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class NodeComponents {
+}
 exports.NodeComponents = NodeComponents;
-var Node = (function () {
-    function Node(entityId, classType, components) {
+class Node {
+    constructor(entityId, classType, components) {
         this.entityId = entityId;
         this.classType = classType;
         this.animation = components.animation;
@@ -41754,106 +41815,8 @@ var Node = (function () {
         this.velocity = components.velocity;
         this.isActive = true;
     }
-    return Node;
-}());
-exports["default"] = Node;
-
-
-/***/ }),
-/* 210 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var entity_1 = __webpack_require__(14);
-var display_1 = __webpack_require__(12);
-var position_1 = __webpack_require__(13);
-var sprite_1 = __webpack_require__(15);
-var settings_1 = __webpack_require__(8);
-var backgroundPrefab = (function (_super) {
-    __extends(backgroundPrefab, _super);
-    function backgroundPrefab(type, x, y, mapWidth, mapHeight) {
-        var _this = _super.call(this) || this;
-        var settings = new settings_1["default"]();
-        var tile = settings.TILE;
-        var spriteTileX = type % 10;
-        var spriteTileY = Math.ceil(type / 10);
-        var spriteX = Math.max(spriteTileX * 16 - 16, 0);
-        var spriteY = Math.max(spriteTileY * 16 - 16, 0);
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, tile));
-        var sprite = new sprite_1["default"](texture);
-        sprite.height = tile;
-        sprite.width = tile;
-        var display = new display_1["default"](sprite, mapWidth, mapHeight);
-        var position = new position_1["default"](x, y, mapWidth);
-        _this.addComponents(display, position);
-        return _this;
-    }
-    return backgroundPrefab;
-}(entity_1["default"]));
-exports["default"] = backgroundPrefab;
-
-
-/***/ }),
-/* 211 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var entity_1 = __webpack_require__(14);
-var settings_1 = __webpack_require__(8);
-var sprite_1 = __webpack_require__(15);
-var trigger_1 = __webpack_require__(94);
-var position_1 = __webpack_require__(13);
-var display_1 = __webpack_require__(12);
-var input_1 = __webpack_require__(93);
-var ControlPrefab = (function (_super) {
-    __extends(ControlPrefab, _super);
-    function ControlPrefab(type) {
-        var _this = _super.call(this) || this;
-        var trigger = new trigger_1["default"](type);
-        var position = new position_1["default"](0, 0, 0);
-        var settings = new settings_1["default"]();
-        var tile = settings.TILE;
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 1, 1));
-        var sprite = new sprite_1["default"](texture);
-        var display = new display_1["default"](sprite, 0, 0);
-        var input = new input_1["default"](settings);
-        input.inputManager.onKeyUp(function (e) {
-            var key = e.keyCode;
-            if (key === settings.KEY.SPACE) {
-                console.log('TRIGGER');
-                trigger.isTriggered = true;
-            }
-        });
-        _this.addComponents(trigger, position, display, input);
-        return _this;
-    }
-    return ControlPrefab;
-}(entity_1["default"]));
-exports["default"] = ControlPrefab;
+}
+exports.default = Node;
 
 
 /***/ }),
@@ -41862,47 +41825,31 @@ exports["default"] = ControlPrefab;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var entity_1 = __webpack_require__(14);
-var display_1 = __webpack_require__(12);
-var position_1 = __webpack_require__(13);
-var collision_1 = __webpack_require__(45);
-var sprite_1 = __webpack_require__(15);
-var settings_1 = __webpack_require__(8);
-var GroundPrefab = (function (_super) {
-    __extends(GroundPrefab, _super);
-    function GroundPrefab(type, x, y, mapWidth, mapHeight) {
-        var _this = _super.call(this) || this;
-        var settings = new settings_1["default"]();
-        var tile = settings.TILE;
-        var display = _this._getDisplayComponent(type, tile, tile, mapWidth, mapHeight);
-        var position = new position_1["default"](x, y, mapWidth);
-        var collision = new collision_1["default"]('secondary');
-        _this.addComponents(display, position, collision);
-        return _this;
+Object.defineProperty(exports, "__esModule", { value: true });
+const entity_1 = __webpack_require__(14);
+const display_1 = __webpack_require__(12);
+const position_1 = __webpack_require__(13);
+const sprite_1 = __webpack_require__(15);
+const settings_1 = __webpack_require__(8);
+class backgroundPrefab extends entity_1.default {
+    constructor(type, x, y, mapWidth, mapHeight) {
+        super();
+        let settings = new settings_1.default();
+        let tile = settings.TILE;
+        let spriteTileX = type % 10;
+        let spriteTileY = Math.ceil(type / 10);
+        let spriteX = Math.max(spriteTileX * 16 - 16, 0);
+        let spriteY = Math.max(spriteTileY * 16 - 16, 0);
+        let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, tile));
+        let sprite = new sprite_1.default(texture);
+        sprite.height = tile;
+        sprite.width = tile;
+        let display = new display_1.default(sprite, mapWidth, mapHeight);
+        let position = new position_1.default(x, y, mapWidth);
+        this.addComponents(display, position);
     }
-    GroundPrefab.prototype._getDisplayComponent = function (type, height, width, mapWidth, mapHeight) {
-        var spriteX = Math.max(type * 16 - 16, 0);
-        var spriteY = 0;
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, height));
-        var sprite = new sprite_1["default"](texture);
-        sprite.height = height;
-        sprite.width = width;
-        return new display_1["default"](sprite, mapWidth, mapHeight);
-    };
-    return GroundPrefab;
-}(entity_1["default"]));
-exports["default"] = GroundPrefab;
+}
+exports.default = backgroundPrefab;
 
 
 /***/ }),
@@ -41911,106 +41858,36 @@ exports["default"] = GroundPrefab;
 
 "use strict";
 
-exports.__esModule = true;
-var player_1 = __webpack_require__(214);
-var sky_1 = __webpack_require__(215);
-var ground_1 = __webpack_require__(212);
-var background_1 = __webpack_require__(210);
-var trigger_1 = __webpack_require__(216);
-var control_1 = __webpack_require__(211);
-var enum_1 = __webpack_require__(6);
-var LevelPrefabData = (function () {
-    function LevelPrefabData(type, index, position) {
-        this.type = type;
-        this.index = index;
-        this.position = position;
-    }
-    return LevelPrefabData;
-}());
-var LevelPrefab = (function () {
-    function LevelPrefab(settings, data) {
-        this.settings = settings;
-        this.data = data;
-    }
-    LevelPrefab.prototype.getPrefabData = function (data) {
-        var values = data.map(function (type, index) {
-            return type === 0 ? null : new LevelPrefabData(type, index, [0, 0]);
-        });
-        var filteredValues = values.filter(Boolean);
-        return filteredValues;
-    };
-    LevelPrefab.prototype.getPositionedPrefabData = function (data, mapWidth, tileWidth) {
-        var getPositionByIndex = this.getPositionFunc(mapWidth, tileWidth);
-        return data.map(function (val) {
-            val.position = getPositionByIndex(val.index);
-            return val;
-        });
-    };
-    LevelPrefab.prototype.getValuesByLevelData = function (data, layerIndex) {
-        var prefabData = [];
-        if (data.layers[layerIndex]) {
-            var values = this.getPrefabData(data.layers[layerIndex].data);
-            prefabData = this.getPositionedPrefabData(values, data.width, data.tilewidth);
-        }
-        return prefabData;
-    };
-    LevelPrefab.prototype.getPositionFunc = function (levelWidth, tileSize) {
-        return function (mapIndex) {
-            var x = (mapIndex % levelWidth) * tileSize;
-            var y = (Math.floor(mapIndex / levelWidth)) * tileSize;
-            return [x, y];
-        };
-    };
-    LevelPrefab.prototype.getEntities = function (data, layerIndex) {
-        var values = this.getValuesByLevelData(data, layerIndex);
-        var mapHeight = data.height;
-        var mapWidth = data.width;
-        return values.map(function (val) {
-            switch (val.type) {
-                case 1:
-                    return new ground_1["default"](val.type, val.position[0], val.position[1], mapWidth, mapHeight);
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                    return new background_1["default"](val.type, val.position[0], val.position[1], mapWidth, mapHeight);
-                case 8:
-                    return new trigger_1["default"](enum_1.TriggerType.LEVELEXIT, val.position[0], val.position[1], mapWidth, mapHeight);
-                case 9:
-                    return new control_1["default"](enum_1.TriggerType.LEVELEXIT);
-                case 11:
-                case 12:
-                case 13:
-                case 14:
-                case 15:
-                case 16:
-                case 17:
-                    return new background_1["default"](val.type, val.position[0], val.position[1], mapWidth, mapHeight);
+Object.defineProperty(exports, "__esModule", { value: true });
+const entity_1 = __webpack_require__(14);
+const settings_1 = __webpack_require__(8);
+const sprite_1 = __webpack_require__(15);
+const trigger_1 = __webpack_require__(46);
+const position_1 = __webpack_require__(13);
+const display_1 = __webpack_require__(12);
+const input_1 = __webpack_require__(94);
+class ControlPrefab extends entity_1.default {
+    constructor(type) {
+        super();
+        let trigger = new trigger_1.default(type);
+        let position = new position_1.default(0, 0, 0);
+        let settings = new settings_1.default();
+        let tile = settings.TILE;
+        let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 1, 1));
+        let sprite = new sprite_1.default(texture);
+        let display = new display_1.default(sprite, 0, 0);
+        let input = new input_1.default(settings);
+        input.inputManager.onKeyUp((e) => {
+            let key = e.keyCode;
+            if (key === settings.KEY.SPACE) {
+                console.log('TRIGGER');
+                trigger.isTriggered = true;
             }
         });
-    };
-    LevelPrefab.prototype.createLevel = function () {
-        var _this = this;
-        var data = this.data;
-        data.entities = [];
-        var sky = new sky_1["default"](data.width, data.height, data.tileheight, data.width, data.height);
-        data.entities.push(sky);
-        var entities = data.layers.map(function (layer) {
-            return _this.getEntities(data, data.layers.indexOf(layer));
-        });
-        entities.map(function (layerEntities) {
-            (_a = data.entities).push.apply(_a, layerEntities);
-            var _a;
-        });
-        if (data.properties && data.properties.startX && data.properties.startY) {
-            var player = new player_1["default"](this.settings, [data.properties.startX, data.properties.startY], data.width, data.height);
-            data.entities.push(player);
-        }
-        return data;
-    };
-    return LevelPrefab;
-}());
-exports["default"] = LevelPrefab;
+        this.addComponents(trigger, position, display, input);
+    }
+}
+exports.default = ControlPrefab;
 
 
 /***/ }),
@@ -42019,64 +41896,34 @@ exports["default"] = LevelPrefab;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var entity_1 = __webpack_require__(14);
-var sprite_1 = __webpack_require__(15);
-var display_1 = __webpack_require__(12);
-var position_1 = __webpack_require__(13);
-var velocity_1 = __webpack_require__(206);
-var input_1 = __webpack_require__(93);
-var collision_1 = __webpack_require__(45);
-var animation_1 = __webpack_require__(205);
-var trigger_1 = __webpack_require__(94);
-var enum_1 = __webpack_require__(6);
-var PlayerPrefab = (function (_super) {
-    __extends(PlayerPrefab, _super);
-    function PlayerPrefab(settings, start, mapWidth, mapHeight) {
-        var _this = _super.call(this) || this;
-        var texture = PIXI.utils.TextureCache['/static/img/player.png'];
-        var sprite = new sprite_1["default"](texture);
-        sprite.data.texture.push(new PIXI.Rectangle(0, 0, 16, 32));
-        sprite.data.texture.push(new PIXI.Rectangle(16, 0, 16, 32));
-        sprite.data.texture.push(new PIXI.Rectangle(32, 0, 16, 32));
-        sprite.data.texture.push(new PIXI.Rectangle(48, 0, 16, 32));
-        texture.frame = sprite.data.texture[1];
-        var display = new display_1["default"](sprite, mapWidth, mapHeight, true);
-        var animation = new animation_1["default"]({
-            right: [1, 2],
-            left: [2, 1],
-            jump: [3],
-            "default": [0]
-        });
-        var collision = new collision_1["default"]('primary');
-        var positionComponent = new position_1["default"](start[0] * settings.TILE, start[1] * settings.TILE, mapWidth);
-        var velocityComponent = new velocity_1["default"](settings);
-        var inputComponent = new input_1["default"](settings);
-        var trigger = new trigger_1["default"](enum_1.TriggerType.PLAYERDEATH);
-        _this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation, trigger);
-        return _this;
+Object.defineProperty(exports, "__esModule", { value: true });
+const entity_1 = __webpack_require__(14);
+const display_1 = __webpack_require__(12);
+const position_1 = __webpack_require__(13);
+const collision_1 = __webpack_require__(45);
+const sprite_1 = __webpack_require__(15);
+const settings_1 = __webpack_require__(8);
+class GroundPrefab extends entity_1.default {
+    constructor(type, x, y, mapWidth, mapHeight) {
+        super();
+        let settings = new settings_1.default();
+        let tile = settings.TILE;
+        let display = this._getDisplayComponent(type, tile, tile, mapWidth, mapHeight);
+        let position = new position_1.default(x, y, mapWidth);
+        let collision = new collision_1.default('secondary');
+        this.addComponents(display, position, collision);
     }
-    PlayerPrefab.prototype.destroy = function () {
-        var trigger = this.components['trigger'];
-        if (trigger) {
-            console.log('PLAYER DESTROY');
-            trigger.isTriggered = true;
-            _super.prototype.destroy.call(this);
-        }
-    };
-    return PlayerPrefab;
-}(entity_1["default"]));
-exports["default"] = PlayerPrefab;
+    _getDisplayComponent(type, height, width, mapWidth, mapHeight) {
+        let spriteX = Math.max(type * 16 - 16, 0);
+        let spriteY = 0;
+        let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, 14, height));
+        let sprite = new sprite_1.default(texture);
+        sprite.height = height;
+        sprite.width = width;
+        return new display_1.default(sprite, mapWidth, mapHeight);
+    }
+}
+exports.default = GroundPrefab;
 
 
 /***/ }),
@@ -42085,37 +41932,102 @@ exports["default"] = PlayerPrefab;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var entity_1 = __webpack_require__(14);
-var display_1 = __webpack_require__(12);
-var position_1 = __webpack_require__(13);
-var sprite_1 = __webpack_require__(15);
-var SkyPrefab = (function (_super) {
-    __extends(SkyPrefab, _super);
-    function SkyPrefab(width, height, tile, mapWidth, mapHeight) {
-        var _this = _super.call(this) || this;
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(33, 0, 14, tile));
-        var sprite = new sprite_1["default"](texture);
-        sprite.height = height * tile;
-        sprite.width = width * tile;
-        var display = new display_1["default"](sprite, mapWidth, mapHeight);
-        var position = new position_1["default"](0, 0, mapWidth);
-        _this.addComponents(display, position);
-        return _this;
+Object.defineProperty(exports, "__esModule", { value: true });
+const player_1 = __webpack_require__(216);
+const sky_1 = __webpack_require__(217);
+const ground_1 = __webpack_require__(214);
+const background_1 = __webpack_require__(212);
+const trigger_1 = __webpack_require__(218);
+const control_1 = __webpack_require__(213);
+const enum_1 = __webpack_require__(5);
+class LevelPrefabData {
+    constructor(type, index, position) {
+        this.type = type;
+        this.index = index;
+        this.position = position;
     }
-    return SkyPrefab;
-}(entity_1["default"]));
-exports["default"] = SkyPrefab;
+}
+class LevelPrefab {
+    constructor(settings, data) {
+        this.settings = settings;
+        this.data = data;
+    }
+    getPrefabData(data) {
+        let values = data.map((type, index) => {
+            return type === 0 ? null : new LevelPrefabData(type, index, [0, 0]);
+        });
+        let filteredValues = values.filter(Boolean);
+        return filteredValues;
+    }
+    getPositionedPrefabData(data, mapWidth, tileWidth) {
+        let getPositionByIndex = this.getPositionFunc(mapWidth, tileWidth);
+        return data.map((val) => {
+            val.position = getPositionByIndex(val.index);
+            return val;
+        });
+    }
+    getValuesByLevelData(data, layerIndex) {
+        let prefabData = [];
+        if (data.layers[layerIndex]) {
+            let values = this.getPrefabData(data.layers[layerIndex].data);
+            prefabData = this.getPositionedPrefabData(values, data.width, data.tilewidth);
+        }
+        return prefabData;
+    }
+    getPositionFunc(levelWidth, tileSize) {
+        return (mapIndex) => {
+            let x = (mapIndex % levelWidth) * tileSize;
+            let y = (Math.floor(mapIndex / levelWidth)) * tileSize;
+            return [x, y];
+        };
+    }
+    getEntities(data, layerIndex) {
+        let values = this.getValuesByLevelData(data, layerIndex);
+        let mapHeight = data.height;
+        let mapWidth = data.width;
+        return values.map((val) => {
+            switch (val.type) {
+                case 1:
+                    return new ground_1.default(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                    return new background_1.default(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
+                case 8:
+                    return new trigger_1.default(enum_1.TriggerType.LEVELEXIT, val.position[0], val.position[1], mapWidth, mapHeight);
+                case 9:
+                    return new control_1.default(enum_1.TriggerType.LEVELEXIT);
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                    return new background_1.default(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
+            }
+        });
+    }
+    createLevel() {
+        let data = this.data;
+        data.entities = [];
+        let sky = new sky_1.default(data.width, data.height, data.tileheight, data.width, data.height);
+        data.entities.push(sky);
+        let entities = data.layers.map((layer) => {
+            return this.getEntities(data, data.layers.indexOf(layer));
+        });
+        entities.map((layerEntities) => {
+            data.entities.push(...layerEntities);
+        });
+        if (data.properties && data.properties.startX && data.properties.startY) {
+            let player = new player_1.default(this.settings, [data.properties.startX, data.properties.startY], data.width, data.height);
+            data.entities.push(player);
+        }
+        return data;
+    }
+}
+exports.default = LevelPrefab;
 
 
 /***/ }),
@@ -42124,55 +42036,121 @@ exports["default"] = SkyPrefab;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var entity_1 = __webpack_require__(14);
-var settings_1 = __webpack_require__(8);
-var sprite_1 = __webpack_require__(15);
-var trigger_1 = __webpack_require__(94);
-var position_1 = __webpack_require__(13);
-var collision_1 = __webpack_require__(45);
-var display_1 = __webpack_require__(12);
-var TriggerPrefab = (function (_super) {
-    __extends(TriggerPrefab, _super);
-    function TriggerPrefab(type, x, y, mapWidth, mapHeight) {
-        var _this = _super.call(this) || this;
-        var trigger = new trigger_1["default"](type);
-        var position = new position_1["default"](x, y, mapWidth);
-        var collision = new collision_1["default"]('secondary');
-        collision.collide = function () {
-            // console.log('TRIGGER');
-            trigger.isTriggered = true;
-            collision.collide = function () { };
-        };
-        var settings = new settings_1["default"]();
-        var tile = settings.TILE;
-        var spriteX = 8 * tile - tile;
-        var spriteY = 0;
-        var texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, tile, tile));
-        var sprite = new sprite_1["default"](texture);
-        sprite.height = tile;
-        sprite.width = tile;
-        var display = new display_1["default"](sprite, mapWidth, mapHeight);
-        _this.addComponents(trigger, position, collision, display);
-        return _this;
+Object.defineProperty(exports, "__esModule", { value: true });
+const entity_1 = __webpack_require__(14);
+const sprite_1 = __webpack_require__(15);
+const display_1 = __webpack_require__(12);
+const position_1 = __webpack_require__(13);
+const velocity_1 = __webpack_require__(206);
+const input_1 = __webpack_require__(94);
+const collision_1 = __webpack_require__(45);
+const animation_1 = __webpack_require__(205);
+const trigger_1 = __webpack_require__(46);
+const enum_1 = __webpack_require__(5);
+class PlayerPrefab extends entity_1.default {
+    constructor(settings, start, mapWidth, mapHeight) {
+        super();
+        let texture = PIXI.utils.TextureCache['/static/img/player.png'];
+        let sprite = new sprite_1.default(texture);
+        sprite.data.texture.push(new PIXI.Rectangle(0, 0, 16, 32));
+        sprite.data.texture.push(new PIXI.Rectangle(16, 0, 16, 32));
+        sprite.data.texture.push(new PIXI.Rectangle(32, 0, 16, 32));
+        sprite.data.texture.push(new PIXI.Rectangle(48, 0, 16, 32));
+        texture.frame = sprite.data.texture[1];
+        let display = new display_1.default(sprite, mapWidth, mapHeight, true);
+        let animation = new animation_1.default({
+            right: [1, 2],
+            left: [2, 1],
+            jump: [3],
+            default: [0]
+        });
+        let collision = new collision_1.default('primary');
+        let positionComponent = new position_1.default(start[0] * settings.TILE, start[1] * settings.TILE, mapWidth);
+        let velocityComponent = new velocity_1.default(settings);
+        let inputComponent = new input_1.default(settings);
+        let trigger = new trigger_1.default(enum_1.TriggerType.PLAYERDEATH);
+        this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation, trigger);
     }
-    return TriggerPrefab;
-}(entity_1["default"]));
-exports["default"] = TriggerPrefab;
+    destroy() {
+        let trigger = this.components['trigger'];
+        if (trigger) {
+            console.log('PLAYER DESTROY');
+            trigger.isTriggered = true;
+            super.destroy();
+        }
+    }
+}
+exports.default = PlayerPrefab;
 
 
 /***/ }),
 /* 217 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const entity_1 = __webpack_require__(14);
+const display_1 = __webpack_require__(12);
+const position_1 = __webpack_require__(13);
+const sprite_1 = __webpack_require__(15);
+class SkyPrefab extends entity_1.default {
+    constructor(width, height, tile, mapWidth, mapHeight) {
+        super();
+        let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(33, 0, 14, tile));
+        let sprite = new sprite_1.default(texture);
+        sprite.height = height * tile;
+        sprite.width = width * tile;
+        let display = new display_1.default(sprite, mapWidth, mapHeight);
+        let position = new position_1.default(0, 0, mapWidth);
+        this.addComponents(display, position);
+    }
+}
+exports.default = SkyPrefab;
+
+
+/***/ }),
+/* 218 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const entity_1 = __webpack_require__(14);
+const settings_1 = __webpack_require__(8);
+const sprite_1 = __webpack_require__(15);
+const trigger_1 = __webpack_require__(46);
+const position_1 = __webpack_require__(13);
+const collision_1 = __webpack_require__(45);
+const display_1 = __webpack_require__(12);
+class TriggerPrefab extends entity_1.default {
+    constructor(type, x, y, mapWidth, mapHeight) {
+        super();
+        let trigger = new trigger_1.default(type);
+        let position = new position_1.default(x, y, mapWidth);
+        let collision = new collision_1.default('secondary');
+        collision.collide = () => {
+            // console.log('TRIGGER');
+            trigger.isTriggered = true;
+            collision.collide = () => { };
+        };
+        let settings = new settings_1.default();
+        let tile = settings.TILE;
+        let spriteX = 8 * tile - tile;
+        let spriteY = 0;
+        let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(spriteX, spriteY, tile, tile));
+        let sprite = new sprite_1.default(texture);
+        sprite.height = tile;
+        sprite.width = tile;
+        let display = new display_1.default(sprite, mapWidth, mapHeight);
+        this.addComponents(trigger, position, collision, display);
+    }
+}
+exports.default = TriggerPrefab;
+
+
+/***/ }),
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42195,10 +42173,10 @@ module.exports = {
 
 
 /***/ }),
-/* 218 */,
-/* 219 */,
 /* 220 */,
-/* 221 */
+/* 221 */,
+/* 222 */,
+/* 223 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -42223,79 +42201,6 @@ module.exports = function(module) {
 	}
 	return module;
 };
-
-
-/***/ }),
-/* 222 */,
-/* 223 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var node_1 = __webpack_require__(209);
-var NodeManager = (function () {
-    function NodeManager(settings) {
-        this.settings = settings;
-        this._nodes = new Map();
-    }
-    NodeManager.prototype.addClassType = function (classType) {
-        this._nodes[classType] = [];
-    };
-    NodeManager.prototype.addNode = function (node) {
-        this._nodes[node.classType].push(node);
-    };
-    NodeManager.prototype.addNewNode = function (entityId, classType, components) {
-        var node = new node_1["default"](entityId, classType, components);
-        this.addNode(node);
-    };
-    NodeManager.prototype.removeNodesByClassType = function (classType) {
-        this._nodes[classType] = [];
-    };
-    NodeManager.prototype.getAllNodes = function () {
-        var vals = Object.values(this._nodes);
-        return [].concat.apply([], vals);
-    };
-    NodeManager.prototype.getInactiveNodes = function () {
-        var nodes = this.getAllNodes();
-        return nodes.filter(function (node) {
-            return !node.isActive;
-        });
-    };
-    NodeManager.prototype.getActiveNodesByClassType = function (classType) {
-        return this._nodes[classType].filter(function (node) {
-            return node.isActive;
-        });
-    };
-    NodeManager.prototype.filterInactiveNodes = function () {
-        var _this = this;
-        Object.keys(this._nodes).map(function (classType) {
-            _this._nodes[classType] = _this._nodes[classType].filter(function (node) {
-                return node.isActive;
-            });
-        });
-    };
-    NodeManager.prototype.deactivateNodesByEntityId = function (entityId) {
-        var _this = this;
-        var nodes = this.getAllNodes();
-        return nodes.filter(function (node) {
-            return node.entityId === entityId;
-        }).map(function (node) {
-            _this.destroySprite(node);
-            node.isActive = false;
-            return node;
-        });
-    };
-    NodeManager.prototype.destroySprite = function (node) {
-        if (node.display && node.display.sprite) {
-            node.display.sprite.destroy();
-        }
-    };
-    NodeManager.prototype.destructor = function () {
-    };
-    return NodeManager;
-}());
-exports["default"] = NodeManager;
 
 
 /***/ })
