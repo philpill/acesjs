@@ -20342,7 +20342,7 @@ const entity_1 = __webpack_require__(208);
 const node_1 = __webpack_require__(210);
 class Engine {
     constructor(settings) {
-        this.entities = [];
+        // this.entities = [];
         this.systems = [];
         this.nodeManager = new node_1.default(settings);
         this.entityManager = new entity_1.default(settings);
@@ -20352,33 +20352,13 @@ class Engine {
         this.update();
     }
     addEntity(entity) {
-        this.entities.push(entity);
-        let entityComponents = entity.components;
-        this.nodeManager.generateNodes(entity.id, entityComponents);
-        return entity;
+        this.entityManager.addEntity(entity);
+        this.nodeManager.generateNodes(entity.id, entity.components);
     }
     addEntities(entities) {
         if (entities && entities.length) {
-            entities.map(this.addEntity.bind(this));
+            entities.map(this.addEntity, this);
         }
-    }
-    removeEntity(entity) {
-        let entityId = entity.id;
-        this.entities = this.entities.filter((entity) => {
-            return entity.id !== entityId;
-        });
-    }
-    removeEntityById(entityId) {
-        let entities = this.getEntitiesById(entityId);
-        return entities.map(this.removeEntity.bind(this));
-    }
-    removeEntitiesById(ids) {
-        return ids.map(this.removeEntityById.bind(this));
-    }
-    destroyEntities(entities) {
-        return entities.map((entity) => {
-            return entity.destroy();
-        });
     }
     addSystem(system) {
         this.systems.push(system);
@@ -20393,37 +20373,6 @@ class Engine {
             return !!system;
         });
     }
-    getEntitiesById(entityId) {
-        return this.entities.filter((entity) => {
-            return entity.id === entityId;
-        });
-    }
-    getEntityIdsByNodes(nodes) {
-        let ids = nodes.map((node) => {
-            return node.entityId;
-        });
-        // unique values only
-        return [...new Set(ids)];
-    }
-    filterInactiveNodes(nodes) {
-        let inactiveNodes = this.nodeManager.getInactiveNodes();
-        let entityIds = this.getEntityIdsByNodes(inactiveNodes);
-        let entities = entityIds.map((id) => {
-            return this.getEntitiesById(id)[0];
-        });
-        this.destroyEntities(entities);
-        return nodes.filter((node) => {
-            return node.isActive;
-        });
-    }
-    getInactiveEntityIds() {
-        let entities = this.entities.filter((entity) => {
-            return !entity.isActive;
-        });
-        return entities.map((entity) => {
-            return entity.id;
-        });
-    }
     update(before = 0) {
         this.isPaused = false;
         if (document.visibilityState !== 'visible') {
@@ -20433,18 +20382,22 @@ class Engine {
         let dt = (now - before) / 1000;
         dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
         if (!this.isPaused) {
-            let inactiveEntityIds = this.getInactiveEntityIds();
+            let inactiveEntityIds = this.entityManager.getInactiveEntityIds();
             this.nodeManager.deactivateNodesByEntityIds(inactiveEntityIds);
             this.nodeManager.filterInactiveNodes();
             let results = [];
             this.systems.map((system) => {
                 let nodes = this.nodeManager.getActiveNodesByClassType(system.classType);
-                results.push(system.update(dt, nodes || []));
+                let result = system.update(dt, nodes || []);
+                if (result) {
+                    results.push(result);
+                }
             });
             results = results.filter((result) => { return result; });
-            let newEntities = results.map((result) => {
+            let things = results.map((result) => {
                 return result.newEntities;
-            })[0];
+            });
+            let newEntities = things[0];
             let deadEntities = results.map((result) => {
                 return result.deadEntities;
             });
@@ -20767,10 +20720,10 @@ class LevelSystem {
         this.currentLevel = this.levels.length > this.currentLevel ? this.currentLevel + 1 : 0;
     }
     update(time, nodes) {
-        let result = {};
+        let result = null;
         this.currentLevel = this.currentLevel || 1;
         if (!this.isLoaded) {
-            result.newEntities = this.loadLevel(this.currentLevel - 1);
+            result = { newEntities: this.loadLevel(this.currentLevel - 1) };
             // result.deadEntities = this.getAllEntityIds(nodes);
             this.isLoaded = true;
         }
@@ -41628,14 +41581,18 @@ let tbgscratch = new Main();
 Object.defineProperty(exports, "__esModule", { value: true });
 class EntityManager {
     constructor(settings) {
-        this.settings = settings;
+        this._settings = settings;
         this._entities = [];
     }
     addEntity(entity) {
-        this._entities.push(entity);
+        if (entity) {
+            this._entities.push(entity);
+        }
     }
     addEntities(entities) {
-        entities.map(this.addEntity, this);
+        if (entities && entities.length) {
+            this._entities.push(...entities);
+        }
     }
     removeEntitiesById(entityId) {
         this._entities = this._entities.filter((entity) => {
@@ -41643,7 +41600,7 @@ class EntityManager {
         });
     }
     destroyEntities(entities) {
-        return entities.map((entity) => {
+        entities.map((entity) => {
             return entity.destroy();
         });
     }
@@ -41652,10 +41609,20 @@ class EntityManager {
             return !entity.isActive;
         });
     }
+    getInactiveEntityIds() {
+        let entities = this.getInactiveEntities();
+        return entities.map((entity) => { return entity.id; });
+    }
     getEntitiesById(entityId) {
         return this._entities.filter((entity) => {
             return entity.id === entityId;
         });
+    }
+    getEntityById(entityId) {
+        let entities = this._entities.filter((entity) => {
+            return entity.id === entityId;
+        });
+        return entities.length ? entities[0] : null;
     }
     destructor() {
     }
@@ -41707,8 +41674,8 @@ const node_1 = __webpack_require__(211);
 const enum_1 = __webpack_require__(5);
 class NodeManager {
     constructor(settings) {
-        this.settings = settings;
-        this._nodes = new Map();
+        this._settings = settings;
+        this._nodes = {};
     }
     addClassType(classType) {
         this._nodes[classType] = [];
@@ -41719,6 +41686,7 @@ class NodeManager {
     addNewNode(entityId, classType, components) {
         let node = new node_1.default(entityId, classType, components);
         this.addNode(node);
+        return node;
     }
     removeNodesByClassType(classType) {
         this._nodes[classType] = [];
@@ -41746,8 +41714,7 @@ class NodeManager {
         });
     }
     deactivateNodesByEntityId(entityId) {
-        let nodes = this.getAllNodes();
-        return nodes.filter((node) => {
+        return this.getAllNodes().filter((node) => {
             return node.entityId === entityId;
         }).map((node) => {
             this.destroySprite(node);

@@ -5,29 +5,29 @@ import { NodeComponents } from '../nodes/node';
 
 export default class NodeManager {
 
-    settings: Settings;
-
-    private _nodes: Map<ClassType, Node[]>;
+    private _settings: Settings;
+    private _nodes: any;
 
     constructor(settings: Settings) {
-        this.settings = settings;
-        this._nodes = new Map<ClassType, Node[]>();
+        this._settings = settings;
+        this._nodes = {};
     }
 
-    addClassType(classType: ClassType) {
+    addClassType(classType: ClassType): void {
         this._nodes[classType] = [];
     }
 
-    addNode(node: Node) {
+    addNode(node: Node): void {
         this._nodes[node.classType].push(node);
     }
 
-    addNewNode(entityId: string, classType: ClassType, components: NodeComponents) {
+    addNewNode(entityId: string, classType: ClassType, components: NodeComponents): Node {
         let node = new Node(entityId, classType, components);
         this.addNode(node);
+        return node;
     }
 
-    removeNodesByClassType(classType: ClassType) {
+    removeNodesByClassType(classType: ClassType): void {
         this._nodes[classType] = [];
     }
 
@@ -43,13 +43,13 @@ export default class NodeManager {
         });
     }
 
-    getActiveNodesByClassType(classType: ClassType) {
+    getActiveNodesByClassType(classType: ClassType): Node[] {
         return this._nodes[classType].filter((node) => {
             return node.isActive;
         });
     }
 
-    filterInactiveNodes() {
+    filterInactiveNodes(): void {
         Object.keys(this._nodes).map((classType: string) => {
             this._nodes[classType] = this._nodes[classType].filter((node: Node) => {
                 return node.isActive;
@@ -58,8 +58,7 @@ export default class NodeManager {
     }
 
     deactivateNodesByEntityId(entityId: string): Node[] {
-        let nodes: Node[] = this.getAllNodes();
-        return nodes.filter((node: Node) => {
+        return this.getAllNodes().filter((node: Node) => {
             return node.entityId === entityId;
         }).map((node: Node) => {
             this.destroySprite(node);

@@ -82,12 +82,12 @@ export default class LevelSystem implements ISystem {
 
     update(time: number, nodes: Node[]) {
 
-        let result: any = {};
+        let result: any = null;
 
         this.currentLevel = this.currentLevel || 1;
 
         if (!this.isLoaded) {
-            result.newEntities = this.loadLevel(this.currentLevel - 1);
+            result = { newEntities: this.loadLevel(this.currentLevel - 1) }
             // result.deadEntities = this.getAllEntityIds(nodes);
             this.isLoaded = true;
         }
