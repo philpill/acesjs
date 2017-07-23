@@ -61,4 +61,21 @@ export default class Node {
 
         this.isActive = true;
     }
+
+    destroy() {
+        this.classType = null;
+
+        this.animation = null;
+        this.collision = null;
+        this.damage = null;
+        this.display = null;
+        this.health = null;
+        this.input = null;
+        this.position = null;
+        this.trigger = null;
+        this.user = null;
+        this.velocity = null;
+
+        this.isActive = false;
+    }
 }

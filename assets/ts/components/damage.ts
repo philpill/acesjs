@@ -12,4 +12,8 @@ export default class DamageComponent implements IComponent {
 
         this.damage = 10;
     }
+
+    destroy() {
+
+    }
 }

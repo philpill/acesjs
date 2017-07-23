@@ -27,4 +27,9 @@ export default class DisplayComponent implements IComponent {
 
         this.mapWidth = mapWidth;
     }
+
+    destroy() {
+
+        this.sprite = null;
+    }
 }

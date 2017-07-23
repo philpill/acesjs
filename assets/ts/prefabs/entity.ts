@@ -34,6 +34,7 @@ export default class Entity {
     }
 
     removeComponent(componentClass: string) {
+        this.components[componentClass].destroy();
         this.components[componentClass] = null;
     }
 
@@ -41,7 +42,8 @@ export default class Entity {
         console.log('destroy');
         this.isActive = false;
         Object.keys(this.components).map((component) => {
-            this.components[component] = null;
+            this.removeComponent(component);
         });
+        this.components = {};
     }
 }

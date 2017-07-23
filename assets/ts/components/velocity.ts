@@ -31,4 +31,8 @@ export default class VelocityComponent implements IComponent {
 
         this.isGrounded = false;
     }
+
+    destroy() {
+
+    }
 }

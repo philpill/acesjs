@@ -15,7 +15,7 @@ export default class InputManager {
         window.addEventListener('keyup', this.onKeyUpHandler.bind(this), false);
     }
 
-    destructor() {
+    destroy() {
 
         window.removeEventListener('keydown', this.onKeyDownHandler);
         window.removeEventListener('keyup', this.onKeyUpHandler);

@@ -35,4 +35,12 @@ export default class AnimationComponent implements IComponent {
 
         this.currentFrame = 0;
     }
+
+    destroy() {
+
+        this.default = null;
+        this.right = null;
+        this.left = null;
+        this.jump = null;
+    }
 }

@@ -12,4 +12,8 @@ export default class HealthComponent implements IComponent {
 
         this.health = 0;
     }
+
+    destroy() {
+
+    }
 }

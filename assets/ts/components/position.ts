@@ -20,4 +20,8 @@ export default class PositionComponent implements IComponent {
 
         this.outOfBounds = false;
     }
+
+    destroy() {
+
+    }
 }

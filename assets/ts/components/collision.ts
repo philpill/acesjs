@@ -36,4 +36,11 @@ export default class CollisionComponent implements IComponent {
             // console.log('COLLIDE');
         }
     }
+
+    destroy() {
+
+        this.collide = () => {
+
+        }
+    }
 }

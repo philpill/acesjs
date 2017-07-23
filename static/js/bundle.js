@@ -3672,6 +3672,9 @@ class DisplayComponent {
         this.mapHeight = mapHeight;
         this.mapWidth = mapWidth;
     }
+    destroy() {
+        this.sprite = null;
+    }
 }
 exports.default = DisplayComponent;
 
@@ -3690,6 +3693,8 @@ class PositionComponent {
         this.y = y;
         this.mapWidth = mapWidth;
         this.outOfBounds = false;
+    }
+    destroy() {
     }
 }
 exports.default = PositionComponent;
@@ -3727,14 +3732,16 @@ class Entity {
         components.map(this.addComponent.bind(this));
     }
     removeComponent(componentClass) {
+        this.components[componentClass].destroy();
         this.components[componentClass] = null;
     }
     destroy() {
         console.log('destroy');
         this.isActive = false;
         Object.keys(this.components).map((component) => {
-            this.components[component] = null;
+            this.removeComponent(component);
         });
+        this.components = {};
     }
 }
 exports.default = Entity;
@@ -11788,6 +11795,10 @@ class CollisionComponent {
             // console.log('COLLIDE');
         };
     }
+    destroy() {
+        this.collide = () => {
+        };
+    }
 }
 exports.default = CollisionComponent;
 
@@ -11805,6 +11816,8 @@ class TriggerComponent {
         this.class = 'trigger';
         this.triggerType = type;
         this.isTriggered = false;
+    }
+    destroy() {
     }
 }
 exports.default = TriggerComponent;
@@ -19470,6 +19483,10 @@ class InputComponent {
         //     this.isPause = !this.isPause;
         // }
     }
+    destroy() {
+        this.inputManager.destroy();
+        this.inputManager = null;
+    }
 }
 exports.default = InputComponent;
 
@@ -20367,7 +20384,7 @@ class Engine {
     removeSystem(system) {
         system.stop();
         system = null;
-        this.nodeManager.deactivateNodesByClassType(system.classType);
+        this.nodeManager.destroyNodesByClassType(system.classType);
         this.nodeManager.removeNodesByClassType(system.classType);
         this.systems = this.systems.filter((system) => {
             return !!system;
@@ -20375,7 +20392,7 @@ class Engine {
     }
     clearInactiveItems() {
         let inactiveEntityIds = this.entityManager.getInactiveEntityIds();
-        this.nodeManager.deactivateNodesByEntityIds(inactiveEntityIds);
+        this.nodeManager.destroyNodesByEntityIds(inactiveEntityIds);
         this.nodeManager.filterInactiveNodes();
         this.entityManager.filterInactiveEntities();
     }
@@ -20411,10 +20428,10 @@ class Engine {
         let dt = (now - before) / 1000;
         dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
         if (!this.isPaused) {
-            this.clearInactiveItems();
             let results = this.updateSystems(dt);
             this.processResults(results);
         }
+        this.clearInactiveItems();
         before = now;
         requestAnimationFrame(this.update.bind(this, before));
     }
@@ -41517,6 +41534,12 @@ class AnimationComponent {
         this.currentAnimationProp = 'default';
         this.currentFrame = 0;
     }
+    destroy() {
+        this.default = null;
+        this.right = null;
+        this.left = null;
+        this.jump = null;
+    }
 }
 exports.default = AnimationComponent;
 
@@ -41538,6 +41561,8 @@ class VelocityComponent {
         this.velocityX = 0;
         this.velocityY = 0;
         this.isGrounded = false;
+    }
+    destroy() {
     }
 }
 exports.default = VelocityComponent;
@@ -41660,7 +41685,7 @@ class InputManager {
         window.addEventListener('keydown', this.onKeyDownHandler.bind(this), false);
         window.addEventListener('keyup', this.onKeyUpHandler.bind(this), false);
     }
-    destructor() {
+    destroy() {
         window.removeEventListener('keydown', this.onKeyDownHandler);
         window.removeEventListener('keyup', this.onKeyUpHandler);
     }
@@ -41712,6 +41737,12 @@ class NodeManager {
         let vals = Object.values(this._nodes);
         return [].concat.apply([], vals);
     }
+    // slow
+    getNodesByEntityId(entityId) {
+        return this.getAllNodes().filter((node) => {
+            return node.entityId === entityId;
+        });
+    }
     getInactiveNodes() {
         let nodes = this.getAllNodes();
         return nodes.filter((node) => {
@@ -41730,23 +41761,20 @@ class NodeManager {
             });
         });
     }
-    deactivateNodesByClassType(classType) {
+    destroyNodesByClassType(classType) {
         this._nodes[classType].map((node) => {
-            node.isActive = false;
+            node.destroy();
         });
     }
-    // slow
-    deactivateNodesByEntityId(entityId) {
-        return this.getAllNodes().filter((node) => {
-            return node.entityId === entityId;
-        }).map((node) => {
+    destroyNodesByEntityId(entityId) {
+        return this.getNodesByEntityId(entityId).map((node) => {
             this.destroySprite(node);
-            node.isActive = false;
+            node.destroy();
             return node;
         });
     }
-    deactivateNodesByEntityIds(ids) {
-        ids.map(this.deactivateNodesByEntityId, this);
+    destroyNodesByEntityIds(ids) {
+        ids.map(this.destroyNodesByEntityId, this);
     }
     destroySprite(node) {
         if (node.display && node.display.sprite) {
@@ -41804,6 +41832,20 @@ class Node {
         this.user = components.user;
         this.velocity = components.velocity;
         this.isActive = true;
+    }
+    destroy() {
+        this.classType = null;
+        this.animation = null;
+        this.collision = null;
+        this.damage = null;
+        this.display = null;
+        this.health = null;
+        this.input = null;
+        this.position = null;
+        this.trigger = null;
+        this.user = null;
+        this.velocity = null;
+        this.isActive = false;
     }
 }
 exports.default = Node;

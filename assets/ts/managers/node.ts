@@ -6,7 +6,7 @@ import { NodeComponents } from '../nodes/node';
 export default class NodeManager {
 
     private _settings: Settings;
-    private _nodes: any;
+    private _nodes: { [id: string] : Node[]; };
 
     constructor(settings: Settings) {
         this._settings = settings;
@@ -36,6 +36,13 @@ export default class NodeManager {
         return [].concat.apply([], vals);
     }
 
+    // slow
+    getNodesByEntityId(entityId: string) {
+        return this.getAllNodes().filter((node: Node) => {
+            return node.entityId === entityId;
+        });
+    }
+
     getInactiveNodes(): Node[] {
         let nodes: Node[] = this.getAllNodes();
         return nodes.filter((node: Node) => {
@@ -57,25 +64,22 @@ export default class NodeManager {
         });
     }
 
-    deactivateNodesByClassType(classType: ClassType): void {
+    destroyNodesByClassType(classType: ClassType): void {
         this._nodes[classType].map((node: Node) => {
-            node.isActive = false;
+            node.destroy();
         });
     }
 
-    // slow
-    deactivateNodesByEntityId(entityId: string): Node[] {
-        return this.getAllNodes().filter((node: Node) => {
-            return node.entityId === entityId;
-        }).map((node: Node) => {
+    destroyNodesByEntityId(entityId: string): Node[] {
+        return this.getNodesByEntityId(entityId).map((node: Node) => {
             this.destroySprite(node);
-            node.isActive = false;
+            node.destroy();
             return node;
         });
     }
 
-    deactivateNodesByEntityIds(ids: string[]): void {
-        ids.map(this.deactivateNodesByEntityId, this);
+    destroyNodesByEntityIds(ids: string[]): void {
+        ids.map(this.destroyNodesByEntityId, this);
     }
 
     destroySprite(node: Node): void {

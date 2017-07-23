@@ -17,4 +17,8 @@ export default class TriggerComponent implements IComponent {
 
         this.isTriggered = false;
     }
+
+    destroy() {
+
+    }
 }

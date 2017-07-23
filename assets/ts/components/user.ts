@@ -9,4 +9,8 @@ export default class UserComponent implements IComponent {
         this.class = 'user';
 
     }
+
+    destroy() {
+
+    }
 }

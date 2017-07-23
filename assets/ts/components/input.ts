@@ -52,4 +52,10 @@ export default class InputComponent implements IComponent {
         //     this.isPause = !this.isPause;
         // }
     }
+
+    destroy() {
+
+        this.inputManager.destroy();
+        this.inputManager = null;
+    }
 }

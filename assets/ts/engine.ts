@@ -47,7 +47,7 @@ export default class Engine {
     removeSystem(system: ISystem) {
         system.stop();
         system = null;
-        this.nodeManager.deactivateNodesByClassType(system.classType);
+        this.nodeManager.destroyNodesByClassType(system.classType);
         this.nodeManager.removeNodesByClassType(system.classType);
         this.systems = this.systems.filter((system: ISystem) => {
             return !!system;
@@ -56,7 +56,7 @@ export default class Engine {
 
     clearInactiveItems() {
         let inactiveEntityIds = this.entityManager.getInactiveEntityIds();
-        this.nodeManager.deactivateNodesByEntityIds(inactiveEntityIds);
+        this.nodeManager.destroyNodesByEntityIds(inactiveEntityIds);
         this.nodeManager.filterInactiveNodes();
         this.entityManager.filterInactiveEntities();
     }
@@ -106,12 +106,12 @@ export default class Engine {
 
         if (!this.isPaused) {
 
-            this.clearInactiveItems();
-
             let results = this.updateSystems(dt);
 
             this.processResults(results);
         }
+
+        this.clearInactiveItems();
 
         before = now;
 
