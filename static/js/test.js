@@ -33,9 +33,6 @@
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -63,20 +60,76 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 224);
+/******/ 	return __webpack_require__(__webpack_require__.s = 220);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 103:
+/***/ 10:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const move_1 = __webpack_require__(27);
-const settings_1 = __webpack_require__(8);
-const assert = __webpack_require__(104);
+class Settings {
+    constructor() {
+        this.GRAVITY = 1;
+        this.FRICTION = 0.90;
+        this.TILE = 16;
+        this.MAP = [45, 30];
+        this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
+    }
+}
+exports.default = Settings;
+
+
+/***/ }),
+
+/***/ 11:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 220:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(221);
+
+
+/***/ }),
+
+/***/ 221:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const move_1 = __webpack_require__(46);
+const settings_1 = __webpack_require__(10);
+const assert = __webpack_require__(222);
 describe('MoveSystem', () => {
     let settings;
     let system;
@@ -128,7 +181,7 @@ describe('MoveSystem', () => {
 
 /***/ }),
 
-/***/ 104:
+/***/ 222:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -200,7 +253,7 @@ function isBuffer(b) {
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var util = __webpack_require__(222);
+var util = __webpack_require__(223);
 var hasOwn = Object.prototype.hasOwnProperty;
 var pSlice = Array.prototype.slice;
 var functionsHaveNames = (function () {
@@ -623,81 +676,11 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ }),
 
-/***/ 16:
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ 220:
-/***/ (function(module, exports) {
-
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
-
-
-/***/ }),
-
-/***/ 221:
-/***/ (function(module, exports) {
-
-module.exports = function isBuffer(arg) {
-  return arg && typeof arg === 'object'
-    && typeof arg.copy === 'function'
-    && typeof arg.fill === 'function'
-    && typeof arg.readUInt8 === 'function';
-}
-
-/***/ }),
-
-/***/ 222:
+/***/ 223:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -1225,7 +1208,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(221);
+exports.isBuffer = __webpack_require__(224);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -1269,7 +1252,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(220);
+exports.inherits = __webpack_require__(225);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -1287,94 +1270,53 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16), __webpack_require__(43)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11), __webpack_require__(39)))
 
 /***/ }),
 
 /***/ 224:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-module.exports = __webpack_require__(103);
-
-
-/***/ }),
-
-/***/ 27:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const enum_1 = __webpack_require__(5);
-const enum_2 = __webpack_require__(5);
-class MoveSystem {
-    constructor(settings) {
-        this.classType = enum_1.ClassType.MOVE;
-        this.settings = settings;
-    }
-    init() { }
-    stop() { }
-    getVelocityX(time, friction, velocity, acceleration, isGrounded) {
-        // limit horizontal movement in the air
-        acceleration = isGrounded ? acceleration : acceleration / 3;
-        return (velocity + time * acceleration) * friction;
-    }
-    getPositionX(time, tile, position, velocity, mapWidth) {
-        position = position + (velocity + time * velocity) * tile;
-        // stop movement at map boundaries - shift this to collision system
-        position = Math.max(0, position);
-        position = this.getLowestHorizontalPosition(position, mapWidth, tile);
-        return position;
-    }
-    getLowestHorizontalPosition(currentPosition, mapWidth, tileSize) {
-        return Math.min(currentPosition, mapWidth * tileSize - tileSize);
-    }
-    getVelocityY(time, velocity, acceleration, isGrounded) {
-        // prevent any more downwards vertical movement
-        velocity = isGrounded ? Math.max(0, velocity) : velocity + time * acceleration;
-        // cap the velocity - anything more than 0.7 and the entity might fall
-        // though the tile before collision is detected
-        return Math.min(velocity, 0.5);
-    }
-    getPositionY(time, tile, position, velocity, isGrounded) {
-        position = position + velocity * tile;
-        if (isGrounded) {
-            // round up to tile edge
-            position = Math.floor(position / tile) * tile;
-        }
-        return Math.max(0, position);
-    }
-    update(time, nodes) {
-        nodes.map((node) => {
-            let velocityData = node.velocity;
-            let positionData = node.position;
-            let collisionData = node.collision;
-            let triggerData = node.trigger;
-            let isGrounded = collisionData.isBottomObstacleCollision;
-            let tile = this.settings.TILE;
-            let friction = this.settings.FRICTION;
-            velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
-            positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
-            velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
-            positionData.y = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
-            if (positionData.y > this.settings.MAP[0] * tile) {
-                console.log('OFF MAP');
-                // node.isActive = false;
-                positionData.outOfBounds = true;
-                if (triggerData && triggerData.triggerType === enum_2.TriggerType.PLAYERDEATH) {
-                    console.log('OFF MAP TRIGGER');
-                    triggerData.isTriggered = true;
-                }
-            }
-        });
-    }
+module.exports = function isBuffer(arg) {
+  return arg && typeof arg === 'object'
+    && typeof arg.copy === 'function'
+    && typeof arg.fill === 'function'
+    && typeof arg.readUInt8 === 'function';
 }
-exports.default = MoveSystem;
+
+/***/ }),
+
+/***/ 225:
+/***/ (function(module, exports) {
+
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
 
 
 /***/ }),
 
-/***/ 43:
+/***/ 39:
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1547,6 +1489,10 @@ process.off = noop;
 process.removeListener = noop;
 process.removeAllListeners = noop;
 process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
@@ -1557,6 +1503,81 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
+
+
+/***/ }),
+
+/***/ 46:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const enum_1 = __webpack_require__(5);
+const enum_2 = __webpack_require__(5);
+class MoveSystem {
+    constructor(settings) {
+        this.classType = enum_1.ClassType.MOVE;
+        this.settings = settings;
+    }
+    init() { }
+    stop() { }
+    getVelocityX(time, friction, velocity, acceleration, isGrounded) {
+        // limit horizontal movement in the air
+        acceleration = isGrounded ? acceleration : acceleration / 3;
+        return (velocity + time * acceleration) * friction;
+    }
+    getPositionX(time, tile, position, velocity, mapWidth) {
+        position = position + (velocity + time * velocity) * tile;
+        // stop movement at map boundaries - shift this to collision system
+        position = Math.max(0, position);
+        position = this.getLowestHorizontalPosition(position, mapWidth, tile);
+        return position;
+    }
+    getLowestHorizontalPosition(currentPosition, mapWidth, tileSize) {
+        return Math.min(currentPosition, mapWidth * tileSize - tileSize);
+    }
+    getVelocityY(time, velocity, acceleration, isGrounded) {
+        // prevent any more downwards vertical movement
+        velocity = isGrounded ? Math.max(0, velocity) : velocity + time * acceleration;
+        // cap the velocity - anything more than 0.7 and the entity might fall
+        // though the tile before collision is detected
+        return Math.min(velocity, 0.5);
+    }
+    getPositionY(time, tile, position, velocity, isGrounded) {
+        position = position + velocity * tile;
+        if (isGrounded) {
+            // round up to tile edge
+            position = Math.floor(position / tile) * tile;
+        }
+        return Math.max(0, position);
+    }
+    update(time, nodes) {
+        nodes.map((node) => {
+            let velocityData = node.velocity;
+            let positionData = node.position;
+            let collisionData = node.collision;
+            let triggerData = node.trigger;
+            let isGrounded = collisionData.isBottomObstacleCollision;
+            let tile = this.settings.TILE;
+            let friction = this.settings.FRICTION;
+            velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
+            positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
+            velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
+            positionData.y = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
+            if (positionData.y > this.settings.MAP[0] * tile) {
+                console.log('OFF MAP');
+                // node.isActive = false;
+                positionData.outOfBounds = true;
+                if (triggerData && triggerData.triggerType === enum_2.TriggerType.PLAYERDEATH) {
+                    console.log('OFF MAP TRIGGER');
+                    triggerData.isTriggered = true;
+                }
+            }
+        });
+    }
+}
+exports.default = MoveSystem;
 
 
 /***/ }),
@@ -1586,26 +1607,6 @@ var ClassType;
     ClassType[ClassType["INTERSTITIAL"] = 6] = "INTERSTITIAL";
 })(ClassType || (ClassType = {}));
 exports.ClassType = ClassType;
-
-
-/***/ }),
-
-/***/ 8:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-class Settings {
-    constructor() {
-        this.GRAVITY = 1;
-        this.FRICTION = 0.90;
-        this.TILE = 16;
-        this.MAP = [45, 30];
-        this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
-    }
-}
-exports.default = Settings;
 
 
 /***/ })

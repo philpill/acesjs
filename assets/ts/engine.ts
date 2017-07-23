@@ -8,6 +8,8 @@ import EntityManager from './managers/entity';
 import NodeManager from './managers/node';
 import Settings from './settings';
 
+type UpdateResult = { newEntities: Entity[], deadEntities: string[] };
+
 export default class Engine {
 
     systems: ISystem[];
@@ -62,8 +64,8 @@ export default class Engine {
         this.entityManager.discardInactiveEntities();
     }
 
-    updateSystems(dt: number): { newEntities: Entity[], deadEntities: string[] }[] {
-        let results: { newEntities: Entity[], deadEntities: string[] }[] = [];
+    updateSystems(dt: number): UpdateResult[] {
+        let results: UpdateResult[] = [];
         this.systems.map((system) => {
             let nodes = this.nodeManager.getActiveNodesByClassType(system.classType);
             let result = system.update(dt, nodes);
@@ -72,7 +74,7 @@ export default class Engine {
         return results.filter((result) => { return result; });
     }
 
-    processResults(results: { newEntities: Entity[], deadEntities: string[] }[]) {
+    processResults(results: UpdateResult[]) {
         let newEntities = [];
         let deadEntities = [];
 
@@ -113,9 +115,6 @@ export default class Engine {
             let results = this.updateSystems(delta);
 
             this.processResults(results);
-
-            // console.log(this.entityManager.getEntityCount());
-            // console.log(this.nodeManager.getNodeCount());
         }
 
         before = now;

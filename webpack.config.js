@@ -8,7 +8,6 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var dir_ts = path.resolve(__dirname, 'assets/ts');
 var dir_tests_ts = path.resolve(__dirname, 'test');
-var dir_libs = path.resolve(__dirname, 'libs');
 var dir_build = path.resolve(__dirname, 'static');
 
 module.exports = {
@@ -34,13 +33,6 @@ module.exports = {
         ]
     },
     plugins: [
-        // Simply copies the files over
-        // new CopyWebpackPlugin([
-        //     {
-        //         from: 'assets/libs',
-        //         to: 'libs'
-        //     } // to: output.path
-        // ]),
         new CopyWebpackPlugin([
             {
                 from: 'assets/img',

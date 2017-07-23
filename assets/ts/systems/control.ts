@@ -8,12 +8,6 @@ export default class ControlSystem implements ISystem {
     classType: ClassType;
     settings: Settings;
 
-    isJump: any;
-    isLeft: any;
-    isUp: any;
-    isRight: any;
-    isDown: any;
-
     constructor(settings: Settings) {
 
         this.classType = ClassType.CONTROL;

@@ -142,7 +142,7 @@ export default class RenderSystem implements ISystem {
             }
         });
 
-        // this.clearDeadSprites();
+        this.clearDeadSprites();
 
         this.renderer.render(this.stage);
     }
