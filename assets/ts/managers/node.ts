@@ -57,6 +57,13 @@ export default class NodeManager {
         });
     }
 
+    deactivateNodesByClassType(classType: ClassType): void {
+        this._nodes[classType].map((node: Node) => {
+            node.isActive = false;
+        });
+    }
+
+    // slow
     deactivateNodesByEntityId(entityId: string): Node[] {
         return this.getAllNodes().filter((node: Node) => {
             return node.entityId === entityId;
@@ -67,17 +74,17 @@ export default class NodeManager {
         });
     }
 
-    deactivateNodesByEntityIds(ids: string[]) {
+    deactivateNodesByEntityIds(ids: string[]): void {
         ids.map(this.deactivateNodesByEntityId, this);
     }
 
-    destroySprite(node: Node) {
+    destroySprite(node: Node): void {
         if (node.display && node.display.sprite) {
             node.display.sprite.destroy();
         }
     }
 
-    generateNodes(entityId: string, components: NodeComponents) {
+    generateNodes(entityId: string, components: NodeComponents): void {
 
         if (components.display && components.position) {
             this.addNewNode(entityId, ClassType.RENDER, components);

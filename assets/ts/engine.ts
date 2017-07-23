@@ -9,7 +9,6 @@ import NodeManager from './managers/node';
 import Settings from './settings';
 export default class Engine {
 
-    // entities: Entity[];
     systems: ISystem[];
     isPaused: boolean;
     nodeManager: NodeManager;
@@ -17,7 +16,6 @@ export default class Engine {
 
     constructor(settings: Settings) {
 
-        // this.entities = [];
         this.systems = [];
         this.nodeManager = new NodeManager(settings);
         this.entityManager = new EntityManager(settings);
@@ -49,10 +47,46 @@ export default class Engine {
     removeSystem(system: ISystem) {
         system.stop();
         system = null;
+        this.nodeManager.deactivateNodesByClassType(system.classType);
         this.nodeManager.removeNodesByClassType(system.classType);
         this.systems = this.systems.filter((system: ISystem) => {
             return !!system;
         });
+    }
+
+    clearInactiveItems() {
+        let inactiveEntityIds = this.entityManager.getInactiveEntityIds();
+        this.nodeManager.deactivateNodesByEntityIds(inactiveEntityIds);
+        this.nodeManager.filterInactiveNodes();
+        this.entityManager.filterInactiveEntities();
+    }
+
+    updateSystems(dt: number): { newEntities: Entity[], deadEntities: Entity[] }[] {
+        let results: { newEntities: Entity[], deadEntities: Entity[] }[] = [];
+        this.systems.map((system) => {
+            let nodes = this.nodeManager.getActiveNodesByClassType(system.classType);
+            let result = system.update(dt, nodes);
+            results.push(result);
+        });
+        return results.filter((result) => { return result; });
+    }
+
+    processResults(results: { newEntities: Entity[], deadEntities: Entity[] }[]) {
+        let newEntities = [];
+        let deadEntities = [];
+
+        results.map((result) => {
+            if (result.newEntities) {
+                newEntities.push(...result.newEntities);
+            }
+            if (result.deadEntities) {
+                deadEntities.push(...result.deadEntities);
+            }
+        });
+
+        this.addEntities(newEntities);
+
+        this.entityManager.destroyEntities(deadEntities);
     }
 
     update(before = 0) {
@@ -72,38 +106,11 @@ export default class Engine {
 
         if (!this.isPaused) {
 
-            let inactiveEntityIds = this.entityManager.getInactiveEntityIds();
+            this.clearInactiveItems();
 
-            this.nodeManager.deactivateNodesByEntityIds(inactiveEntityIds);
+            let results = this.updateSystems(dt);
 
-            this.nodeManager.filterInactiveNodes();
-
-            let results = [];
-
-            this.systems.map((system) => {
-
-                let nodes = this.nodeManager.getActiveNodesByClassType(system.classType);
-
-                let result = system.update(dt, nodes || []);
-
-                if (result) {
-                    results.push(result);
-                }
-            });
-
-            results = results.filter((result) => { return result; });
-
-            let things = results.map((result) => {
-                return result.newEntities;
-            });
-
-            let newEntities = things[0];
-
-            let deadEntities = results.map((result) => {
-                return result.deadEntities;
-            });
-
-            this.addEntities(newEntities);
+            this.processResults(results);
         }
 
         before = now;

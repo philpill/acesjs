@@ -59,6 +59,12 @@ export default class EntityManager {
         return entities.length ? entities[0] : null;
     }
 
+    filterInactiveEntities() {
+        this._entities = this._entities.filter((entity) => {
+            return entity.isActive;
+        });
+    }
+
     destructor() {
 
     }

@@ -20342,7 +20342,6 @@ const entity_1 = __webpack_require__(208);
 const node_1 = __webpack_require__(210);
 class Engine {
     constructor(settings) {
-        // this.entities = [];
         this.systems = [];
         this.nodeManager = new node_1.default(settings);
         this.entityManager = new entity_1.default(settings);
@@ -20368,10 +20367,40 @@ class Engine {
     removeSystem(system) {
         system.stop();
         system = null;
+        this.nodeManager.deactivateNodesByClassType(system.classType);
         this.nodeManager.removeNodesByClassType(system.classType);
         this.systems = this.systems.filter((system) => {
             return !!system;
         });
+    }
+    clearInactiveItems() {
+        let inactiveEntityIds = this.entityManager.getInactiveEntityIds();
+        this.nodeManager.deactivateNodesByEntityIds(inactiveEntityIds);
+        this.nodeManager.filterInactiveNodes();
+        this.entityManager.filterInactiveEntities();
+    }
+    updateSystems(dt) {
+        let results = [];
+        this.systems.map((system) => {
+            let nodes = this.nodeManager.getActiveNodesByClassType(system.classType);
+            let result = system.update(dt, nodes);
+            results.push(result);
+        });
+        return results.filter((result) => { return result; });
+    }
+    processResults(results) {
+        let newEntities = [];
+        let deadEntities = [];
+        results.map((result) => {
+            if (result.newEntities) {
+                newEntities.push(...result.newEntities);
+            }
+            if (result.deadEntities) {
+                deadEntities.push(...result.deadEntities);
+            }
+        });
+        this.addEntities(newEntities);
+        this.entityManager.destroyEntities(deadEntities);
     }
     update(before = 0) {
         this.isPaused = false;
@@ -20382,26 +20411,9 @@ class Engine {
         let dt = (now - before) / 1000;
         dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
         if (!this.isPaused) {
-            let inactiveEntityIds = this.entityManager.getInactiveEntityIds();
-            this.nodeManager.deactivateNodesByEntityIds(inactiveEntityIds);
-            this.nodeManager.filterInactiveNodes();
-            let results = [];
-            this.systems.map((system) => {
-                let nodes = this.nodeManager.getActiveNodesByClassType(system.classType);
-                let result = system.update(dt, nodes || []);
-                if (result) {
-                    results.push(result);
-                }
-            });
-            results = results.filter((result) => { return result; });
-            let things = results.map((result) => {
-                return result.newEntities;
-            });
-            let newEntities = things[0];
-            let deadEntities = results.map((result) => {
-                return result.deadEntities;
-            });
-            this.addEntities(newEntities);
+            this.clearInactiveItems();
+            let results = this.updateSystems(dt);
+            this.processResults(results);
         }
         before = now;
         requestAnimationFrame(this.update.bind(this, before));
@@ -41624,6 +41636,11 @@ class EntityManager {
         });
         return entities.length ? entities[0] : null;
     }
+    filterInactiveEntities() {
+        this._entities = this._entities.filter((entity) => {
+            return entity.isActive;
+        });
+    }
     destructor() {
     }
 }
@@ -41713,6 +41730,12 @@ class NodeManager {
             });
         });
     }
+    deactivateNodesByClassType(classType) {
+        this._nodes[classType].map((node) => {
+            node.isActive = false;
+        });
+    }
+    // slow
     deactivateNodesByEntityId(entityId) {
         return this.getAllNodes().filter((node) => {
             return node.entityId === entityId;
