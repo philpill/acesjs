@@ -50,15 +50,12 @@ export default class LevelSystem implements ISystem {
         return this.entities;
     }
 
-    getAllEntityIds(nodes: Node[]) {
+    getEntitiesByNodes(nodes: Node[]) {
 
-        let ids = nodes.map((node: Node) => {
+        return nodes.map((node) => {
+
             return node.entityId;
         });
-
-        ids = Array.from(new Set(ids));
-
-        return ids;
     }
 
     loadNextLevel() {
@@ -87,8 +84,10 @@ export default class LevelSystem implements ISystem {
         this.currentLevel = this.currentLevel || 1;
 
         if (!this.isLoaded) {
-            result = { newEntities: this.loadLevel(this.currentLevel - 1) }
-            // result.deadEntities = this.getAllEntityIds(nodes);
+            result = {
+                newEntities: this.loadLevel(this.currentLevel - 1),
+                deadEntities: this.getEntitiesByNodes(nodes)
+            }
             this.isLoaded = true;
         }
 

@@ -7,6 +7,7 @@ import IComponent from './components/icomponent';
 import EntityManager from './managers/entity';
 import NodeManager from './managers/node';
 import Settings from './settings';
+
 export default class Engine {
 
     systems: ISystem[];
@@ -57,12 +58,12 @@ export default class Engine {
     clearInactiveItems() {
         let inactiveEntityIds = this.entityManager.getInactiveEntityIds();
         this.nodeManager.destroyNodesByEntityIds(inactiveEntityIds);
-        this.nodeManager.filterInactiveNodes();
-        this.entityManager.filterInactiveEntities();
+        this.nodeManager.discardInactiveNodes();
+        this.entityManager.discardInactiveEntities();
     }
 
-    updateSystems(dt: number): { newEntities: Entity[], deadEntities: Entity[] }[] {
-        let results: { newEntities: Entity[], deadEntities: Entity[] }[] = [];
+    updateSystems(dt: number): { newEntities: Entity[], deadEntities: string[] }[] {
+        let results: { newEntities: Entity[], deadEntities: string[] }[] = [];
         this.systems.map((system) => {
             let nodes = this.nodeManager.getActiveNodesByClassType(system.classType);
             let result = system.update(dt, nodes);
@@ -71,7 +72,7 @@ export default class Engine {
         return results.filter((result) => { return result; });
     }
 
-    processResults(results: { newEntities: Entity[], deadEntities: Entity[] }[]) {
+    processResults(results: { newEntities: Entity[], deadEntities: string[] }[]) {
         let newEntities = [];
         let deadEntities = [];
 
@@ -80,7 +81,8 @@ export default class Engine {
                 newEntities.push(...result.newEntities);
             }
             if (result.deadEntities) {
-                deadEntities.push(...result.deadEntities);
+                let entities = result.deadEntities.map(this.entityManager.getEntityById);
+                deadEntities.push(...entities);
             }
         });
 
@@ -100,18 +102,21 @@ export default class Engine {
 
         let now = performance.now();
 
-        let dt = (now - before)/1000;
+        let delta = (now - before)/1000;
 
-        dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
+        delta = Math.min(delta, 0.1); // magic number to prevent massive delta when tab not active
 
         if (!this.isPaused) {
 
-            let results = this.updateSystems(dt);
+            this.clearInactiveItems();
+
+            let results = this.updateSystems(delta);
 
             this.processResults(results);
-        }
 
-        this.clearInactiveItems();
+            // console.log(this.entityManager.getEntityCount());
+            // console.log(this.nodeManager.getNodeCount());
+        }
 
         before = now;
 

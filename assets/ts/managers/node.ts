@@ -56,7 +56,7 @@ export default class NodeManager {
         });
     }
 
-    filterInactiveNodes(): void {
+    discardInactiveNodes(): void {
         Object.keys(this._nodes).map((classType: string) => {
             this._nodes[classType] = this._nodes[classType].filter((node: Node) => {
                 return node.isActive;
@@ -113,6 +113,10 @@ export default class NodeManager {
         if (components.trigger) {
             this.addNewNode(entityId, ClassType.LEVEL, components);
         }
+    }
+
+    getNodeCount(): Number {
+        return this.getAllNodes().length;
     }
 
     destructor() {

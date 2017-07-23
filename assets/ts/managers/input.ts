@@ -19,6 +19,9 @@ export default class InputManager {
 
         window.removeEventListener('keydown', this.onKeyDownHandler);
         window.removeEventListener('keyup', this.onKeyUpHandler);
+
+        this.onKeyDownCallback = () => {};
+        this.onKeyUpCallback = () => {};
     }
 
     onKeyDownHandler(e: KeyboardEvent) {

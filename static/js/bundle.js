@@ -20393,8 +20393,8 @@ class Engine {
     clearInactiveItems() {
         let inactiveEntityIds = this.entityManager.getInactiveEntityIds();
         this.nodeManager.destroyNodesByEntityIds(inactiveEntityIds);
-        this.nodeManager.filterInactiveNodes();
-        this.entityManager.filterInactiveEntities();
+        this.nodeManager.discardInactiveNodes();
+        this.entityManager.discardInactiveEntities();
     }
     updateSystems(dt) {
         let results = [];
@@ -20413,7 +20413,8 @@ class Engine {
                 newEntities.push(...result.newEntities);
             }
             if (result.deadEntities) {
-                deadEntities.push(...result.deadEntities);
+                let entities = result.deadEntities.map(this.entityManager.getEntityById);
+                deadEntities.push(...entities);
             }
         });
         this.addEntities(newEntities);
@@ -20425,13 +20426,15 @@ class Engine {
             this.isPaused = true;
         }
         let now = performance.now();
-        let dt = (now - before) / 1000;
-        dt = Math.min(dt, 0.1); // magic number to prevent massive dt when tab not active
+        let delta = (now - before) / 1000;
+        delta = Math.min(delta, 0.1); // magic number to prevent massive delta when tab not active
         if (!this.isPaused) {
-            let results = this.updateSystems(dt);
+            this.clearInactiveItems();
+            let results = this.updateSystems(delta);
             this.processResults(results);
+            // console.log(this.entityManager.getEntityCount());
+            // console.log(this.nodeManager.getNodeCount());
         }
-        this.clearInactiveItems();
         before = now;
         requestAnimationFrame(this.update.bind(this, before));
     }
@@ -20730,12 +20733,10 @@ class LevelSystem {
         this.entities = tiledLevelData.entities;
         return this.entities;
     }
-    getAllEntityIds(nodes) {
-        let ids = nodes.map((node) => {
+    getEntitiesByNodes(nodes) {
+        return nodes.map((node) => {
             return node.entityId;
         });
-        ids = Array.from(new Set(ids));
-        return ids;
     }
     loadNextLevel() {
         // destroy all nodes
@@ -20752,8 +20753,10 @@ class LevelSystem {
         let result = null;
         this.currentLevel = this.currentLevel || 1;
         if (!this.isLoaded) {
-            result = { newEntities: this.loadLevel(this.currentLevel - 1) };
-            // result.deadEntities = this.getAllEntityIds(nodes);
+            result = {
+                newEntities: this.loadLevel(this.currentLevel - 1),
+                deadEntities: this.getEntitiesByNodes(nodes)
+            };
             this.isLoaded = true;
         }
         nodes.map((node) => {
@@ -20868,7 +20871,7 @@ class RenderSystem {
                 this.stage.pivot.y = this.renderer.height / 2;
             }
         });
-        this.clearDeadSprites();
+        // this.clearDeadSprites();
         this.renderer.render(this.stage);
     }
 }
@@ -41661,10 +41664,13 @@ class EntityManager {
         });
         return entities.length ? entities[0] : null;
     }
-    filterInactiveEntities() {
+    discardInactiveEntities() {
         this._entities = this._entities.filter((entity) => {
             return entity.isActive;
         });
+    }
+    getEntityCount() {
+        return this._entities.length;
     }
     destructor() {
     }
@@ -41688,6 +41694,8 @@ class InputManager {
     destroy() {
         window.removeEventListener('keydown', this.onKeyDownHandler);
         window.removeEventListener('keyup', this.onKeyUpHandler);
+        this.onKeyDownCallback = () => { };
+        this.onKeyUpCallback = () => { };
     }
     onKeyDownHandler(e) {
         return this.onKeyDownCallback(e);
@@ -41754,7 +41762,7 @@ class NodeManager {
             return node.isActive;
         });
     }
-    filterInactiveNodes() {
+    discardInactiveNodes() {
         Object.keys(this._nodes).map((classType) => {
             this._nodes[classType] = this._nodes[classType].filter((node) => {
                 return node.isActive;
@@ -41800,6 +41808,9 @@ class NodeManager {
         if (components.trigger) {
             this.addNewNode(entityId, enum_1.ClassType.LEVEL, components);
         }
+    }
+    getNodeCount() {
+        return this.getAllNodes().length;
     }
     destructor() {
     }
