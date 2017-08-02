@@ -66,45 +66,45 @@ export default class MoveSystem implements ISystem {
         return Math.max(0, position);
     }
 
+    updateNode(node: Node, time: number) {
+
+        let velocityData = node.velocity;
+
+        let positionData = node.position;
+
+        let collisionData = node.collision;
+
+        let triggerData = node.trigger;
+
+        let isGrounded = collisionData.isBottomObstacleCollision;
+
+        let tile = this.settings.TILE;
+
+        let friction = this.settings.FRICTION;
+
+        velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
+
+        positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
+
+        velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
+
+        positionData.y = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
+
+        if (positionData.y > this.settings.MAP[0] * tile) {
+
+            positionData.outOfBounds = true;
+
+            if (triggerData && triggerData.triggerType === TriggerType.PLAYERDEATH) {
+
+                console.log('OFF MAP TRIGGER');
+
+                triggerData.isTriggered = true;
+            }
+        }
+    }
+
     update(time: number, nodes: Node[]) {
 
-        nodes.map((node: Node) => {
-
-            let velocityData = node.velocity;
-
-            let positionData = node.position;
-
-            let collisionData = node.collision;
-
-            let triggerData = node.trigger;
-
-            let isGrounded = collisionData.isBottomObstacleCollision;
-
-            let tile = this.settings.TILE;
-
-            let friction = this.settings.FRICTION;
-
-            velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
-
-            positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
-
-            velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
-
-            positionData.y = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
-
-            if (positionData.y > this.settings.MAP[0] * tile) {
-                console.log('OFF MAP');
-                // node.isActive = false;
-
-                positionData.outOfBounds = true;
-
-                if (triggerData && triggerData.triggerType === TriggerType.PLAYERDEATH) {
-
-                    console.log('OFF MAP TRIGGER');
-
-                    triggerData.isTriggered = true;
-                }
-            }
-        });
+        nodes.map((node: Node) => { this.updateNode(node, time); });
     }
 }

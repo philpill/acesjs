@@ -22,6 +22,7 @@ export default class Main {
         PIXI.loader.add('level1', '/assets/json/levelone.json');
         PIXI.loader.add('level2', '/assets/json/leveltwo.json');
         PIXI.loader.add('title', '/assets/json/title.json');
+        PIXI.loader.add('death', '/assets/json/death.json');
 
         PIXI.loader.load(this._onLoad.bind(this));
     }

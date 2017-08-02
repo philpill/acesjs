@@ -23,8 +23,10 @@ export default class LevelSystem implements ISystem {
         this.settings = settings;
 
         this.isLoaded = false;
-        this.currentLevel = 0;
+        this.currentLevel = 2;
         this.levels = [{
+            data: PIXI.loader.resources.death.data
+        }, {
             data: PIXI.loader.resources.title.data
         }, {
             data: PIXI.loader.resources.level1.data
@@ -60,9 +62,6 @@ export default class LevelSystem implements ISystem {
 
     loadNextLevel() {
 
-        // destroy all nodes
-        // destroy all entities
-
         console.log('loadNextLevel()');
 
         this.isLoaded = false;
@@ -74,14 +73,14 @@ export default class LevelSystem implements ISystem {
 
         this.entities = [];
 
-        this.currentLevel = this.levels.length > this.currentLevel ? this.currentLevel + 1 : 0;
+        this.currentLevel = this.levels.length > this.currentLevel ? this.currentLevel + 1 : 1;
     }
 
     update(time: number, nodes: Node[]) {
 
         let result: any = null;
 
-        this.currentLevel = this.currentLevel || 1;
+        this.currentLevel = this.currentLevel || 2;
 
         if (!this.isLoaded) {
             result = {
@@ -91,35 +90,38 @@ export default class LevelSystem implements ISystem {
             this.isLoaded = true;
         }
 
-        nodes.map((node: Node) => {
-
-            let triggerData = node.trigger;
-
-            if (this.isLoaded && triggerData.isTriggered) {
-
-                if (triggerData.triggerType === TriggerType.LEVELEXIT) {
-
-                    console.log('FINISH');
-
-                    triggerData.isTriggered = false;
-
-                    this.loadNextLevel();
-                }
-
-                if (triggerData.triggerType === TriggerType.PLAYERDEATH) {
-
-                    console.log('DEATH');
-
-                    triggerData.isTriggered = false;
-
-                    this.currentLevel = 0;
-
-                    this.loadNextLevel();
-                }
-            }
-        });
+        nodes.map(this.updateNode, this);
 
         return result;
+    }
+
+
+    updateNode(node: Node): void {
+
+        let triggerData = node.trigger;
+
+        if (this.isLoaded && triggerData.isTriggered) {
+
+            if (triggerData.triggerType === TriggerType.LEVELEXIT) {
+
+                console.log('FINISH');
+
+                triggerData.isTriggered = false;
+
+                this.loadNextLevel();
+            }
+
+            if (triggerData.triggerType === TriggerType.PLAYERDEATH) {
+
+                console.log('DEATH');
+
+                triggerData.isTriggered = false;
+
+                this.currentLevel = 0;
+
+                this.loadNextLevel();
+            }
+        }
     }
 }
 

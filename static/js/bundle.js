@@ -11910,29 +11910,28 @@ class MoveSystem {
         }
         return Math.max(0, position);
     }
-    update(time, nodes) {
-        nodes.map((node) => {
-            let velocityData = node.velocity;
-            let positionData = node.position;
-            let collisionData = node.collision;
-            let triggerData = node.trigger;
-            let isGrounded = collisionData.isBottomObstacleCollision;
-            let tile = this.settings.TILE;
-            let friction = this.settings.FRICTION;
-            velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
-            positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
-            velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
-            positionData.y = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
-            if (positionData.y > this.settings.MAP[0] * tile) {
-                console.log('OFF MAP');
-                // node.isActive = false;
-                positionData.outOfBounds = true;
-                if (triggerData && triggerData.triggerType === enum_2.TriggerType.PLAYERDEATH) {
-                    console.log('OFF MAP TRIGGER');
-                    triggerData.isTriggered = true;
-                }
+    updateNode(node, time) {
+        let velocityData = node.velocity;
+        let positionData = node.position;
+        let collisionData = node.collision;
+        let triggerData = node.trigger;
+        let isGrounded = collisionData.isBottomObstacleCollision;
+        let tile = this.settings.TILE;
+        let friction = this.settings.FRICTION;
+        velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
+        positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
+        velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
+        positionData.y = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
+        if (positionData.y > this.settings.MAP[0] * tile) {
+            positionData.outOfBounds = true;
+            if (triggerData && triggerData.triggerType === enum_2.TriggerType.PLAYERDEATH) {
+                console.log('OFF MAP TRIGGER');
+                triggerData.isTriggered = true;
             }
-        });
+        }
+    }
+    update(time, nodes) {
+        nodes.map((node) => { this.updateNode(node, time); });
     }
 }
 exports.default = MoveSystem;
@@ -20394,6 +20393,7 @@ class Main {
         PIXI.loader.add('level1', '/assets/json/levelone.json');
         PIXI.loader.add('level2', '/assets/json/leveltwo.json');
         PIXI.loader.add('title', '/assets/json/title.json');
+        PIXI.loader.add('death', '/assets/json/death.json');
         PIXI.loader.load(this._onLoad.bind(this));
     }
     _onLoad() {
@@ -41930,8 +41930,10 @@ class LevelSystem {
         this.classType = enum_1.ClassType.LEVEL;
         this.settings = settings;
         this.isLoaded = false;
-        this.currentLevel = 0;
+        this.currentLevel = 2;
         this.levels = [{
+                data: PIXI.loader.resources.death.data
+            }, {
                 data: PIXI.loader.resources.title.data
             }, {
                 data: PIXI.loader.resources.level1.data
@@ -41956,19 +41958,17 @@ class LevelSystem {
         });
     }
     loadNextLevel() {
-        // destroy all nodes
-        // destroy all entities
         console.log('loadNextLevel()');
         this.isLoaded = false;
         this.entities.map((entity) => {
             entity.destroy();
         });
         this.entities = [];
-        this.currentLevel = this.levels.length > this.currentLevel ? this.currentLevel + 1 : 0;
+        this.currentLevel = this.levels.length > this.currentLevel ? this.currentLevel + 1 : 1;
     }
     update(time, nodes) {
         let result = null;
-        this.currentLevel = this.currentLevel || 1;
+        this.currentLevel = this.currentLevel || 2;
         if (!this.isLoaded) {
             result = {
                 newEntities: this.loadLevel(this.currentLevel - 1),
@@ -41976,23 +41976,24 @@ class LevelSystem {
             };
             this.isLoaded = true;
         }
-        nodes.map((node) => {
-            let triggerData = node.trigger;
-            if (this.isLoaded && triggerData.isTriggered) {
-                if (triggerData.triggerType === enum_2.TriggerType.LEVELEXIT) {
-                    console.log('FINISH');
-                    triggerData.isTriggered = false;
-                    this.loadNextLevel();
-                }
-                if (triggerData.triggerType === enum_2.TriggerType.PLAYERDEATH) {
-                    console.log('DEATH');
-                    triggerData.isTriggered = false;
-                    this.currentLevel = 0;
-                    this.loadNextLevel();
-                }
-            }
-        });
+        nodes.map(this.updateNode, this);
         return result;
+    }
+    updateNode(node) {
+        let triggerData = node.trigger;
+        if (this.isLoaded && triggerData.isTriggered) {
+            if (triggerData.triggerType === enum_2.TriggerType.LEVELEXIT) {
+                console.log('FINISH');
+                triggerData.isTriggered = false;
+                this.loadNextLevel();
+            }
+            if (triggerData.triggerType === enum_2.TriggerType.PLAYERDEATH) {
+                console.log('DEATH');
+                triggerData.isTriggered = false;
+                this.currentLevel = 0;
+                this.loadNextLevel();
+            }
+        }
     }
 }
 exports.default = LevelSystem;
@@ -42077,6 +42078,10 @@ class LevelPrefab {
                 case 15:
                 case 16:
                 case 17:
+                case 21:
+                case 22:
+                case 23:
+                case 24:
                     return new background_1.default(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
             }
         });
@@ -42398,7 +42403,6 @@ class ControlPrefab extends entity_1.default {
         let trigger = new trigger_1.default(type);
         let position = new position_1.default(0, 0, 0);
         let settings = new settings_1.default();
-        let tile = settings.TILE;
         let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 1, 1));
         let sprite = new sprite_1.default(texture);
         let display = new display_1.default(sprite, 0, 0);

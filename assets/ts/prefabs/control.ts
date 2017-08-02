@@ -5,11 +5,8 @@ import Sprite from '../sprite';
 
 import TriggerComponent from '../components/trigger';
 import PositionComponent from '../components/position';
-import CollisionComponent from '../components/collision';
 import DisplayComponent from '../components/display';
 import InputComponent from '../components/input';
-
-import IComponent from '../components/icomponent';
 
 import { TriggerType } from '../enum';
 
@@ -24,8 +21,6 @@ export default class ControlPrefab extends Entity {
         let position = new PositionComponent(0, 0, 0);
 
         let settings = new Settings();
-
-        let tile = settings.TILE;
 
         let texture = new PIXI.Texture(PIXI.utils.TextureCache['bg'], new PIXI.Rectangle(0, 0, 1, 1));
         let sprite = new Sprite(texture);

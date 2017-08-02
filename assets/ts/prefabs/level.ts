@@ -18,7 +18,7 @@ class LevelPrefabData {
     index: number;
     position: number[];
 
-    constructor(type, index, position) {
+    constructor(type: number, index: number, position: number[]) {
 
         this.type = type;
         this.index = index;
@@ -116,6 +116,10 @@ export default class LevelPrefab {
                 case 15:
                 case 16:
                 case 17:
+                case 21:
+                case 22:
+                case 23:
+                case 24:
                     return new BackgroundPrefab(val.type, val.position[0], val.position[1], mapWidth, mapHeight);
             }
         });
