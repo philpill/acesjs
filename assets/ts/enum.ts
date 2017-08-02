@@ -13,7 +13,8 @@ enum ClassType {
     MOVE,
     COLLISION,
     RENDER,
-    INTERSTITIAL
+    INTERSTITIAL,
+    SOUND
 }
 
 export { TriggerType, ClassType };

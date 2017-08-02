@@ -9,6 +9,7 @@ import ControlSystem from './systems/control';
 import LevelSystem from './systems/level';
 import MoveSystem from './systems/move';
 import RenderSystem from './systems/render';
+import SoundSystem from './systems/sound';
 
 export default class Main {
 
@@ -43,6 +44,8 @@ export default class Main {
         this._engine.addSystem(new CollisionSystem(this._settings));
 
         this._engine.addSystem(new LevelSystem(this._settings));
+
+        this._engine.addSystem(new SoundSystem(this._settings));
 
         this._engine.init();
     }

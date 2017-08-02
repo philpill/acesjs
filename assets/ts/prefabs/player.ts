@@ -8,6 +8,7 @@ import InputComponent from '../components/input';
 import CollisionComponent from '../components/collision';
 import AnimationComponent from '../components/animation';
 import TriggerComponent from '../components/trigger';
+import AudioComponent from '../components/audio';
 
 import { TriggerType } from '../enum';
 
@@ -49,7 +50,12 @@ export default class PlayerPrefab extends Entity {
 
         let trigger = new TriggerComponent(TriggerType.PLAYERDEATH);
 
-        this.addComponents(inputComponent, velocityComponent, positionComponent, display, collision, animation, trigger);
+        let audioComponent = new AudioComponent(settings);
+
+
+
+
+        this.addComponents(audioComponent, inputComponent, velocityComponent, positionComponent, display, collision, animation, trigger);
     }
 
     destroy() {

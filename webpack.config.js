@@ -35,6 +35,10 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             {
+                from: 'assets/wav',
+                to: 'wav'
+            },
+            {
                 from: 'assets/img',
                 to: 'img'
             } // to: output.path

@@ -60,12 +60,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 220);
+/******/ 	return __webpack_require__(__webpack_require__.s = 223);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 10:
+/***/ 11:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -85,51 +85,23 @@ exports.default = Settings;
 
 /***/ }),
 
-/***/ 11:
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ 220:
+/***/ 223:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(221);
+module.exports = __webpack_require__(224);
 
 
 /***/ }),
 
-/***/ 221:
+/***/ 224:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const move_1 = __webpack_require__(46);
-const settings_1 = __webpack_require__(10);
-const assert = __webpack_require__(222);
+const settings_1 = __webpack_require__(11);
+const assert = __webpack_require__(225);
 describe('MoveSystem', () => {
     let settings;
     let system;
@@ -181,7 +153,7 @@ describe('MoveSystem', () => {
 
 /***/ }),
 
-/***/ 222:
+/***/ 225:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -253,7 +225,7 @@ function isBuffer(b) {
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var util = __webpack_require__(223);
+var util = __webpack_require__(226);
 var hasOwn = Object.prototype.hasOwnProperty;
 var pSlice = Array.prototype.slice;
 var functionsHaveNames = (function () {
@@ -676,11 +648,11 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
 /***/ }),
 
-/***/ 223:
+/***/ 226:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -1208,7 +1180,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(224);
+exports.isBuffer = __webpack_require__(227);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -1252,7 +1224,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(225);
+exports.inherits = __webpack_require__(228);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -1270,11 +1242,11 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11), __webpack_require__(39)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8), __webpack_require__(39)))
 
 /***/ }),
 
-/***/ 224:
+/***/ 227:
 /***/ (function(module, exports) {
 
 module.exports = function isBuffer(arg) {
@@ -1286,7 +1258,7 @@ module.exports = function isBuffer(arg) {
 
 /***/ }),
 
-/***/ 225:
+/***/ 228:
 /***/ (function(module, exports) {
 
 if (typeof Object.create === 'function') {
@@ -1604,8 +1576,37 @@ var ClassType;
     ClassType[ClassType["COLLISION"] = 4] = "COLLISION";
     ClassType[ClassType["RENDER"] = 5] = "RENDER";
     ClassType[ClassType["INTERSTITIAL"] = 6] = "INTERSTITIAL";
+    ClassType[ClassType["SOUND"] = 7] = "SOUND";
 })(ClassType || (ClassType = {}));
 exports.ClassType = ClassType;
+
+
+/***/ }),
+
+/***/ 8:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
 
 
 /***/ })
