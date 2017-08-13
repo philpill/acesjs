@@ -13,7 +13,9 @@ export default class DisplayComponent implements IComponent {
     mapHeight: number;
     mapWidth: number;
 
-    constructor(sprite: Sprite, mapWidth: number, mapHeight: number, isFocus = false, tile = 16) {
+    text: PIXI.Text;
+
+    constructor(sprite: Sprite, mapWidth: number, mapHeight: number, isFocus = false, tile = 16, text = '') {
 
         this.class = 'display';
 
@@ -26,6 +28,8 @@ export default class DisplayComponent implements IComponent {
         this.mapHeight = mapHeight;
 
         this.mapWidth = mapWidth;
+
+        this.text = text && text.length ? new PIXI.Text(text): null;
     }
 
     destroy() {

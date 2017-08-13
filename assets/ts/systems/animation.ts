@@ -37,16 +37,24 @@ export default class AnimationSystem implements ISystem {
 
         let frames = animationData[animationData.currentAnimationProp];
 
-        if (animationData.currentFrame + 1 >= frames.length) {
-
-            animationData.currentFrame = 0;
-
-        } else {
-
-            animationData.currentFrame++;
-        }
+        animationData.currentFrame = animationData.currentFrame + 1 >= frames.length ? 0 : animationData.currentFrame + 1;
 
         displayData.sprite.texture.frame = displayData.sprite.data.texture[frames[animationData.currentFrame]];
+    }
+
+    getAnimation(velocityX: number, velocityY: number) {
+
+        let animation = 'default';
+
+        let isMidAir = velocityY > 0.01 || velocityY < -0.01;
+
+        animation = isMidAir ? 'jump' : animation;
+
+        animation = velocityX > 0.1 && !isMidAir ? 'right' : animation;
+
+        animation = velocityX < -0.1 && !isMidAir ? 'left' : animation;
+
+        return animation;
     }
 
     update(dt: number, nodes: Node[]) {
@@ -57,25 +65,9 @@ export default class AnimationSystem implements ISystem {
 
             let animationData = node.animation;
 
-            if (velocityData.velocityY > 0.01 || velocityData.velocityY < -0.01) {
+            let animation = this.getAnimation(velocityData.velocityX, velocityData.velocityY);
 
-                // play jump animation
-                this.setAnimation(node, 'jump');
-
-            } else if (velocityData.velocityX > 0.1) {
-
-                //play right animation
-                this.setAnimation(node, 'right');
-
-            } else if (velocityData.velocityX < -0.1) {
-
-                //play left animation
-                this.setAnimation(node, 'left');
-
-            } else {
-
-                this.setAnimation(node, 'default');
-            }
+            this.setAnimation(node, animation);
 
             this.timer = this.timer + dt;
 

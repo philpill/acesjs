@@ -29,21 +29,15 @@ export default class ControlSystem implements ISystem {
             let velocityData = node.velocity;
             let inputData = node.input;
 
-            if (inputData.isUp && velocityData.isGrounded) {
-                velocityData.accelerationY = -velocityData.maxAccelerationY;
-            } else {
-                velocityData.accelerationY = this.settings.GRAVITY;
-            }
+            let isJump = inputData.isUp &&  velocityData.isGrounded;
 
-            if (inputData.isRight) {
-                // console.log('right');
-                velocityData.accelerationX = velocityData.maxAccelerationX;
-            } else if (inputData.isLeft) {
-                // console.log('left');
-                velocityData.accelerationX = -velocityData.maxAccelerationX;
-            } else {
-                velocityData.accelerationX = 0;
-            }
+            velocityData.accelerationY = isJump ? -velocityData.maxAccelerationY : this.settings.GRAVITY;
+
+            velocityData.accelerationX = inputData.isRight || inputData.isLeft ? velocityData.accelerationX : 0;
+
+            velocityData.accelerationX = inputData.isRight ? velocityData.maxAccelerationX : velocityData.accelerationX;
+
+            velocityData.accelerationX = inputData.isLeft ? -velocityData.maxAccelerationX : velocityData.accelerationX;
         });
     }
 }

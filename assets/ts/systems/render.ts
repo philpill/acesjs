@@ -78,11 +78,18 @@ export default class RenderSystem implements ISystem {
         return pivotX;
     }
 
-    addNewSprites(id: string, sprite: Sprite) {
+    addNewSprite(id: string, sprite: Sprite) {
 
         this.sprites[id] = sprite;
 
         this.container.addChild(sprite);
+    }
+
+    addNewText(id: string, text: PIXI.Text) {
+
+        this.sprites[id] = text;
+
+        this.container.addChild(text);
     }
 
     removeSprite(id: string) {
@@ -111,13 +118,23 @@ export default class RenderSystem implements ISystem {
             let displayData = node.display;
             let positionData = node.position;
 
-            !this.sprites[node.entityId] && this.addNewSprites(node.entityId, displayData.sprite);
+            if (displayData.sprite) {
 
-            /* bottleneck */
-            displayData.sprite.position.x = positionData.x;
-            displayData.sprite.position.y = positionData.y;
+                !this.sprites[node.entityId] && this.addNewSprite(node.entityId, displayData.sprite);
 
-            if (displayData.isFocus) {
+                /* bottleneck */
+                displayData.sprite.position.x = positionData.x;
+                displayData.sprite.position.y = positionData.y;
+
+            } else if (displayData.text) {
+
+                !this.sprites[node.entityId] && this.addNewText(node.entityId, displayData.text);
+
+                displayData.text.position.x = positionData.x;
+                displayData.text.position.y = positionData.y;
+            }
+
+            if (displayData && displayData.isFocus) {
 
                 this.stage.pivot.x = this.getPivotX(displayData);
                 this.stage.pivot.y = this.getPivotY(displayData);
@@ -125,8 +142,8 @@ export default class RenderSystem implements ISystem {
                 let mapWidth = displayData.mapWidth * displayData.tile;
 
                 // test against map width * tilesize
-                if (displayData.sprite.x < 0 ||
-                    displayData.sprite.x + displayData.sprite.width > mapWidth) {
+                if (displayData.sprite && (displayData.sprite.x < 0 ||
+                    displayData.sprite.x + displayData.sprite.width > mapWidth)) {
                     console.log('EXIT');
                 }
             } else {
