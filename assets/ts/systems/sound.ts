@@ -15,7 +15,7 @@ export default class SoundSystem implements ISystem {
         this.settings = settings;
 
         var sound = new Howl({
-            src: ['/static/wav/NFF-micro-jump.wav'],
+            src: ['/static/wav/hup.wav'],
             autoplay: true,
             volume: 0.1,
             onend: function() {

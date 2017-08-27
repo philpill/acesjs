@@ -119,6 +119,8 @@ export default class Engine {
 
         before = now;
 
-        requestAnimationFrame(this.update.bind(this, before));
+        requestAnimationFrame(() => {
+            this.update(before);
+        });
     }
 }
