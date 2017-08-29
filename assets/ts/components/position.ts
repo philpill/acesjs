@@ -7,7 +7,6 @@ export default class PositionComponent implements IComponent {
     x: number;
     y: number;
     mapWidth: number;
-    outOfBounds: boolean;
 
     constructor(x, y, mapWidth) {
 
@@ -17,8 +16,6 @@ export default class PositionComponent implements IComponent {
         this.y = y;
 
         this.mapWidth = mapWidth;
-
-        this.outOfBounds = false;
     }
 
     destroy() {

@@ -82,17 +82,47 @@ export default class MoveSystem implements ISystem {
 
         let friction = this.settings.FRICTION;
 
-        velocityData.velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
 
-        positionData.x = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
+        let velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
 
-        velocityData.velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
+        let positionX = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
 
-        positionData.y = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
+        let velocityY = this.getVelocityY(time, velocityData.velocityY, velocityData.accelerationY, isGrounded);
+
+        let positionY = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
+
+
+        if (collisionData.isBottomObstacleCollision) {
+
+            velocityY = Math.min(0, velocityY);
+            velocityData.isGrounded = true;
+
+        } else if (collisionData.isTopObstacleCollision) {
+
+            velocityY = Math.max(0, velocityY);
+
+        } else if (collisionData.isRightObstacleCollision) {
+
+            velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
+            velocityX = Math.min(0, velocityX);
+
+        } else if (collisionData.isLeftObstacleCollision) {
+
+            velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
+            velocityX = Math.max(0, velocityX);
+        }
+
+
+        velocityData.velocityX = velocityX;
+
+        positionData.x = positionX;
+
+        velocityData.velocityY = velocityY;
+
+        positionData.y = positionY;
+
 
         if (positionData.y > this.settings.MAP[0] * tile) {
-
-            positionData.outOfBounds = true;
 
             if (triggerData && triggerData.triggerType === TriggerType.PLAYERDEATH) {
 

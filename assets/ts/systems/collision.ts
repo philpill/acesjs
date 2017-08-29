@@ -72,34 +72,6 @@ export default class CollisionSystem implements ISystem {
         let isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
             sprite2.x + sprite2.width < sprite1.x + errorMargin;
 
-        // collisionData.isTopObstacleCollision = isTopCollision;
-        // collisionData.isBottomObstacleCollision = isBottomCollision;
-        // collisionData.isLeftObstacleCollision = isLeftCollision;
-        // collisionData.isRightObstacleCollision = isRightCollision;
-
-        // SHIFT ALL THIS INTO MOVE SYSTEM
-
-        // check collision
-        if (isBottomCollision) {
-
-            velocityData.velocityY = Math.min(0, velocityData.velocityY);
-            velocityData.isGrounded = true;
-
-        } else if (isTopCollision) {
-
-            velocityData.velocityY = Math.max(0, velocityData.velocityY);
-
-        } else if (isRightCollision) {
-
-            velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
-            velocityData.velocityX = Math.min(0, velocityData.velocityX);
-
-        } else if (isLeftCollision) {
-
-            velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
-            velocityData.velocityX = Math.max(0, velocityData.velocityX);
-        }
-
         return {
             top: isTopCollision,
             bottom: isBottomCollision,
