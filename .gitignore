@@ -3,3 +3,4 @@ coverage
 /static/
 .map
 package-lock.json
+.js
