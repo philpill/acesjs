@@ -24,7 +24,7 @@ export default class VelocityComponent implements IComponent {
         this.accelerationY = settings.GRAVITY;
 
         this.maxAccelerationX = 3;
-        this.maxAccelerationY = 20;
+        this.maxAccelerationY = 7;
 
         this.velocityX = 0;
         this.velocityY = 0;

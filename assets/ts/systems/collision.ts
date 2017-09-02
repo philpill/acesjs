@@ -27,10 +27,10 @@ export default class CollisionSystem implements ISystem {
 
         let approxY = false;
 
-        let approxX = (Math.abs(sprite1.x - sprite2.x) < 100);
+        let approxX = (Math.abs(sprite1.x - sprite2.x) < 50);
 
         if (approxX) {
-            approxY = (Math.abs(sprite1.y - sprite2.y) < 100);
+            approxY = (Math.abs(sprite1.y - sprite2.y) < 50);
         }
 
         return approxX && approxY;
@@ -40,12 +40,43 @@ export default class CollisionSystem implements ISystem {
 
         let isCollision = false;
 
+        // console.log('sprite1.y', sprite1.y);
+        // console.log('sprite2.y', sprite2.y);
+
         if (sprite1.x < sprite2.x + sprite2.width &&
            sprite1.x + sprite1.width > sprite2.x &&
-           sprite1.y < sprite2.y + sprite2.height &&
-           sprite1.height + sprite1.y > sprite2.y) {
+           sprite1.y <= sprite2.y + sprite2.height &&
+           sprite1.height + sprite1.y >= sprite2.y) {
             isCollision = true;
         }
+
+        return isCollision;
+    }
+
+    isBottomCollision(y1, y2, margin) {
+
+        let isCollision = y1 + margin >= y2 && y1 - margin <= y2;
+
+        return isCollision;
+    }
+
+    isTopCollision(y1, y2, margin) {
+
+        let isCollision = y2 > y1 && y2 < y1 + margin;
+
+        return isCollision;
+    }
+
+    isRightCollision(x1, x2, margin) {
+
+        let isCollision = x1 > x2 && x1 < x2 + margin;
+
+        return isCollision;
+    }
+
+    isLeftCollision(x1, x2, margin) {
+
+        let isCollision = x2 > x1 && x2 < x1 + margin;
 
         return isCollision;
     }
@@ -55,28 +86,51 @@ export default class CollisionSystem implements ISystem {
         let sprite1 = primary.display.sprite;
         let sprite2 = secondary.display.sprite;
 
-        let velocityData = primary.velocity;
-        let collisionData = primary.collision;
-
         let errorMargin = this.settings.TILE/2;
 
-        let isBottomCollision = sprite1.y + sprite1.height > sprite2.y &&
-            sprite1.height + sprite1.y < sprite2.y + errorMargin;
+        // let isBottomCollision = false;
+        // let isTopCollision = false;
+        // let isRightCollision = false;
+        // let isLeftCollision = false;
 
-        let isTopCollision = sprite2.y + sprite2.height > sprite1.y &&
-            sprite2.height + sprite2.y < sprite1.y + errorMargin;
+        let result = 0; // 1111
 
-        let isRightCollision = sprite1.x + sprite1.width > sprite2.x &&
-            sprite1.x + sprite1.width < sprite2.x + errorMargin;
 
-        let isLeftCollision = sprite2.x + sprite2.width > sprite1.x &&
-            sprite2.x + sprite2.width < sprite1.x + errorMargin;
+        // if (this.isBottomCollision(sprite1.y + sprite1.height, sprite2.y, errorMargin)) {
+
+        //     isBottomCollision = true;
+
+        // } else if (this.isTopCollision(sprite1.y, sprite2.y + sprite2.height, errorMargin)) {
+
+        //     isTopCollision = true;
+
+        // } else if (this.isRightCollision(sprite1.x + sprite1.width, sprite2.x, errorMargin)) {
+
+        //     isRightCollision = true;
+
+        // } else if (this.isLeftCollision(sprite1.x, sprite2.x + sprite2.width, errorMargin)) {
+
+        //     isLeftCollision = true;
+        // }
+
+        // console.log(isTopCollision + ', ' + isBottomCollision + ', ' + isLeftCollision + ', ' + isRightCollision);
+
+
+        result = this.isBottomCollision(sprite1.y + sprite1.height, sprite2.y, errorMargin) ? result + 1 : result;
+
+        result = this.isTopCollision(sprite1.y, sprite2.y + sprite2.height, errorMargin) ? result + 2 : result;
+
+        result = this.isRightCollision(sprite1.x + sprite1.width, sprite2.x, errorMargin) ? result + 4 : result;
+
+        result = this.isLeftCollision(sprite1.x, sprite2.x + sprite2.width, errorMargin) ? result + 8 : result;
+
+        console.log(result);
 
         return {
-            top: isTopCollision,
-            bottom: isBottomCollision,
-            left: isLeftCollision,
-            right: isRightCollision
+            top: (result | 2) === 2,
+            bottom: (result | 1) === 1,
+            left: (result | 8) === 8,
+            right: (result | 4) === 4
         };
     }
 
@@ -134,6 +188,8 @@ export default class CollisionSystem implements ISystem {
 
     update(time: number, nodes: Node[]) {
 
+
+
         let primaries = nodes.filter((node: Node) => {
 
             return node.collision.type === 'primary';
@@ -155,20 +211,35 @@ export default class CollisionSystem implements ISystem {
 
             secondaries.map((secondary: Node) => {
 
+
                 let sprite1 = primary.display.sprite;
                 let sprite2 = secondary.display.sprite;
 
-                if (this.isBroadcollision(sprite1, sprite2) && this.isNarrowCollision(sprite1, sprite2)) {
+                if (this.isBroadcollision(sprite1, sprite2)) {
 
-                    let collisionResults = this.handleCollision(primary, secondary);
+                // console.log('------------');
 
-                    // set collision position true
-                    results.top = collisionResults.top || results.top;
-                    results.bottom = collisionResults.bottom || results.bottom;
-                    results.left = collisionResults.left || results.left;
-                    results.right = collisionResults.right || results.right;
+
+                    // console.log('+');
+
+                    if (this.isNarrowCollision(sprite1, sprite2)) {
+
+                        console.log('+');
+
+                        let collisionResults = this.handleCollision(primary, secondary);
+
+                        // set collision position true
+                        results.top = collisionResults.top || results.top;
+                        results.bottom = collisionResults.bottom || results.bottom;
+                        results.left = collisionResults.left || results.left;
+                        results.right = collisionResults.right || results.right;
+
+                        // console.log(results.top + ', ' + results.bottom + ', ' + results.left + ', ' + results.right);
+                    }
                 }
             });
+
+            // console.log('results.bottom', results.bottom);
 
             primary.collision.isTopObstacleCollision = results.top;
             primary.collision.isBottomObstacleCollision = results.bottom;
@@ -176,6 +247,10 @@ export default class CollisionSystem implements ISystem {
             primary.collision.isRightObstacleCollision = results.right;
 
             primary.velocity.isGrounded = results.bottom;
+
+            // console.log(results.top + ', ' + results.bottom + ', ' + results.left + ', ' + results.right);
         });
+
+
     }
 }

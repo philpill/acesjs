@@ -11,22 +11,22 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/chai": "^4.0.0",
-    "@types/mocha": "^2.2.41",
-    "@types/pixi.js": "*",
-    "@types/howler": "^2.0.2",
-    "chai": "^4.0.2",
+    "@types/chai": "^4.0.4",
+    "@types/howler": "^2.0.3",
+    "@types/mocha": "*",
+    "@types/pixi.js": "^4.5.3",
+    "chai": "*",
     "copy-webpack-plugin": "^4.0.1",
     "glob": "*",
-    "istanbul": "^0.4.5",
-    "mocha": "*",
-    "ts-loader": "*",
-    "typescript": "*",
-    "webpack": "*",
-    "webpack-dev-server": "^2.4.5"
+    "istanbul": "*",
+    "mocha": "^3.5.0",
+    "ts-loader": "^2.3.4",
+    "typescript": "^2.5.2",
+    "webpack": "^3.5.5",
+    "webpack-dev-server": "^2.7.1"
   },
   "dependencies": {
     "howler": "*",
-    "pixi.js": "*"
+    "pixi.js": "^4.5.5"
   }
 }

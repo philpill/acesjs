@@ -22,7 +22,7 @@ export default class MoveSystem implements ISystem {
     getVelocityX(time: number, friction: number, velocity: number, acceleration: number, isGrounded: boolean) {
 
         // limit horizontal movement in the air
-        acceleration = isGrounded ? acceleration : acceleration/3;
+        acceleration = isGrounded ? acceleration : acceleration/2;
 
         return (velocity + time * acceleration) * friction;
     }
@@ -33,40 +33,28 @@ export default class MoveSystem implements ISystem {
 
         // stop movement at map boundaries - shift this to collision system
         position = Math.max(0, position);
-        position = this.getLowestHorizontalPosition(position, mapWidth, tile);
+        position = Math.min(position, mapWidth * tile - tile);
 
         return position;
     }
 
-    getLowestHorizontalPosition(currentPosition: number, mapWidth: number, tileSize: number) {
-
-        return Math.min(currentPosition, mapWidth * tileSize - tileSize);
-    }
-
     getVelocityY(time: number, velocity: number, acceleration: number, isGrounded: boolean) {
 
-        // prevent any more downwards vertical movement
-        velocity = isGrounded ? Math.max(0, velocity) : velocity + time * acceleration;
+        velocity = velocity + time * acceleration;
 
-        // cap the velocity - anything more than 0.7 and the entity might fall
-        // though the tile before collision is detected
-        return Math.min(velocity, 0.5);
+        return velocity;
     }
 
     getPositionY(time: number, tile: number, position: number, velocity: number, isGrounded: boolean) {
 
-        position = position + velocity * tile;
-
-        if (isGrounded) {
-
-            // round up to tile edge
-            position = Math.floor(position / tile) * tile;
-        }
+        position = position + (velocity * tile);
 
         return Math.max(0, position);
     }
 
     updateNode(node: Node, time: number) {
+
+        // console.log('----------------------');
 
         let velocityData = node.velocity;
 
@@ -76,11 +64,13 @@ export default class MoveSystem implements ISystem {
 
         let triggerData = node.trigger;
 
-        let isGrounded = collisionData.isBottomObstacleCollision;
+        let isGrounded = velocityData.isGrounded;
 
         let tile = this.settings.TILE;
 
         let friction = this.settings.FRICTION;
+
+        // console.log('isGrounded ', isGrounded);
 
 
         let velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
@@ -91,22 +81,31 @@ export default class MoveSystem implements ISystem {
 
         let positionY = this.getPositionY(time, tile, positionData.y, velocityData.velocityY, isGrounded);
 
+        // cap the velocity - anything more than 0.3 and the entity might fall
+        // though the tile before collision is detected
+        velocityY = Math.min(velocityY, 0.2);
 
         if (collisionData.isBottomObstacleCollision) {
 
+            // prevent any more downwards vertical movement
             velocityY = Math.min(0, velocityY);
-            velocityData.isGrounded = true;
 
-        } else if (collisionData.isTopObstacleCollision) {
+            // round up to tile edge
+            positionY = (Math.round(positionY / tile) * tile);
+        }
+
+         if (collisionData.isTopObstacleCollision) {
 
             velocityY = Math.max(0, velocityY);
+        }
 
-        } else if (collisionData.isRightObstacleCollision) {
-
+         if (collisionData.isRightObstacleCollision) {
+            console.log('collisionData.isRightObstacleCollision');
             velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
             velocityX = Math.min(0, velocityX);
+        }
 
-        } else if (collisionData.isLeftObstacleCollision) {
+         if (collisionData.isLeftObstacleCollision) {
 
             velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
             velocityX = Math.max(0, velocityX);
@@ -117,7 +116,11 @@ export default class MoveSystem implements ISystem {
 
         positionData.x = positionX;
 
+        // console.log('velocityY ', velocityY);
+
         velocityData.velocityY = velocityY;
+
+        console.log('positionY ', positionY);
 
         positionData.y = positionY;
 

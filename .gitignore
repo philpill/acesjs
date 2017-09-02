@@ -1,6 +1,6 @@
 node_modules
 coverage
 /static/
-.map
+**/*.map
 package-lock.json
-.js
+**/*.js

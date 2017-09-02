@@ -46,9 +46,9 @@ export default class AnimationSystem implements ISystem {
 
         let animation = 'default';
 
-        let isMidAir = velocityY > 0.01 || velocityY < -0.01;
+        let isMidAir = velocityY > 0.05 || velocityY < -0.05;
 
-        animation = isMidAir ? 'jump' : animation;
+        animation = isMidAir ? 'jump' : animation; // should be based on obstacle collision
 
         animation = velocityX > 0.1 && !isMidAir ? 'right' : animation;
 
