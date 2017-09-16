@@ -3,6 +3,7 @@ import Node from '../nodes/node';
 import Settings from '../settings';
 import { ClassType } from '../enum';
 import { TriggerType } from '../enum';
+import Resolver from '../collisionResolver';
 
 export default class MoveSystem implements ISystem {
 
@@ -22,7 +23,7 @@ export default class MoveSystem implements ISystem {
     getVelocityX(time: number, friction: number, velocity: number, acceleration: number, isGrounded: boolean) {
 
         // limit horizontal movement in the air
-        acceleration = isGrounded ? acceleration : acceleration/2;
+        acceleration = isGrounded ? acceleration : acceleration/3;
 
         return (velocity + time * acceleration) * friction;
     }
@@ -47,14 +48,18 @@ export default class MoveSystem implements ISystem {
 
     getPositionY(time: number, tile: number, position: number, velocity: number, isGrounded: boolean) {
 
+        // console.log('velocity ', velocity);
+
+        // console.log('position1', position);
+
         position = position + (velocity * tile);
+
+        // console.log('position', position);
 
         return Math.max(0, position);
     }
 
     updateNode(node: Node, time: number) {
-
-        // console.log('----------------------');
 
         let velocityData = node.velocity;
 
@@ -70,9 +75,6 @@ export default class MoveSystem implements ISystem {
 
         let friction = this.settings.FRICTION;
 
-        // console.log('isGrounded ', isGrounded);
-
-
         let velocityX = this.getVelocityX(time, friction, velocityData.velocityX, velocityData.accelerationX, isGrounded);
 
         let positionX = this.getPositionX(time, tile, positionData.x, velocityData.velocityX, positionData.mapWidth);
@@ -83,47 +85,60 @@ export default class MoveSystem implements ISystem {
 
         // cap the velocity - anything more than 0.3 and the entity might fall
         // though the tile before collision is detected
+        //  bullet-through-paper
         velocityY = Math.min(velocityY, 0.2);
+
 
         if (collisionData.isBottomObstacleCollision) {
 
             // prevent any more downwards vertical movement
-            velocityY = Math.min(0, velocityY);
+            // velocityY = Math.min(0, velocityY);
+            // velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
 
-            // round up to tile edge
+            // penetration resolution
             positionY = (Math.round(positionY / tile) * tile);
         }
 
          if (collisionData.isTopObstacleCollision) {
 
             velocityY = Math.max(0, velocityY);
+
+            // penetration resolution
+            // something
         }
 
          if (collisionData.isRightObstacleCollision) {
-            console.log('collisionData.isRightObstacleCollision');
+
             velocityData.accelerationX = Math.min(0, velocityData.accelerationX);
             velocityX = Math.min(0, velocityX);
+
+            // penetration resolution
+            positionX = (Math.round(positionX / tile) * tile) - 1;
         }
 
          if (collisionData.isLeftObstacleCollision) {
 
             velocityData.accelerationX = Math.max(0, velocityData.accelerationX);
             velocityX = Math.max(0, velocityX);
+
+            // penetration resolution
+            positionX = (Math.round(positionX / tile) * tile) + 1;
         }
 
+        // let resolver = new Resolver();
+
+        // check bounding box collision here
+        // positionData.x = positionX;
+        // positionData.y = positionY;
+
+        positionData.expectedX = positionX;
+        positionData.expectedY = positionY;
 
         velocityData.velocityX = velocityX;
-
-        positionData.x = positionX;
-
-        // console.log('velocityY ', velocityY);
-
         velocityData.velocityY = velocityY;
 
-        console.log('positionY ', positionY);
-
-        positionData.y = positionY;
-
+        // console.log(velocityY);
+        // console.log(positionData.expectedY);
 
         if (positionData.y > this.settings.MAP[0] * tile) {
 

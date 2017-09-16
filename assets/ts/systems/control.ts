@@ -31,7 +31,22 @@ export default class ControlSystem implements ISystem {
 
             let isJump = inputData.isUp &&  velocityData.isGrounded;
 
-            velocityData.accelerationY = isJump ? -velocityData.maxAccelerationY : this.settings.GRAVITY;
+
+            if (isJump) {
+
+                velocityData.accelerationY = -velocityData.maxAccelerationY;
+
+            } else if (velocityData.isGrounded) {
+
+                velocityData.accelerationY = 0;
+
+                velocityData.velocityY = Math.min(0, velocityData.velocityY);
+                velocityData.accelerationY = Math.min(0, velocityData.accelerationY);
+
+            } else {
+
+                velocityData.accelerationY = this.settings.GRAVITY;
+            }
 
             velocityData.accelerationX = inputData.isRight || inputData.isLeft ? velocityData.accelerationX : 0;
 

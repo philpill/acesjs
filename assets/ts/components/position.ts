@@ -6,6 +6,10 @@ export default class PositionComponent implements IComponent {
 
     x: number;
     y: number;
+
+    expectedX: number;
+    expectedY: number;
+
     mapWidth: number;
 
     constructor(x, y, mapWidth) {
@@ -14,6 +18,9 @@ export default class PositionComponent implements IComponent {
 
         this.x = x;
         this.y = y;
+
+        this.expectedX = null;
+        this.expectedY = null;
 
         this.mapWidth = mapWidth;
     }

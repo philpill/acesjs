@@ -1,5 +1,6 @@
 export default class Settings {
 
+    EPSILON: number;
     GRAVITY: number;
     FRICTION: number;
     TILE: number;
@@ -15,8 +16,9 @@ export default class Settings {
 
     constructor() {
 
-        this.GRAVITY = 10;
-        this.FRICTION = 0.80;
+        this.EPSILON = 0.001;
+        this.GRAVITY = 7;
+        this.FRICTION = 0.90;
         this.TILE = 16;
         this.MAP = [45, 30];
         this.KEY = { SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, P: 80 };
